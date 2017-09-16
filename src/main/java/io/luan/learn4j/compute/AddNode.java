@@ -21,11 +21,11 @@ public class AddNode extends BaseNode {
     }
 
     @Override
-    ComputeNode createGradientNode(String nodeName) {
-        ComputeNode leftGrad = left.getGradient(nodeName);
-        ComputeNode rightGrad = right.getGradient(nodeName);
+    ComputeNode createGradientNode(String target) {
+        ComputeNode leftGrad = left.getGradient(target);
+        ComputeNode rightGrad = right.getGradient(target);
 
-        String gradName = this.getName() + "_" + nodeName;
+        String gradName = this.getName() + "_" + target;
 
         return new AddNode(gradName, leftGrad, rightGrad);
     }

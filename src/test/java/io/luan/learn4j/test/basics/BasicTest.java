@@ -2,6 +2,8 @@ package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.Learn4j;
 import io.luan.learn4j.Session;
+import io.luan.learn4j.compute.ComputeGraph;
+import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.expression.*;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -27,10 +29,19 @@ public class BasicTest {
 
         Add add = Learn4j.add("add", c, b);
 
+        Multiply mul = Learn4j.mul("mul", W, x);
+
         Graph graph = new GraphImpl();
         graph.add(add);
+        graph.add(mul);
 
         System.out.println(graph);
+
+        graph.gradient(add, "b");
+        graph.gradient(add, "c");
+
+        ComputeGraph computeGraph = graph.getComputeGraph();
+        System.out.println(computeGraph);
 
         Session sess = new Session(graph);
 
@@ -41,7 +52,7 @@ public class BasicTest {
         sess.run(feedDict);
 
 //
-//        System.out.println("MUL: " + graph.get("mul").getValue());
+        System.out.println("MUL: " + graph.get("mul").getComputeNode().getValue());
         System.out.println("ADD: " + graph.get("add").getComputeNode().getValue());
 //        System.out.println("SUB: " + graph.get("sub").getValue());
     }

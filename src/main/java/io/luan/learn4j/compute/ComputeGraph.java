@@ -1,6 +1,7 @@
 package io.luan.learn4j.compute;
 
 import io.luan.learn4j.compute.visitor.ComputeVisitor;
+import io.luan.learn4j.compute.visitor.DependencyVisitor;
 import io.luan.learn4j.compute.visitor.SourceVisitor;
 
 import java.util.HashSet;
@@ -20,8 +21,13 @@ public class ComputeGraph {
      * Add a node to the list of all nodes
      */
     public void add(ComputeNode node) {
-        node.setGraph(this);
-        nodes.add(node);
+        DependencyVisitor visitor = new DependencyVisitor();
+        node.accept(visitor);
+        for (ComputeNode dep : visitor.getDependencies()) {
+            addInternal(dep);
+        }
+
+        addInternal(node);
     }
 
     public void accept(ComputeVisitor visitor) {
@@ -31,6 +37,11 @@ public class ComputeGraph {
         for (ComputeNode node : sources) {
             node.accept(visitor);
         }
+    }
+
+    private void addInternal(ComputeNode node) {
+        node.setGraph(this);
+        nodes.add(node);
     }
 
     /**

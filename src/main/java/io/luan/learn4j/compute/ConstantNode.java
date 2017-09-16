@@ -34,7 +34,7 @@ public class ConstantNode extends BaseNode {
     }
 
     @Override
-    ComputeNode createGradientNode(String nodeName) {
+    ComputeNode createGradientNode(String target) {
         return ZERO;
     }
 }

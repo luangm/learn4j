@@ -33,7 +33,7 @@ public interface ComputeNode {
 
     void setValue(INDArray value);
 
-    ComputeNode getGradient(String nodeName);
+    ComputeNode getGradient(String target);
 
     String getName();
 }

@@ -40,14 +40,19 @@ abstract class BaseNode implements ComputeNode {
         visitor.visit(this);
     }
 
-    public ComputeNode getGradient(String nodeName) {
-        ComputeNode gradient = gradients.get(nodeName);
+    public ComputeNode getGradient(String target) {
+        ComputeNode gradient = gradients.get(target);
         if (gradient == null) {
-            gradient = createGradientNode(nodeName);
-            gradients.put(nodeName, gradient);
+            gradient = createGradientNode(target);
+            gradients.put(target, gradient);
         }
         return gradient;
     }
 
-    abstract ComputeNode createGradientNode(String nodeName);
+    @Override
+    public String toString() {
+        return this.getClass().getSimpleName() + " [" + this.getName() + "]";
+    }
+
+    abstract ComputeNode createGradientNode(String target);
 }

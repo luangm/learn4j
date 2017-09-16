@@ -12,8 +12,8 @@ public class ParameterNode extends BaseNode {
         super(name, value);
     }
 
-    ComputeNode createGradientNode(String nodeName) {
-        if (this.getName().equals(nodeName)) {
+    ComputeNode createGradientNode(String target) {
+        if (this.getName().equals(target)) {
             // self
             return ConstantNode.IDENTITY;
         }

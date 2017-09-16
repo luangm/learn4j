@@ -21,4 +21,10 @@ public interface Graph {
 
     Set<Expression> getNodes();
 
+    /**
+     * Performs the Gradient operation on the exp, w.r.t target
+     *
+     * The result is added to the ComputeGraph
+     */
+    void gradient(Expression exp, String target);
 }

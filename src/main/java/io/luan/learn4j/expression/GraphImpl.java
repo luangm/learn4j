@@ -1,6 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeGraph;
+import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.expression.visitor.DependencyVisitor;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import io.luan.learn4j.expression.visitor.SourceVisitor;
@@ -47,6 +48,13 @@ public class GraphImpl implements Graph {
         for (Expression node : sources) {
             node.accept(visitor);
         }
+    }
+
+    public void gradient(Expression exp, String target) {
+        ComputeNode node = exp.getComputeNode();
+        ComputeNode gradient = node.getGradient(target);
+
+        computeGraph.add(gradient);
     }
 
     private void addInternal(Expression exp) {
