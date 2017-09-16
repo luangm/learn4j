@@ -1,9 +1,10 @@
 package io.luan.learn4j.compute.visitor;
 
-import io.luan.learn4j.compute.AddNode;
-import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.MatMulNode;
-import io.luan.learn4j.compute.ParameterNode;
+import io.luan.learn4j.compute.*;
+import io.luan.learn4j.expression.Add;
+import io.luan.learn4j.expression.MatMul;
+import io.luan.learn4j.expression.Multiply;
+import io.luan.learn4j.expression.Parameter;
 
 /**
  * @author Guangmiao Luan
@@ -24,11 +25,27 @@ public abstract class BaseComputeVisitor implements ComputeVisitor {
         if (node instanceof MatMulNode) {
             visitMatMul((MatMulNode) node);
         }
+
+        if (node instanceof MultiplyNode) {
+            visitMultiply((MultiplyNode) node);
+        }
+    }
+    public void visitAdd(AddNode node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
-    abstract void visitAdd(AddNode node);
+    public void visitParameter(ParameterNode node) {
+        // by default do nothing
+    }
 
-    abstract void visitMatMul(MatMulNode node);
+    public void visitMatMul(MatMulNode node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
 
-    abstract void visitParameter(ParameterNode node);
+    public void visitMultiply(MultiplyNode node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
 }

@@ -6,7 +6,7 @@ import lombok.Getter;
  * @author Guangmiao Luan
  * @since 30/08/2017.
  */
-public class MatMulNode extends BaseNode {
+public class MultiplyNode extends BaseNode {
 
     @Getter
     private ComputeNode left;
@@ -14,18 +14,10 @@ public class MatMulNode extends BaseNode {
     @Getter
     private ComputeNode right;
 
-    @Getter
-    private boolean transposeLeft;
-
-    @Getter
-    private boolean transposeRight;
-
-    public MatMulNode(String name, ComputeNode left, ComputeNode right, boolean transposeLeft, boolean transposeRight) {
+    public MultiplyNode(String name, ComputeNode left, ComputeNode right) {
         super(name);
         this.left = left;
         this.right = right;
-        this.transposeLeft = transposeLeft;
-        this.transposeRight = transposeRight;
     }
 
     /**
@@ -40,8 +32,8 @@ public class MatMulNode extends BaseNode {
         String part1Name = gradName + "$1";
         String part2Name = gradName + "$1";
 
-        ComputeNode part1 = new MatMulNode(part1Name, leftGrad, right, false, true);
-        ComputeNode part2 = new MatMulNode(part2Name, left, rightGrad, true, false);
+        ComputeNode part1 = new MultiplyNode(part1Name, leftGrad, right);
+        ComputeNode part2 = new MultiplyNode(part2Name, left, rightGrad);
 
         return new AddNode(gradName, part1, part2);
     }

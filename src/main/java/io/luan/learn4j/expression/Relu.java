@@ -1,4 +1,4 @@
-package io.luan.learn4j.structure;
+package io.luan.learn4j.expression;
 
 import org.nd4j.linalg.api.ndarray.INDArray;
 

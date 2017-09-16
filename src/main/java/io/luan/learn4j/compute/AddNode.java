@@ -1,7 +1,6 @@
 package io.luan.learn4j.compute;
 
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Getter;
 
 /**
  * @author Guangmiao Luan
@@ -9,39 +8,25 @@ import java.util.List;
  */
 public class AddNode extends BaseNode {
 
-    private ComputeNode leftNode;
-    private ComputeNode rightNode;
+    @Getter
+    private ComputeNode left;
 
-    private List<ComputeNode> nodes;
+    @Getter
+    private ComputeNode right;
 
-    public AddNode(ComputeNode leftNode, ComputeNode rightNode) {
-        this.leftNode = leftNode;
-        this.rightNode = rightNode;
-        nodes = new ArrayList<ComputeNode>();
-        nodes.add(leftNode);
-        nodes.add(rightNode);
+    public AddNode(String name, ComputeNode left, ComputeNode right) {
+        super(name);
+        this.left = left;
+        this.right = right;
     }
 
-    public ComputeNode getLeft() {
-        return leftNode;
-    }
+    @Override
+    ComputeNode createGradientNode(String nodeName) {
+        ComputeNode leftGrad = left.getGradient(nodeName);
+        ComputeNode rightGrad = right.getGradient(nodeName);
 
-    public ComputeNode getRight() {
-        return rightNode;
-    }
+        String gradName = this.getName() + "_" + nodeName;
 
-    public List<ComputeNode> getDependencies() {
-        return nodes;
-    }
-
-    public ComputeNode getGradient(ParameterNode node) {
-        ComputeNode leftGrad = leftNode.getGradient(node);
-        ComputeNode rightGrad = rightNode.getGradient(node);
-
-        if (leftGrad != null && rightGrad != null) {
-            return new AddNode(leftGrad, rightGrad);
-        }
-
-        return leftGrad == null ? rightGrad : leftGrad;
+        return new AddNode(gradName, leftGrad, rightGrad);
     }
 }

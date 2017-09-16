@@ -1,10 +1,8 @@
 package io.luan.learn4j.compute;
 
+import org.bytedeco.javacpp.annotation.Const;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Guangmiao Luan
@@ -12,22 +10,31 @@ import java.util.List;
  */
 public class ConstantNode extends BaseNode {
 
-    private final static List<ComputeNode> EMPTY = new ArrayList<ComputeNode>();
+    public static final ConstantNode ZERO = new ConstantNode("ZERO", Nd4j.zeros(1));
+    public static final ConstantNode ONE = new ConstantNode("ONE", Nd4j.ones(1));
+    public static final ConstantNode IDENTITY = new ConstantNode("IDENTITY", Nd4j.eye(1));
 
-    public ConstantNode(INDArray value) {
-        super(value);
+    public ConstantNode(String name, INDArray value) {
+        super(name, value);
     }
 
-    public static ConstantNode ones(int row, int col) {
+    public static ConstantNode ones(String name, int row, int col) {
         INDArray array = Nd4j.ones(row, col);
-        return new ConstantNode(array);
+        return new ConstantNode(name, array);
     }
 
-    public List<ComputeNode> getDependencies() {
-        return EMPTY;
+    public static ComputeNode identity(String name, int i) {
+        INDArray array = Nd4j.eye(i);
+        return new ConstantNode(name, array);
     }
 
-    public ComputeNode getGradient(ParameterNode node) {
-        return null;
+    public static ConstantNode zeros(String name, int row, int col) {
+        INDArray array = Nd4j.zeros(row, col);
+        return new ConstantNode(name, array);
+    }
+
+    @Override
+    ComputeNode createGradientNode(String nodeName) {
+        return ZERO;
     }
 }

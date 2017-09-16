@@ -1,7 +1,9 @@
 package io.luan.learn4j;
 
-import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.compute.ComputeGraph;
+import io.luan.learn4j.compute.visitor.EvaluationVisitor;
+import io.luan.learn4j.expression.Expression;
+import io.luan.learn4j.expression.Graph;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.util.Map;
@@ -20,9 +22,11 @@ public class Session {
 
     public void run(Map<String, INDArray> feedDict) {
         System.out.println("running session");
+        EvaluationVisitor visitor = new EvaluationVisitor();
+        visitor.setFeed(feedDict);
 
-        Expression root = graph.node;
-
+        ComputeGraph computeGraph = graph.getComputeGraph();
+        computeGraph.accept(visitor);
     }
 
 }

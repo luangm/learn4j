@@ -2,7 +2,7 @@ package io.luan.learn4j.compute.visitor;
 
 import io.luan.learn4j.compute.AddNode;
 import io.luan.learn4j.compute.MatMulNode;
-import io.luan.learn4j.compute.ParameterNode;
+import io.luan.learn4j.compute.MultiplyNode;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.util.Map;
@@ -24,33 +24,29 @@ public class EvaluationVisitor extends BaseComputeVisitor {
     }
 
     @Override
-    void visitAdd(AddNode node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-
+    public void visitAdd(AddNode node) {
+        super.visitAdd(node);
         INDArray left = node.getLeft().getValue();
         INDArray right = node.getRight().getValue();
-
         INDArray sum = left.add(right);
-
         node.setValue(sum);
     }
 
-    void visitParameter(ParameterNode node) {
-        // do nothing
-    }
-
-
-    void visitMatMul(MatMulNode node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-
+    @Override
+    public void visitMatMul(MatMulNode node) {
+        super.visitMatMul(node);
         INDArray left = node.getLeft().getValue();
         INDArray right = node.getRight().getValue();
-
         INDArray product = left.mmul(right);
-
         node.setValue(product);
     }
 
+    @Override
+    public void visitMultiply(MultiplyNode node) {
+        super.visitMultiply(node);
+        INDArray left = node.getLeft().getValue();
+        INDArray right = node.getRight().getValue();
+        INDArray product = left.mul(right);
+        node.setValue(product);
+    }
 }

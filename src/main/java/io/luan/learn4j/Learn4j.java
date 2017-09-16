@@ -1,6 +1,6 @@
 package io.luan.learn4j;
 
-import io.luan.learn4j.structure.*;
+import io.luan.learn4j.expression.*;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
@@ -23,6 +23,10 @@ public class Learn4j {
         return new Add(name, left, right);
     }
 
+    public static Multiply mul(String name, Expression left, Expression right) {
+        return new Multiply(name, left, right);
+    }
+
     public static Add add(Expression left, Expression right) {
         return new Add(null, left, right);
     }
@@ -39,15 +43,4 @@ public class Learn4j {
         return new Variable(name, shape);
     }
 
-    public static Expression sigmoid(Expression exp) {
-        return new Sigmoid(exp);
-    }
-
-    public static Expression subtract(Expression left, Expression right) {
-        return new Subtract(null, left, right);
-    }
-
-    public static Expression subtract(String name, Expression left, Expression right) {
-        return new Subtract(name, left, right);
-    }
 }

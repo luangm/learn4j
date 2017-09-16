@@ -1,7 +1,12 @@
 package io.luan.learn4j.compute;
 
 import io.luan.learn4j.compute.visitor.ComputeVisitor;
+import lombok.Getter;
+import lombok.Setter;
 import org.nd4j.linalg.api.ndarray.INDArray;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Guangmiao Luan
@@ -9,36 +14,40 @@ import org.nd4j.linalg.api.ndarray.INDArray;
  */
 abstract class BaseNode implements ComputeNode {
 
+    @Getter
+    private String name;
+
+    @Getter
+    @Setter
     private INDArray value;
 
+    @Getter
+    @Setter
     private ComputeGraph graph;
 
-    BaseNode() {
-        this.value = null;
+    private Map<String, ComputeNode> gradients = new HashMap<String, ComputeNode>();
+
+    BaseNode(String name) {
+        this(name, null);
     }
 
-    BaseNode(INDArray value) {
+    BaseNode(String name, INDArray value) {
+        this.name = name;
         this.value = value;
-    }
-
-    public ComputeGraph getGraph() {
-        return graph;
-    }
-
-    public void setGraph(ComputeGraph graph) {
-        this.graph = graph;
     }
 
     public void accept(ComputeVisitor visitor) {
         visitor.visit(this);
     }
 
-    public INDArray getValue() {
-        return value;
+    public ComputeNode getGradient(String nodeName) {
+        ComputeNode gradient = gradients.get(nodeName);
+        if (gradient == null) {
+            gradient = createGradientNode(nodeName);
+            gradients.put(nodeName, gradient);
+        }
+        return gradient;
     }
 
-    public void setValue(INDArray value) {
-        this.value = value;
-    }
-
+    abstract ComputeNode createGradientNode(String nodeName);
 }

@@ -1,9 +1,7 @@
-package io.luan.learn4j.structure;
+package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import org.nd4j.linalg.api.ndarray.INDArray;
-
-import java.util.Map;
+import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 
 /**
  * Expression is the primary Node interface for Graph
@@ -20,8 +18,14 @@ public interface Expression {
      */
     String getName();
 
-    Iterable<Expression> getDependencies();
-
+    /**
+     * Returns the compute node for this Expression.
+     * This should be for internal use only
+     */
     ComputeNode getComputeNode();
 
+    /**
+     * Generic Visitor Pattern
+     */
+    void accept(ExpressionVisitor visitor);
 }
