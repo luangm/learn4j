@@ -1,9 +1,9 @@
 package io.luan.learn4j.compute.visitor;
 
-import io.luan.learn4j.compute.AddNode;
+import io.luan.learn4j.compute.impl.AddNode;
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.MatMulNode;
-import io.luan.learn4j.compute.MultiplyNode;
+import io.luan.learn4j.compute.impl.MatMulNode;
+import io.luan.learn4j.compute.impl.MultiplyNode;
 import lombok.Getter;
 
 import java.util.HashSet;

@@ -1,5 +1,7 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.compute.ComputeNode;
+import io.luan.learn4j.compute.factory.NodeFactory;
 import lombok.Getter;
 
 /**
@@ -27,6 +29,6 @@ public class AddNode extends BaseNode {
 
         String gradName = this.getName() + "_" + target;
 
-        return new AddNode(gradName, leftGrad, rightGrad);
+        return NodeFactory.createAddNode(gradName, leftGrad, rightGrad);
     }
 }

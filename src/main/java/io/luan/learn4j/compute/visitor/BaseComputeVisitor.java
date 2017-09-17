@@ -1,10 +1,10 @@
 package io.luan.learn4j.compute.visitor;
 
 import io.luan.learn4j.compute.*;
-import io.luan.learn4j.expression.Add;
-import io.luan.learn4j.expression.MatMul;
-import io.luan.learn4j.expression.Multiply;
-import io.luan.learn4j.expression.Parameter;
+import io.luan.learn4j.compute.impl.AddNode;
+import io.luan.learn4j.compute.impl.MatMulNode;
+import io.luan.learn4j.compute.impl.MultiplyNode;
+import io.luan.learn4j.compute.impl.ParameterNode;
 
 /**
  * @author Guangmiao Luan

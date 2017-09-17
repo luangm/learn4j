@@ -1,5 +1,7 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.compute.ComputeNode;
+import io.luan.learn4j.compute.factory.NodeFactory;
 import lombok.Getter;
 
 /**
@@ -30,11 +32,11 @@ public class MultiplyNode extends BaseNode {
 
         String gradName = this.getName() + "_" + target;
         String part1Name = gradName + "$1";
-        String part2Name = gradName + "$1";
+        String part2Name = gradName + "$2";
 
-        ComputeNode part1 = new MultiplyNode(part1Name, leftGrad, right);
-        ComputeNode part2 = new MultiplyNode(part2Name, left, rightGrad);
+        ComputeNode part1 = NodeFactory.createMultiplyNode(part1Name, leftGrad, right);
+        ComputeNode part2 = NodeFactory.createMultiplyNode(part2Name, left, rightGrad);
 
-        return new AddNode(gradName, part1, part2);
+        return NodeFactory.createAddNode(gradName, part1, part2);
     }
 }

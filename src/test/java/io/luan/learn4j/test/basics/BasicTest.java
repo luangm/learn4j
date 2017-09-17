@@ -39,6 +39,8 @@ public class BasicTest {
 
         graph.gradient(add, "b");
         graph.gradient(add, "c");
+        graph.gradient(mul, "W");
+        graph.gradient(mul, "x");
 
         ComputeGraph computeGraph = graph.getComputeGraph();
         System.out.println(computeGraph);

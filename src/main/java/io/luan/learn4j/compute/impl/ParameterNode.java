@@ -1,5 +1,6 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.compute.ComputeNode;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**

@@ -1,7 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.ParameterNode;
+import io.luan.learn4j.compute.impl.ParameterNode;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 

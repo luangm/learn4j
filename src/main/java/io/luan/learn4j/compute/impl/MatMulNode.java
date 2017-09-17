@@ -1,5 +1,6 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.compute.ComputeNode;
 import lombok.Getter;
 
 /**
@@ -38,7 +39,7 @@ public class MatMulNode extends BaseNode {
 
         String gradName = this.getName() + "_" + target;
         String part1Name = gradName + "$1";
-        String part2Name = gradName + "$1";
+        String part2Name = gradName + "$2";
 
         ComputeNode part1 = new MatMulNode(part1Name, leftGrad, right, false, true);
         ComputeNode part2 = new MatMulNode(part2Name, left, rightGrad, true, false);

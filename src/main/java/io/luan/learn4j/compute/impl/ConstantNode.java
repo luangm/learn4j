@@ -1,6 +1,6 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
-import org.bytedeco.javacpp.annotation.Const;
+import io.luan.learn4j.compute.ComputeNode;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 

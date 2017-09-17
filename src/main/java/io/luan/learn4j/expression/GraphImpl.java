@@ -53,7 +53,6 @@ public class GraphImpl implements Graph {
     public void gradient(Expression exp, String target) {
         ComputeNode node = exp.getComputeNode();
         ComputeNode gradient = node.getGradient(target);
-
         computeGraph.add(gradient);
     }
 

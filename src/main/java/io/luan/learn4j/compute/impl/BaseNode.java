@@ -1,5 +1,7 @@
-package io.luan.learn4j.compute;
+package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.compute.ComputeGraph;
+import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.compute.visitor.ComputeVisitor;
 import lombok.Getter;
 import lombok.Setter;

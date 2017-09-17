@@ -1,8 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.MatMulNode;
-import io.luan.learn4j.compute.MultiplyNode;
+import io.luan.learn4j.compute.impl.MultiplyNode;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import lombok.Getter;
 
