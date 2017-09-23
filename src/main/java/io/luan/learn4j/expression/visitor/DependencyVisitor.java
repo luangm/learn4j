@@ -1,9 +1,6 @@
 package io.luan.learn4j.expression.visitor;
 
-import io.luan.learn4j.expression.Add;
-import io.luan.learn4j.expression.Expression;
-import io.luan.learn4j.expression.MatMul;
-import io.luan.learn4j.expression.Multiply;
+import io.luan.learn4j.expression.*;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -39,5 +36,30 @@ public class DependencyVisitor extends BaseExpressionVisitor {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitMultiply(node);
+    }
+
+    @Override
+    public void visitSubtract(Subtract node) {
+        dependencies.add(node.getLeft());
+        dependencies.add(node.getRight());
+        super.visitSubtract(node);
+    }
+
+    @Override
+    public void visitPower(Power node) {
+        dependencies.add(node.getBase());
+        dependencies.add(node.getPower());
+        super.visitPower(node);
+    }
+
+    @Override
+    public void visitReduceMean(ReduceMean node) {
+        dependencies.add(node.getBase());
+        super.visitReduceMean(node);
+    }
+
+    public void visitSquare(Square node) {
+        dependencies.add(node.getBase());
+        super.visitSquare(node);
     }
 }

@@ -22,8 +22,7 @@ public class Session {
 
     public void run(Map<String, INDArray> feedDict) {
         System.out.println("running session");
-        EvaluationVisitor visitor = new EvaluationVisitor();
-        visitor.setFeed(feedDict);
+        EvaluationVisitor visitor = new EvaluationVisitor(feedDict);
 
         ComputeGraph computeGraph = graph.getComputeGraph();
         computeGraph.accept(visitor);

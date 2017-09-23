@@ -1,9 +1,7 @@
 package io.luan.learn4j.compute.factory;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.AddNode;
-import io.luan.learn4j.compute.impl.ConstantNode;
-import io.luan.learn4j.compute.impl.MultiplyNode;
+import io.luan.learn4j.compute.impl.*;
 
 /**
  * The NodeFactory class implements the Factory pattern for object creation.
@@ -46,5 +44,19 @@ public class NodeFactory {
         }
 
         return new MultiplyNode(name, left, right);
+    }
+
+    public static ComputeNode createPowerNode(String name, ComputeNode base, ComputeNode power) {
+
+        return new PowerNode(name, base, power);
+    }
+
+    public static ComputeNode createSubtractNode(String name, ComputeNode left, ComputeNode right) {
+
+        return new SubtractNode(name, left, right);
+    }
+
+    public static ComputeNode createReduceMeanNode(String name, ComputeNode base, int dimension) {
+        return new ReduceMeanNode(name, base, dimension);
     }
 }

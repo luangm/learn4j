@@ -13,15 +13,14 @@ import lombok.Getter;
  */
 public class MatMul extends BaseExpression {
 
+    private static final String TYPE = "MatMul";
+
     @Getter
     private Expression left;
-
     @Getter
     private Expression right;
-
     @Getter
     private boolean transposeLeft = false;
-
     @Getter
     private boolean transposeRight = false;
 
@@ -37,6 +36,10 @@ public class MatMul extends BaseExpression {
         this.right = right;
         this.transposeLeft = transposeLeft;
         this.transposeRight = transposeRight;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 
     @Override

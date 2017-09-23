@@ -1,19 +1,18 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.MultiplyNode;
+import io.luan.learn4j.compute.factory.NodeFactory;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import lombok.Getter;
 
 /**
- * Scalar Multiply
- *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Multiply extends BaseExpression {
+public class Subtract extends BaseExpression {
 
-    private static final String TYPE = "Multiply";
+
+    private static final String TYPE = "Subtract";
 
     @Getter
     private Expression left;
@@ -21,7 +20,7 @@ public class Multiply extends BaseExpression {
     @Getter
     private Expression right;
 
-    public Multiply(String name, Expression left, Expression right) {
+    public Subtract(String name, Expression left, Expression right) {
         super(name);
         this.left = left;
         this.right = right;
@@ -33,12 +32,11 @@ public class Multiply extends BaseExpression {
 
     @Override
     public void accept(ExpressionVisitor visitor) {
-        visitor.visitMultiply(this);
+        visitor.visitSubtract(this);
     }
 
     @Override
     ComputeNode createComputeNode() {
-        return new MultiplyNode(this.getName(), left.getComputeNode(), right.getComputeNode());
+        return NodeFactory.createSubtractNode(this.getName(), left.getComputeNode(), right.getComputeNode());
     }
-
 }

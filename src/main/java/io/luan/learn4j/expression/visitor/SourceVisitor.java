@@ -1,9 +1,6 @@
 package io.luan.learn4j.expression.visitor;
 
-import io.luan.learn4j.expression.Add;
-import io.luan.learn4j.expression.Expression;
-import io.luan.learn4j.expression.MatMul;
-import io.luan.learn4j.expression.Multiply;
+import io.luan.learn4j.expression.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -51,5 +48,29 @@ public class SourceVisitor extends BaseExpressionVisitor {
         super.visitMultiply(node);
     }
 
+    @Override
+    public void visitSubtract(Subtract node) {
+        nonSource.add(node.getLeft());
+        nonSource.add(node.getRight());
+        super.visitSubtract(node);
+    }
 
+    @Override
+    public void visitPower(Power node) {
+        nonSource.add(node.getBase());
+        nonSource.add(node.getPower());
+        super.visitPower(node);
+    }
+
+    @Override
+    public void visitReduceMean(ReduceMean node) {
+        nonSource.add(node.getBase());
+        super.visitReduceMean(node);
+    }
+
+    @Override
+    public void visitSquare(Square node) {
+        nonSource.add(node.getBase());
+        super.visitSquare(node);
+    }
 }

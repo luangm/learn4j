@@ -53,7 +53,7 @@ abstract class BaseNode implements ComputeNode {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + " [" + this.getName() + "]";
+        return this.getClass().getSimpleName() + "\t" + this.getValue();
     }
 
     abstract ComputeNode createGradientNode(String target);

@@ -15,12 +15,18 @@ import org.nd4j.linalg.api.ndarray.INDArray;
  */
 public class Parameter extends BaseExpression {
 
+    private static final String TYPE = "Parameter";
+
     @Getter
     private INDArray value;
 
     public Parameter(String name, INDArray value) {
         super(name);
         this.value = value;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 
     @Override

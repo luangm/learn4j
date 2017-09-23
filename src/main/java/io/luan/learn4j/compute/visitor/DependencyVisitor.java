@@ -1,9 +1,7 @@
 package io.luan.learn4j.compute.visitor;
 
-import io.luan.learn4j.compute.impl.AddNode;
+import io.luan.learn4j.compute.impl.*;
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.MatMulNode;
-import io.luan.learn4j.compute.impl.MultiplyNode;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -39,5 +37,31 @@ public class DependencyVisitor extends BaseComputeVisitor {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitMultiply(node);
+    }
+
+    @Override
+    public void visitPower(PowerNode node) {
+        dependencies.add(node.getBase());
+        dependencies.add(node.getPower());
+        super.visitPower(node);
+    }
+
+    @Override
+    public void visitSubtract(SubtractNode node) {
+        dependencies.add(node.getLeft());
+        dependencies.add(node.getRight());
+        super.visitSubtract(node);
+    }
+
+    @Override
+    public void visitReduceMean(ReduceMeanNode node) {
+        dependencies.add(node.getBase());
+        super.visitReduceMean(node);
+    }
+
+    @Override
+    public void visitSquare(SquareNode node) {
+        dependencies.add(node.getBase());
+        super.visitSquare(node);
     }
 }

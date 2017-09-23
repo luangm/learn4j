@@ -44,4 +44,22 @@ abstract class BaseExpressionVisitor implements ExpressionVisitor {
         node.getLeft().accept(this);
         node.getRight().accept(this);
     }
+
+    public void visitSubtract(Subtract node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
+
+    public void visitPower(Power node) {
+        node.getBase().accept(this);
+        node.getPower().accept(this);
+    }
+
+    public void visitReduceMean(ReduceMean node) {
+        node.getBase().accept(this);
+    }
+
+    public void visitSquare(Square node) {
+        node.getBase().accept(this);
+    }
 }

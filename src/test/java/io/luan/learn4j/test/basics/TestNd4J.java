@@ -1,17 +1,9 @@
 package io.luan.learn4j.test.basics;
 
-import io.luan.learn4j.Learn4j;
-import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.expression.Add;
-import io.luan.learn4j.expression.Graph;
-import io.luan.learn4j.expression.MatMul;
-import io.luan.learn4j.expression.Parameter;
-import io.luan.learn4j.expression.visitor.GradientVisitor;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
-
-import java.util.Set;
+import org.nd4j.linalg.ops.transforms.Transforms;
 
 /**
  * @author Guangmiao Luan
@@ -31,6 +23,40 @@ public class TestNd4J {
         array.putScalar(1, 2, 5.0);
         System.out.println(array);
 
-        System.out.println(transposed);
+        INDArray sum = array.sum(0);
+        System.out.println(sum);
+        System.out.println(sum.shapeInfoToString());
+        System.out.println(sum.rank());
+
+
+        System.out.println("----------");
+
+
+        INDArray nd2 = Nd4j.create(new float[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12}, new int[]{2, 6});
+        System.out.println(nd2);
+
+
+        INDArray nd34 = nd2.reshape(3, 4);
+        System.out.println(nd34);
+
+
+        nd2.putScalar(1, 2, 999);
+
+        System.out.println(nd34);
+
+
+        System.out.println("----------");
+
+
+        INDArray ddd3 = Nd4j.create(new float[]{-1, 2, -3 ,4,-5,6}, new int[]{2, 3});
+        System.out.println(ddd3);
+
+
+        INDArray abs = Transforms.abs(ddd3);
+        System.out.println(abs);
+
+        System.out.println(ddd3);
+
+
     }
 }

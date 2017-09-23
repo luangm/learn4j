@@ -30,5 +30,10 @@ abstract class BaseExpression implements Expression {
         visitor.visit(this);
     }
 
+    @Override
+    public String toString() {
+        return this.getType() + "[" + this.getName() + "]@" + this.computeNode.toString();
+    }
+
     abstract ComputeNode createComputeNode();
 }

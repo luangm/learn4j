@@ -1,7 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.AddNode;
+import io.luan.learn4j.compute.factory.NodeFactory;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import lombok.Getter;
 
@@ -9,20 +9,20 @@ import lombok.Getter;
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Add extends BaseExpression {
+public class Power extends BaseExpression {
 
-    private static final String TYPE = "Add";
-
-    @Getter
-    private Expression left;
+    private static final String TYPE = "Power";
 
     @Getter
-    private Expression right;
+    private Expression base;
 
-    public Add(String name, Expression left, Expression right) {
+    @Getter
+    private Expression power;
+
+    public Power(String name, Expression base, Expression power) {
         super(name);
-        this.left = left;
-        this.right = right;
+        this.base = base;
+        this.power = power;
     }
 
     public String getType() {
@@ -31,11 +31,11 @@ public class Add extends BaseExpression {
 
     @Override
     public void accept(ExpressionVisitor visitor) {
-        visitor.visitAdd(this);
+        visitor.visitPower(this);
     }
 
     @Override
     ComputeNode createComputeNode() {
-        return new AddNode(this.getName(), left.getComputeNode(), right.getComputeNode());
+        return NodeFactory.createPowerNode(getName(), base.getComputeNode(), power.getComputeNode());
     }
 }

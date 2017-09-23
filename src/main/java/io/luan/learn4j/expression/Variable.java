@@ -13,12 +13,18 @@ import lombok.Getter;
  */
 public class Variable extends BaseExpression {
 
+    private static final String TYPE = "Variable";
+
     @Getter
     private int[] shape;
 
     public Variable(String name, int[] shape) {
         super(name);
         this.shape = shape;
+    }
+
+    public String getType() {
+        return TYPE;
     }
 
     ComputeNode createComputeNode() {

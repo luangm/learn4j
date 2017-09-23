@@ -22,4 +22,11 @@ public interface ExpressionVisitor {
 
     void visitMultiply(Multiply node);
 
+    void visitPower(Power node);
+
+    void visitSubtract(Subtract node);
+
+    void visitReduceMean(ReduceMean node);
+
+    void visitSquare(Square node);
 }

@@ -1,7 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.MultiplyNode;
+import io.luan.learn4j.compute.impl.ReduceMeanNode;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import lombok.Getter;
 
@@ -11,20 +11,20 @@ import lombok.Getter;
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Multiply extends BaseExpression {
+public class ReduceMean extends BaseExpression {
 
-    private static final String TYPE = "Multiply";
-
-    @Getter
-    private Expression left;
+    private static final String TYPE = "ReduceMean";
 
     @Getter
-    private Expression right;
+    private Expression base;
 
-    public Multiply(String name, Expression left, Expression right) {
+    @Getter
+    private int dimension;
+
+    public ReduceMean(String name, Expression base, int dimension) {
         super(name);
-        this.left = left;
-        this.right = right;
+        this.base = base;
+        this.dimension = dimension;
     }
 
     public String getType() {
@@ -33,12 +33,11 @@ public class Multiply extends BaseExpression {
 
     @Override
     public void accept(ExpressionVisitor visitor) {
-        visitor.visitMultiply(this);
+        visitor.visitReduceMean(this);
     }
 
     @Override
     ComputeNode createComputeNode() {
-        return new MultiplyNode(this.getName(), left.getComputeNode(), right.getComputeNode());
+        return new ReduceMeanNode(this.getName(), base.getComputeNode(), dimension);
     }
-
 }

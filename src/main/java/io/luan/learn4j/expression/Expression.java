@@ -18,6 +18,12 @@ public interface Expression {
      */
     String getName();
 
+
+    /**
+     * Returns the type of the Expression
+     */
+    String getType();
+
     /**
      * Returns the compute node for this Expression.
      * This should be for internal use only

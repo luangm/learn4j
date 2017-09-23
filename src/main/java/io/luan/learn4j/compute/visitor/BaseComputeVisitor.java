@@ -1,10 +1,7 @@
 package io.luan.learn4j.compute.visitor;
 
-import io.luan.learn4j.compute.*;
-import io.luan.learn4j.compute.impl.AddNode;
-import io.luan.learn4j.compute.impl.MatMulNode;
-import io.luan.learn4j.compute.impl.MultiplyNode;
-import io.luan.learn4j.compute.impl.ParameterNode;
+import io.luan.learn4j.compute.ComputeNode;
+import io.luan.learn4j.compute.impl.*;
 
 /**
  * @author Guangmiao Luan
@@ -29,8 +26,30 @@ public abstract class BaseComputeVisitor implements ComputeVisitor {
         if (node instanceof MultiplyNode) {
             visitMultiply((MultiplyNode) node);
         }
+
+        if (node instanceof SubtractNode) {
+            visitSubtract((SubtractNode) node);
+        }
+
+        if (node instanceof PowerNode) {
+            visitPower((PowerNode) node);
+        }
+
+        if (node instanceof ReduceMeanNode) {
+            visitReduceMean((ReduceMeanNode) node);
+        }
+
+        if (node instanceof SquareNode) {
+            visitSquare((SquareNode) node);
+        }
     }
+
     public void visitAdd(AddNode node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
+
+    public void visitMatMul(MatMulNode node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
     }
@@ -39,13 +58,26 @@ public abstract class BaseComputeVisitor implements ComputeVisitor {
         // by default do nothing
     }
 
-    public void visitMatMul(MatMulNode node) {
+    public void visitMultiply(MultiplyNode node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
     }
 
-    public void visitMultiply(MultiplyNode node) {
+    public void visitSubtract(SubtractNode node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
+    }
+
+    public void visitPower(PowerNode node) {
+        node.getBase().accept(this);
+        node.getPower().accept(this);
+    }
+
+    public void visitReduceMean(ReduceMeanNode node) {
+        node.getBase().accept(this);
+    }
+
+    public void visitSquare(SquareNode node) {
+        node.getBase().accept(this);
     }
 }

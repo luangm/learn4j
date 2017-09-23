@@ -43,4 +43,7 @@ public class Learn4j {
         return new Variable(name, shape);
     }
 
+    public static ReduceMean reduceMean(String name, Expression base) {
+        return new ReduceMean(name, base, 0);
+    }
 }

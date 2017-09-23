@@ -1,28 +1,26 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.AddNode;
+import io.luan.learn4j.compute.impl.SquareNode;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
 import lombok.Getter;
 
 /**
+ * Scalar Multiply
+ *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Add extends BaseExpression {
+public class Square extends BaseExpression {
 
-    private static final String TYPE = "Add";
-
-    @Getter
-    private Expression left;
+    private static final String TYPE = "Square";
 
     @Getter
-    private Expression right;
+    private Expression base;
 
-    public Add(String name, Expression left, Expression right) {
+    public Square(String name, Expression base) {
         super(name);
-        this.left = left;
-        this.right = right;
+        this.base = base;
     }
 
     public String getType() {
@@ -31,11 +29,11 @@ public class Add extends BaseExpression {
 
     @Override
     public void accept(ExpressionVisitor visitor) {
-        visitor.visitAdd(this);
+        visitor.visitSquare(this);
     }
 
     @Override
     ComputeNode createComputeNode() {
-        return new AddNode(this.getName(), left.getComputeNode(), right.getComputeNode());
+        return new SquareNode(this.getName(), base.getComputeNode());
     }
 }
