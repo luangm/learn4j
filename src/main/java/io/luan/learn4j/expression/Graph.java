@@ -1,8 +1,8 @@
 package io.luan.learn4j.expression;
 
+import io.luan.learn4j.Tensor;
 import io.luan.learn4j.compute.ComputeGraph;
 import io.luan.learn4j.expression.visitor.ExpressionVisitor;
-import io.luan.learn4j.optimizer.GradientDescentOptimizer;
 
 import java.util.Set;
 
@@ -24,7 +24,7 @@ public interface Graph {
 
     /**
      * Performs the Gradient operation on the exp, w.r.t target
-     *
+     * <p>
      * The result is added to the ComputeGraph
      */
     void gradient(Expression exp, String target);

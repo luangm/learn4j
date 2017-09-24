@@ -2,6 +2,7 @@ package io.luan.learn4j.compute.factory;
 
 import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.compute.impl.*;
+import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
  * The NodeFactory class implements the Factory pattern for object creation.
@@ -58,5 +59,9 @@ public class NodeFactory {
 
     public static ComputeNode createReduceMeanNode(String name, ComputeNode base, int dimension) {
         return new ReduceMeanNode(name, base, dimension);
+    }
+
+    public static ComputeNode createVariableNode(String name, int[] shape) {
+        return new VariableNode(name, shape);
     }
 }

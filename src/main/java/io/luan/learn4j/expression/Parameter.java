@@ -15,7 +15,7 @@ import org.nd4j.linalg.api.ndarray.INDArray;
  */
 public class Parameter extends BaseExpression {
 
-    private static final String TYPE = "Parameter";
+    public static final String TYPE = "Parameter";
 
     @Getter
     private INDArray value;

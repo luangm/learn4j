@@ -4,6 +4,8 @@ import io.luan.learn4j.compute.ComputeGraph;
 import io.luan.learn4j.compute.visitor.EvaluationVisitor;
 import io.luan.learn4j.expression.Expression;
 import io.luan.learn4j.expression.Graph;
+import lombok.Getter;
+import lombok.Setter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
 import java.util.Map;
@@ -16,8 +18,26 @@ public class Session {
 
     private Graph graph;
 
+    @Getter
+    @Setter
+    private FlowMode flowMode = FlowMode.Store;
+
     public Session(Graph graph) {
         this.graph = graph;
+    }
+
+    public Tensor run(Expression exp) {
+        System.out.println("Session.run: exp = " + exp);
+        return Tensor.ones(1);
+    }
+
+    public Tensor run(Expression... expList) {
+        System.out.println("Session.run: exp = " + expList);
+        return Tensor.ones(1);
+    }
+
+    public void run(Expression exp, Map<String, Tensor> feed) {
+        System.out.println("Session.run: exp = " + exp);
     }
 
     public void run(Map<String, INDArray> feedDict) {

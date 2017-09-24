@@ -42,6 +42,10 @@ public abstract class BaseComputeVisitor implements ComputeVisitor {
         if (node instanceof SquareNode) {
             visitSquare((SquareNode) node);
         }
+
+        if (node instanceof VariableNode) {
+            visitVariable((VariableNode) node);
+        }
     }
 
     public void visitAdd(AddNode node) {
@@ -79,5 +83,9 @@ public abstract class BaseComputeVisitor implements ComputeVisitor {
 
     public void visitSquare(SquareNode node) {
         node.getBase().accept(this);
+    }
+
+    public void visitVariable(VariableNode node) {
+        // nothing
     }
 }

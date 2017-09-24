@@ -11,7 +11,7 @@ import lombok.Getter;
  */
 public class Power extends BaseExpression {
 
-    private static final String TYPE = "Power";
+    public static final String TYPE = "Power";
 
     @Getter
     private Expression base;

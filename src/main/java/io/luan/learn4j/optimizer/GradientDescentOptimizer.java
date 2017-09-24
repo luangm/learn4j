@@ -24,7 +24,7 @@ public class GradientDescentOptimizer {
         this.learnRate = learnRate;
     }
 
-    public void minimize(Expression loss) {
+    public Expression minimize(Expression loss) {
         INDArray bGrad = loss.getComputeNode().getGradient("b").getValue();
         bGrad.muli(this.learnRate);
         System.out.println("bGrad" + bGrad);
@@ -40,5 +40,7 @@ public class GradientDescentOptimizer {
         ComputeNode w = graph.get("W").getComputeNode();
         w.getValue().subi(wGrad);
         System.out.println("newW" + w);
+
+        return null;
     }
 }

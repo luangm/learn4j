@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 public class ReduceMean extends BaseExpression {
 
-    private static final String TYPE = "ReduceMean";
+    public static final String TYPE = "ReduceMean";
 
     @Getter
     private Expression base;

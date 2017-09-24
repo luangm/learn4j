@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 public class Square extends BaseExpression {
 
-    private static final String TYPE = "Square";
+    public static final String TYPE = "Square";
 
     @Getter
     private Expression base;

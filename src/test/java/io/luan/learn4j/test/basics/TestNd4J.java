@@ -13,6 +13,17 @@ public class TestNd4J {
 
     @Test
     public void testTranspose() {
+INDArray testConst = Nd4j.linspace(1, 10, 6);
+INDArray test2 = testConst.reshape(3, 2);
+
+        System.out.println(testConst);
+        System.out.println(testConst.shapeInfoToString());
+        System.out.println("-----");
+
+        System.out.println(test2);
+        System.out.println(test2.shapeInfoToString());
+        System.out.println("-----");
+
 
         INDArray array = Nd4j.ones(4, 4);
         System.out.println(array);

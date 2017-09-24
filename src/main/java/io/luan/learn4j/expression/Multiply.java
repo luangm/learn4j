@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 public class Multiply extends BaseExpression {
 
-    private static final String TYPE = "Multiply";
+    public static final String TYPE = "Multiply";
 
     @Getter
     private Expression left;

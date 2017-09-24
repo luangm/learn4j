@@ -13,7 +13,7 @@ import lombok.Getter;
  */
 public class MatMul extends BaseExpression {
 
-    private static final String TYPE = "MatMul";
+    public static final String TYPE = "MatMul";
 
     @Getter
     private Expression left;

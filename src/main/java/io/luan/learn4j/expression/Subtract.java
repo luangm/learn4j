@@ -11,8 +11,7 @@ import lombok.Getter;
  */
 public class Subtract extends BaseExpression {
 
-
-    private static final String TYPE = "Subtract";
+    public static final String TYPE = "Subtract";
 
     @Getter
     private Expression left;

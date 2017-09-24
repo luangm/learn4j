@@ -1,6 +1,7 @@
 package io.luan.learn4j.expression;
 
 import io.luan.learn4j.compute.ComputeNode;
+import io.luan.learn4j.compute.factory.NodeFactory;
 import lombok.Getter;
 
 /**
@@ -13,7 +14,7 @@ import lombok.Getter;
  */
 public class Variable extends BaseExpression {
 
-    private static final String TYPE = "Variable";
+    public static final String TYPE = "Variable";
 
     @Getter
     private int[] shape;
@@ -28,6 +29,7 @@ public class Variable extends BaseExpression {
     }
 
     ComputeNode createComputeNode() {
-        return null;
+        return NodeFactory.createVariableNode(this.getName(), shape);
+
     }
 }

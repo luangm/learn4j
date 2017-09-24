@@ -9,20 +9,22 @@ import io.luan.learn4j.expression.*;
 abstract class BaseExpressionVisitor implements ExpressionVisitor {
 
     public void visit(Expression node) {
-        if (node instanceof Add) {
-            visitAdd((Add) node);
-        }
-
-        if (node instanceof Parameter) {
-            visitParameter((Parameter) node);
-        }
-
-        if (node instanceof MatMul) {
-            visitMatMul((MatMul) node);
-        }
-
-        if (node instanceof Multiply) {
-            visitMultiply((Multiply) node);
+        switch(node.getType()) {
+            case Add.TYPE:
+                visitAdd((Add) node);
+                break;
+            case Parameter.TYPE:
+                visitParameter((Parameter) node);
+                break;
+            case MatMul.TYPE:
+                visitMatMul((MatMul) node);
+                break;
+            case Multiply.TYPE:
+                visitMultiply((Multiply) node);
+                break;
+            case Variable.TYPE:
+                visitVariable((Variable) node);
+                break;
         }
     }
 
@@ -45,14 +47,14 @@ abstract class BaseExpressionVisitor implements ExpressionVisitor {
         node.getRight().accept(this);
     }
 
-    public void visitSubtract(Subtract node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-    }
-
     public void visitPower(Power node) {
         node.getBase().accept(this);
         node.getPower().accept(this);
+    }
+
+    public void visitSubtract(Subtract node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
     }
 
     public void visitReduceMean(ReduceMean node) {
@@ -62,4 +64,9 @@ abstract class BaseExpressionVisitor implements ExpressionVisitor {
     public void visitSquare(Square node) {
         node.getBase().accept(this);
     }
+
+    protected void visitVariable(Variable node) {
+        // do nothing
+    }
+
 }
