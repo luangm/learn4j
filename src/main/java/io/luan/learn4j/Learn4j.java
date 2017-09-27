@@ -23,13 +23,16 @@ public class Learn4j {
 
     private static List<Graph> graphList = new ArrayList<Graph>();
 
-
     public static Expression add(Expression left, Expression right) {
         return add("", left, right);
     }
 
     public static Expression add(String name, Expression left, Expression right) {
         return addToGraph(new Add(name, left, right));
+    }
+
+    public static Expression constant(String name, Tensor tensor) {
+        return addToGraph(new Constant(name, tensor));
     }
 
     public static GradientDescentOptimizer gradientDescentOptimizer(double learnRate) {

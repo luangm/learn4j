@@ -1,5 +1,6 @@
 package io.luan.learn4j.compute.impl;
 
+import io.luan.learn4j.Tensor;
 import io.luan.learn4j.compute.ComputeNode;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
@@ -16,6 +17,10 @@ public class ConstantNode extends BaseNode {
 
     public ConstantNode(String name, INDArray value) {
         super(name, value);
+    }
+
+    public ConstantNode(String name, Tensor tensor) {
+        super(name, tensor.getValue());
     }
 
     public static ConstantNode ones(String name, int row, int col) {

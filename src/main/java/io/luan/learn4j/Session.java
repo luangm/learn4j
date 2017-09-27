@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -28,7 +29,9 @@ public class Session {
 
     public Tensor run(Expression exp) {
         System.out.println("Session.run: exp = " + exp);
-        return Tensor.ones(1);
+        EvaluationVisitor visitor = new EvaluationVisitor(new HashMap<>());
+        exp.getComputeNode().accept(visitor);
+        return Tensor.create(exp.getComputeNode().getValue());
     }
 
     public Tensor run(Expression... expList) {

@@ -25,6 +25,7 @@ public class BasicTest2 {
         val x = variable("x", new int[]{1, 1});
         val y = variable("y", new int[]{1, 1});
 
+        val add2 = add(W, b);
         val mul = mul("mul", W, x);
         val add = add("add", mul, b);
         val error = sub("sub", add, y);
@@ -34,11 +35,10 @@ public class BasicTest2 {
         val loss2 = reduceMean(square(sub(add(mul(W, x), b), y)));
 
         val gd = gradientDescentOptimizer(0.01);
-        val train_step = gd.minimize(loss);
+//        val train_step = gd.minimize(loss);
 
         Session sess = session("My Session");
 
-        val out = sess.run(loss, train_step);
-        System.out.println(out);
+        sess.run(add2);
     }
 }

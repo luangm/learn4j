@@ -27,8 +27,8 @@ public class Tensor {
         this.value = value;
     }
 
-    public static Tensor scalar(Number value) {
-        return new Tensor(Nd4j.zeros(1).addi(value));
+    public static Tensor create(float[] data) {
+        return new Tensor(Nd4j.create(data));
     }
 
     public static Tensor ones(int columns) {
@@ -39,12 +39,16 @@ public class Tensor {
         return new Tensor(Nd4j.ones(rows, columns));
     }
 
-    public static Tensor zeros(int columns) {
-        return new Tensor(Nd4j.zeros(columns));
+    public static Tensor rand(int columns) {
+        return new Tensor(Nd4j.rand(new int[]{1, columns}));
     }
 
-    public static Tensor zeros(int rows, int columns) {
-        return new Tensor(Nd4j.zeros(rows, columns));
+    public static Tensor rand(int rows, int columns) {
+        return new Tensor(Nd4j.rand(rows, columns));
+    }
+
+    public static Tensor scalar(Number value) {
+        return new Tensor(Nd4j.zeros(1).addi(value));
     }
 
     public static Tensor scalars(Number value, int columns) {
@@ -55,20 +59,20 @@ public class Tensor {
         return new Tensor(Nd4j.zeros(rows, columns).addi(value));
     }
 
-    public static Tensor rand(int columns) {
-        return new Tensor(Nd4j.rand(new int[]{1, columns}));
+    public static Tensor zeros(int columns) {
+        return new Tensor(Nd4j.zeros(columns));
     }
 
-    public static Tensor rand(int rows, int columns) {
-        return new Tensor(Nd4j.rand(rows, columns));
-    }
-
-    public static Tensor create(float[] data) {
-        return new Tensor(Nd4j.create(data));
+    public static Tensor zeros(int rows, int columns) {
+        return new Tensor(Nd4j.zeros(rows, columns));
     }
 
     @Override
     public String toString() {
         return this.value.toString();
+    }
+
+    static Tensor create(INDArray array) {
+        return new Tensor(array);
     }
 }

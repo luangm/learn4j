@@ -2,6 +2,7 @@ package io.luan.learn4j.expression;
 
 import io.luan.learn4j.Tensor;
 import io.luan.learn4j.compute.ComputeNode;
+import io.luan.learn4j.compute.impl.ConstantNode;
 
 /**
  * A Constant expression is an Expression wrapping a Tensor value, where the value will not change.
@@ -13,8 +14,11 @@ public class Constant extends BaseExpression {
 
     public static final String TYPE = "Constant";
 
-    Constant(String name, Tensor tensor) {
+    private Tensor tensor;
+
+    public Constant(String name, Tensor tensor) {
         super(name);
+        this.tensor = tensor;
     }
 
     public String getType() {
@@ -22,6 +26,6 @@ public class Constant extends BaseExpression {
     }
 
     ComputeNode createComputeNode() {
-        return null;
+        return new ConstantNode(this.getName(), tensor);
     }
 }
