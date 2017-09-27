@@ -1,6 +1,7 @@
-package io.luan.learn4j.expression.visitor;
+package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.expression.*;
+import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.impl.*;
 import lombok.Getter;
 
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.Set;
  * @author Guangmiao Luan
  * @since 16/09/2017.
  */
-public class DependencyVisitor extends BaseExpressionVisitor {
+public class DependencyVisitor extends BaseVisitor {
 
     @Getter
     private Set<Expression> dependencies = new HashSet<Expression>();

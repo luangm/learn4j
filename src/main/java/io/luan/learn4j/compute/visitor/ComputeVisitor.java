@@ -2,7 +2,6 @@ package io.luan.learn4j.compute.visitor;
 
 import io.luan.learn4j.compute.*;
 import io.luan.learn4j.compute.impl.*;
-import io.luan.learn4j.expression.ReduceMean;
 
 /**
  * This is the base interface for a ComputeGraph Visitor

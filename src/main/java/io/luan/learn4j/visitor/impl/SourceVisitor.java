@@ -1,6 +1,7 @@
-package io.luan.learn4j.expression.visitor;
+package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.expression.*;
+import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.impl.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +13,7 @@ import java.util.Set;
  * @author Guangmiao Luan
  * @since 31/08/2017.
  */
-public class SourceVisitor extends BaseExpressionVisitor {
+public class SourceVisitor extends BaseVisitor {
 
     private Set<Expression> nonSource = new HashSet<Expression>();
     private Set<Expression> all;

@@ -1,7 +1,7 @@
-package io.luan.learn4j.expression;
+package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.factory.NodeFactory;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.ExpressionType;
 import lombok.Getter;
 
 /**
@@ -14,8 +14,6 @@ import lombok.Getter;
  */
 public class Variable extends BaseExpression {
 
-    public static final String TYPE = "Variable";
-
     @Getter
     private int[] shape;
 
@@ -24,12 +22,16 @@ public class Variable extends BaseExpression {
         this.shape = shape;
     }
 
-    public String getType() {
-        return TYPE;
+    @Override
+    public Expression getGradient(Expression target) {
+        if (target == this) {
+            return Constant.ONE;
+        }
+        return Constant.ZERO;
     }
 
-    ComputeNode createComputeNode() {
-        return NodeFactory.createVariableNode(this.getName(), shape);
-
+    @Override
+    public ExpressionType getType() {
+        return ExpressionType.Variable;
     }
 }

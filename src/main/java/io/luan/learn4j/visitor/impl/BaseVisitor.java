@@ -1,28 +1,30 @@
-package io.luan.learn4j.expression.visitor;
+package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.expression.*;
+import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.visitor.Visitor;
 
 /**
  * @author Guangmiao Luan
  * @since 31/08/2017.
  */
-abstract class BaseExpressionVisitor implements ExpressionVisitor {
+abstract class BaseVisitor implements Visitor {
 
     public void visit(Expression node) {
         switch(node.getType()) {
-            case Add.TYPE:
+            case Add:
                 visitAdd((Add) node);
                 break;
-            case Parameter.TYPE:
+            case Parameter:
                 visitParameter((Parameter) node);
                 break;
-            case MatMul.TYPE:
+            case MatMul:
                 visitMatMul((MatMul) node);
                 break;
-            case Multiply.TYPE:
+            case Multiply:
                 visitMultiply((Multiply) node);
                 break;
-            case Variable.TYPE:
+            case Variable:
                 visitVariable((Variable) node);
                 break;
         }

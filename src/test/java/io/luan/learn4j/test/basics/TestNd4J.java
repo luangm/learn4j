@@ -12,9 +12,24 @@ import org.nd4j.linalg.ops.transforms.Transforms;
 public class TestNd4J {
 
     @Test
+    public void testBroadcast() {
+        INDArray array = Nd4j.linspace(1, 10, 6).reshape(3, 2);
+        System.out.println(array);
+        System.out.println(array.shapeInfoToString());
+        INDArray one = Nd4j.linspace(1, 2, 2).broadcast(3, 2);
+        System.out.println(one);
+        System.out.println(one.shapeInfoToString());
+
+
+        INDArray sum = array.add(one);
+
+        System.out.println(sum);
+    }
+
+    @Test
     public void testTranspose() {
-INDArray testConst = Nd4j.linspace(1, 10, 6);
-INDArray test2 = testConst.reshape(3, 2);
+        INDArray testConst = Nd4j.linspace(1, 10, 6);
+        INDArray test2 = testConst.reshape(3, 2);
 
         System.out.println(testConst);
         System.out.println(testConst.shapeInfoToString());
@@ -59,7 +74,7 @@ INDArray test2 = testConst.reshape(3, 2);
         System.out.println("----------");
 
 
-        INDArray ddd3 = Nd4j.create(new float[]{-1, 2, -3 ,4,-5,6}, new int[]{2, 3});
+        INDArray ddd3 = Nd4j.create(new float[]{-1, 2, -3, 4, -5, 6}, new int[]{2, 3});
         System.out.println(ddd3);
 
 

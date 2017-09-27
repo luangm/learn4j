@@ -1,7 +1,8 @@
 package io.luan.learn4j;
 
-import io.luan.learn4j.expression.*;
+import io.luan.learn4j.structure.*;
 import io.luan.learn4j.optimizer.GradientDescentOptimizer;
+import io.luan.learn4j.structure.impl.*;
 import lombok.val;
 
 import java.util.ArrayList;
@@ -56,7 +57,7 @@ public class Learn4j {
     }
 
     public static Expression parameter(String name, Tensor tensor) {
-        return addToGraph(new Parameter(name, tensor.getValue()));
+        return addToGraph(new Parameter(name, tensor));
     }
 
     public static Expression reduceMean(Expression base) {

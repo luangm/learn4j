@@ -3,10 +3,12 @@ package io.luan.learn4j.test.basics;
 import io.luan.learn4j.Learn4j;
 import io.luan.learn4j.Session;
 import io.luan.learn4j.Tensor;
-import io.luan.learn4j.compute.ComputeGraph;
-import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.expression.*;
+import io.luan.learn4j.structure.*;
 import io.luan.learn4j.optimizer.GradientDescentOptimizer;
+import io.luan.learn4j.structure.impl.GraphImpl;
+import io.luan.learn4j.structure.impl.ReduceMean;
+import io.luan.learn4j.structure.impl.Square;
+import io.luan.learn4j.structure.impl.Subtract;
 import lombok.val;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -43,8 +45,6 @@ public class BasicTest {
 
         GradientDescentOptimizer optimizer = new GradientDescentOptimizer(graph, 0.01);
 
-        graph.gradient(loss, "b");
-        graph.gradient(loss, "W");
 
         Map<String, INDArray> feedDict = new HashMap<String, INDArray>();
         feedDict.put("x", Nd4j.ones(1, 1).add(2));

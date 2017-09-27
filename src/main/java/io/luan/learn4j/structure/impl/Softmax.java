@@ -1,4 +1,4 @@
-package io.luan.learn4j.expression;
+package io.luan.learn4j.structure.impl;
 
 /**
  * @author Guangmiao Luan

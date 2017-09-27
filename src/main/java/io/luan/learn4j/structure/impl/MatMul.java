@@ -1,8 +1,10 @@
-package io.luan.learn4j.expression;
+package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.compute.impl.MatMulNode;
-import io.luan.learn4j.expression.visitor.ExpressionVisitor;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -38,17 +40,14 @@ public class MatMul extends BaseExpression {
         this.transposeRight = transposeRight;
     }
 
-    public String getType() {
-        return TYPE;
+    @Override
+    public Expression getGradient(Expression target) {
+        return null;
     }
 
     @Override
-    public void accept(ExpressionVisitor visitor) {
-        visitor.visitMatMul(this);
+    public ExpressionType getType() {
+        return null;
     }
 
-    @Override
-    ComputeNode createComputeNode() {
-        return new MatMulNode(this.getName(), left.getComputeNode(), right.getComputeNode(), transposeLeft, transposeRight);
-    }
 }

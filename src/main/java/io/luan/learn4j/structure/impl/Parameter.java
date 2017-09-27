@@ -1,7 +1,10 @@
-package io.luan.learn4j.expression;
+package io.luan.learn4j.structure.impl;
 
+import io.luan.learn4j.Tensor;
 import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.compute.impl.ParameterNode;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.ExpressionType;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
@@ -15,22 +18,25 @@ import org.nd4j.linalg.api.ndarray.INDArray;
  */
 public class Parameter extends BaseExpression {
 
-    public static final String TYPE = "Parameter";
-
     @Getter
-    private INDArray value;
+    private Tensor value;
 
-    public Parameter(String name, INDArray value) {
+    public Parameter(String name, Tensor value) {
         super(name);
         this.value = value;
     }
 
-    public String getType() {
-        return TYPE;
+    @Override
+    public Expression getGradient(Expression target) {
+        if (target == this) {
+            return Constant.ONE;
+        }
+        return Constant.ZERO;
     }
 
     @Override
-    ComputeNode createComputeNode() {
-        return new ParameterNode(this.getName(), value);
+    public ExpressionType getType() {
+        return ExpressionType.Parameter;
     }
+
 }

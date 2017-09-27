@@ -2,8 +2,8 @@ package io.luan.learn4j;
 
 import io.luan.learn4j.compute.ComputeGraph;
 import io.luan.learn4j.compute.visitor.EvaluationVisitor;
-import io.luan.learn4j.expression.Expression;
-import io.luan.learn4j.expression.Graph;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.Graph;
 import lombok.Getter;
 import lombok.Setter;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -30,8 +30,9 @@ public class Session {
     public Tensor run(Expression exp) {
         System.out.println("Session.run: exp = " + exp);
         EvaluationVisitor visitor = new EvaluationVisitor(new HashMap<>());
-        exp.getComputeNode().accept(visitor);
-        return Tensor.create(exp.getComputeNode().getValue());
+//        exp.getComputeNode().accept(visitor);
+//        return Tensor.create(exp.getComputeNode().getValue());
+        return Tensor.ones(1);
     }
 
     public Tensor run(Expression... expList) {
@@ -46,9 +47,6 @@ public class Session {
     public void run(Map<String, INDArray> feedDict) {
         System.out.println("running session");
         EvaluationVisitor visitor = new EvaluationVisitor(feedDict);
-
-        ComputeGraph computeGraph = graph.getComputeGraph();
-        computeGraph.accept(visitor);
     }
 
 }

@@ -1,8 +1,7 @@
 package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.Session;
-import io.luan.learn4j.Tensor;
-import io.luan.learn4j.expression.Graph;
+import io.luan.learn4j.structure.Graph;
 import lombok.val;
 import org.junit.Test;
 
