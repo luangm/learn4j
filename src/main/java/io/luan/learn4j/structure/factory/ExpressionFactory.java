@@ -1,6 +1,7 @@
 package io.luan.learn4j.structure.factory;
 
 import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.impl.*;
 
 /**
@@ -55,7 +56,22 @@ public class ExpressionFactory {
     }
 
     public static Expression createSubtract(String name, Expression left, Expression right) {
+        if (right == Constant.ZERO) {
+            return left;
+        }
+
         return new Subtract(name, left, right);
     }
 
+    public static Expression createAssign(String name, Expression target, Expression newValue) {
+        return new Assign(name, target, newValue);
+    }
+
+    public static Expression createConstant(String name, Tensor value) {
+        return new Constant(name, value);
+    }
+
+    public static Expression createGroup(String name, Expression[] expList) {
+        return new Group(name, expList);
+    }
 }

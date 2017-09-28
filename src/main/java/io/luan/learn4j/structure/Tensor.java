@@ -43,6 +43,14 @@ public class Tensor {
         return new Tensor(array);
     }
 
+    public static Tensor create(double[] data, int[] shape) {
+        return new Tensor(Nd4j.create(data, shape));
+    }
+
+    public static Tensor create(float[] data, int[] shape) {
+        return new Tensor(Nd4j.create(data, shape));
+    }
+
     public static Tensor ones(int columns) {
         return new Tensor(Nd4j.ones(columns));
     }
@@ -81,6 +89,9 @@ public class Tensor {
 
     @Override
     public String toString() {
+        if (this.value.isScalar()) {
+            return "" + this.value.getDouble(0);
+        }
         return this.value.toString();
     }
 }

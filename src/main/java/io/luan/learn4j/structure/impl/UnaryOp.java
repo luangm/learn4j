@@ -12,7 +12,6 @@ abstract class UnaryOp extends BaseExpression {
     @Getter
     private Expression base;
 
-
     UnaryOp(String name, Expression base) {
         super(name);
         this.base = base;

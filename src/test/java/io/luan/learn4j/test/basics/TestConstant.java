@@ -1,12 +1,15 @@
 package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.session.Session;
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Tensor;
 import lombok.val;
 import org.junit.Test;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.create;
 import static io.luan.learn4j.structure.Tensor.scalar;
 
 /**
@@ -18,28 +21,27 @@ public class TestConstant {
     @Test
     public void testConstantOp() {
 
-        val a = constant("a", create(new double[]{1, 2, 3}));
-        val b = constant("b", scalar(3));
-        val c = parameter("c", scalar(5));
-        val d = parameter("d", create(new double[]{4, 5, 6}));
+        val W1 = parameter("W1", scalar(5));
+        val b1 = parameter("b1", scalar(3));
+        val x = variable("x", new int[]{1, 1});
+        val y = variable("y", new int[]{1, 1});
 
-        val add = add(a, b);
-        val sub = subtract(add, b);
-        val mul = multiply(a, c);
-        val mul2 = multiply(a, d);
+        val loss2 = reduceMean(square(subtract(add(multiply(W1, x), b1), y)));
+
+        val gd = gradientDescentOptimizer(0.01);
+        val train = gd.minimize(loss2);
+
+        Map<Expression, Tensor> feed = new HashMap<>();
+        feed.put(x, scalar(4));
+        feed.put(y, scalar(2));
 
         Session sess = session("My Session");
 
-        Tensor result = sess.run(add);
-        System.out.println(result);
-
-        Tensor result2 = sess.run(sub);
-        System.out.println(result2);
-
-        Tensor result3 = sess.run(mul);
-        System.out.println(result3);
-
-        Tensor result4 = sess.run(mul2);
-        System.out.println(result4);
+        for (int i = 0; i < 100; i++) {
+            println("W1: " + sess.run(W1, feed));
+            println("b1: " + sess.run(b1, feed));
+            println("Loss: " + sess.run(loss2, feed));
+            println("W1_Train: " + sess.run(train, feed));
+        }
     }
 }

@@ -38,7 +38,7 @@ public class SessionImpl implements Session {
     }
 
     public Tensor run(Expression exp, Map<Expression, Tensor> feed) {
-        System.out.println("Session.run: exp = " + exp);
+//        System.out.println("Session.run: exp = " + exp);
         EvaluationVisitor visitor = new EvaluationVisitor(feed, valueMap);
         exp.accept(visitor);
 

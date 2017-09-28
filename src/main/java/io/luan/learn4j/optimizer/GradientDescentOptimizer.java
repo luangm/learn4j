@@ -1,8 +1,15 @@
 package io.luan.learn4j.optimizer;
 
 import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import lombok.Getter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author Guangmiao Luan
@@ -14,30 +21,32 @@ public class GradientDescentOptimizer {
     private Graph graph;
 
     @Getter
-    private double learnRate;
+    private Expression learnRate;
 
     public GradientDescentOptimizer(Graph graph, double learnRate) {
         this.graph = graph;
-        this.learnRate = learnRate;
+        this.learnRate = ExpressionFactory.createConstant("learn_rate", Tensor.scalar(learnRate));
     }
 
     public Expression minimize(Expression loss) {
-//        INDArray bGrad = loss.getComputeNode().getGradient("b").getValue();
-//        bGrad.muli(this.learnRate);
-//        System.out.println("bGrad" + bGrad);
-//
-//        INDArray wGrad = loss.getComputeNode().getGradient("W").getValue();
-//        wGrad.muli(this.learnRate);
-//        System.out.println("wGrad" + wGrad);
-//
-//        ComputeNode b = graph.get("b").getComputeNode();
-//        b.getValue().subi(bGrad);
-//        System.out.println("newB" + b);
-//
-//        ComputeNode w = graph.get("W").getComputeNode();
-//        w.getValue().subi(wGrad);
-//        System.out.println("newW" + w);
 
-        return null;
+        DependencyVisitor depVisitor = new DependencyVisitor();
+        loss.accept(depVisitor);
+
+        List<Expression> assignList = new ArrayList<>();
+
+        for (Expression exp : depVisitor.getDependencies()) {
+            if (exp.getType() == ExpressionType.Parameter) {
+                Expression grad = loss.getGradient(exp);
+                Expression newGrad = ExpressionFactory.createMultiply(null, grad, this.learnRate);
+                Expression sub = ExpressionFactory.createSubtract("", exp, newGrad);
+                Expression assign = ExpressionFactory.createAssign("", exp, sub);
+                assignList.add(assign);
+            }
+        }
+
+
+        return ExpressionFactory.createGroup("TrainStep", assignList.toArray(new Expression[assignList.size()]));
+
     }
 }

@@ -59,8 +59,16 @@ public class DependencyVisitor extends BaseVisitor {
         super.visitReduceMean(node);
     }
 
+    @Override
     public void visitSquare(Square node) {
         dependencies.add(node.getBase());
         super.visitSquare(node);
+    }
+
+    @Override
+    protected void visitAssign(Assign node) {
+        dependencies.add(node.getTarget());
+        dependencies.add(node.getNewValue());
+        super.visitAssign(node);
     }
 }

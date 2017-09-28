@@ -1,9 +1,10 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.Tensor;
 import lombok.Getter;
+import lombok.Setter;
 
 /**
  * Parameter is holder for parameters to be updated on each gradient descend run
@@ -16,6 +17,7 @@ import lombok.Getter;
 public class Parameter extends BaseExpression {
 
     @Getter
+    @Setter
     private Tensor value;
 
     public Parameter(String name, Tensor value) {
@@ -24,16 +26,15 @@ public class Parameter extends BaseExpression {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
+        return ExpressionType.Parameter;
+    }
+
+    protected Expression createGradient(Expression target) {
         if (target == this) {
             return Constant.ONE;
         }
         return Constant.ZERO;
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Parameter;
     }
 
 }

@@ -24,9 +24,13 @@ public class Power extends BaseExpression {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
+        return ExpressionType.Power;
+    }
+
+    protected Expression createGradient(Expression target) {
         Expression baseGrad = base.getGradient(target);
-        String gradName = this.getName() + "_" + target;
+        String gradName = this.getName() + "_" + target.getName();
 
         String subName = gradName + "$sub";
         Expression sub = ExpressionFactory.createSubtract(subName, power, Constant.ONE);
@@ -38,10 +42,5 @@ public class Power extends BaseExpression {
         Expression mul = ExpressionFactory.createMultiply(newMultiplyName, sub, newPower);
 
         return ExpressionFactory.createMultiply(gradName, mul, baseGrad);
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Power;
     }
 }

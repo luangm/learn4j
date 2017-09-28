@@ -23,7 +23,7 @@ public class Learn4j {
     /**
      * Stores the current active graph.
      * All subsequent calls are based on this graph
-     *
+     * <p>
      * This should be ThreadLocal
      */
     private static Graph activeGraph;
@@ -74,6 +74,10 @@ public class Learn4j {
         return addToGraph(new Parameter(name, tensor));
     }
 
+    public static void println(Object obj) {
+        System.out.println(obj);
+    }
+
     public static Expression reduceMean(Expression base) {
         return reduceMean("", base);
     }
@@ -105,6 +109,10 @@ public class Learn4j {
 
     public static Expression variable(String name, int[] shape) {
         return addToGraph(new Variable(name, shape));
+    }
+
+    public static Expression assign(Expression target, Expression newValue) {
+        return null;
     }
 
     private static Expression addToGraph(Expression exp) {

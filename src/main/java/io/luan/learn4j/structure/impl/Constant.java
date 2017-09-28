@@ -1,8 +1,8 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.Tensor;
 import lombok.Getter;
 
 /**
@@ -26,12 +26,11 @@ public class Constant extends BaseExpression {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
-        return ZERO;
-    }
-
-    @Override
     public ExpressionType getType() {
         return ExpressionType.Constant;
+    }
+
+    protected Expression createGradient(Expression target) {
+        return ZERO;
     }
 }

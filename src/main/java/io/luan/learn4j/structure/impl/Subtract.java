@@ -15,17 +15,16 @@ public class Subtract extends BinaryOp {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
+        return ExpressionType.Subtract;
+    }
+
+    protected Expression createGradient(Expression target) {
         Expression leftGrad = getLeft().getGradient(target);
         Expression rightGrad = getRight().getGradient(target);
 
         String gradName = this.getName() + "_" + target.getName();
 
         return ExpressionFactory.createSubtract(gradName, leftGrad, rightGrad);
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Subtract;
     }
 }

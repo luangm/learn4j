@@ -2,6 +2,7 @@ package io.luan.learn4j.utils;
 
 import io.luan.learn4j.structure.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
 
 /**
  * Utility class for encapsulate all Tensor operations
@@ -28,6 +29,18 @@ public class TensorMath {
 
         INDArray prod = leftArray.mul(rightArray);
         return Tensor.create(prod);
+    }
+
+    public static Tensor reduceMean(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray mean = Nd4j.mean(array);
+        return Tensor.create(mean);
+    }
+
+    public static Tensor square(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray squared = array.mul(array);
+        return Tensor.create(squared);
     }
 
     public static Tensor subtract(Tensor left, Tensor right) {

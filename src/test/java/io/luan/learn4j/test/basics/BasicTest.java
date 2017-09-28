@@ -65,7 +65,7 @@ public class BasicTest {
 //            System.out.println(square);
 //            System.out.println(loss);
 
-            optimizer.minimize(loss);
+//            optimizer.minimize(loss);
         }
     }
 }

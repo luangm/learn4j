@@ -15,8 +15,14 @@ abstract class BaseVisitor implements Visitor {
             case Add:
                 visitAdd((Add) node);
                 break;
+            case Assign:
+                visitAssign((Assign)node);
+                break;
             case Constant:
                 visitConstant((Constant) node);
+                break;
+            case Group:
+                visitGroup((Group) node);
                 break;
             case MatMul:
                 visitMatMul((MatMul) node);
@@ -43,6 +49,12 @@ abstract class BaseVisitor implements Visitor {
                 visitVariable((Variable) node);
                 break;
 
+        }
+    }
+
+    protected void visitGroup(Group node) {
+        for (Expression exp : node.getExpList()) {
+            exp.accept(this);
         }
     }
 
@@ -89,5 +101,9 @@ abstract class BaseVisitor implements Visitor {
 
     protected void visitVariable(Variable node) {
         // do nothing
+    }
+
+    protected void visitAssign(Assign node) {
+        node.getNewValue().accept(this);
     }
 }

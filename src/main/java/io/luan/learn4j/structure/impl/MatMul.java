@@ -38,12 +38,11 @@ public class MatMul extends BaseExpression {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
         return null;
     }
 
-    @Override
-    public ExpressionType getType() {
+    protected Expression createGradient(Expression target) {
         return null;
     }
 

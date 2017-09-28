@@ -18,5 +18,7 @@ public enum ExpressionType {
     Relu,
     Softmax,
     ReduceMean,
-    ReduceSum
+    ReduceSum,
+    Assign,
+    Group
 }

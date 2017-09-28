@@ -17,9 +17,13 @@ public class Square extends UnaryOp {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
+        return ExpressionType.Square;
+    }
+
+    protected Expression createGradient(Expression target) {
         Expression baseGrad = getBase().getGradient(target);
-        String gradName = this.getName() + "_" + target;
+        String gradName = this.getName() + "_" + target.getName();
 
         String mulName = gradName + "$mul";
         Expression mul = ExpressionFactory.createMultiply(mulName, getBase(), baseGrad);
@@ -27,10 +31,5 @@ public class Square extends UnaryOp {
         Constant two = Constant.TWO;
 
         return ExpressionFactory.createMultiply(gradName, two, mul);
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Square;
     }
 }

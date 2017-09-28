@@ -6,34 +6,35 @@ import io.luan.learn4j.structure.factory.ExpressionFactory;
 import lombok.Getter;
 
 /**
- * Scalar Multiply
+ * A Group Expression groups multiple Expression together
  *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class ReduceMean extends BaseExpression {
+public class Group extends BaseExpression {
 
     @Getter
-    private Expression base;
+    private Expression[] expList;
 
-    @Getter
-    private int dimension;
-
-    public ReduceMean(String name, Expression base, int dimension) {
+    public Group(String name, Expression[] expList) {
         super(name);
-        this.base = base;
-        this.dimension = dimension;
+        this.expList = expList;
     }
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.ReduceMean;
+        return ExpressionType.Group;
     }
 
     protected Expression createGradient(Expression target) {
-        Expression baseGrad = base.getGradient(target);
+        Expression[] gradList = new Expression[expList.length];
+
+        for (int i = 0; i < expList.length; i++) {
+            gradList[i] = expList[i].getGradient(target);
+        }
+
         String gradName = this.getName() + "_" + target.getName();
 
-        return ExpressionFactory.createReduceMean(gradName, baseGrad, this.dimension);
+        return ExpressionFactory.createGroup(gradName, gradList);
     }
 }

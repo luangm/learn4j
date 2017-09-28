@@ -16,11 +16,15 @@ public class Multiply extends BinaryOp {
         super(name, left, right);
     }
 
+    @Override
+    public ExpressionType getType() {
+        return ExpressionType.Multiply;
+    }
+
     /**
      * d(AB) = dA * B + dB * A
      */
-    @Override
-    public Expression getGradient(Expression target) {
+    protected Expression createGradient(Expression target) {
         Expression leftGrad = getLeft().getGradient(target);
         Expression rightGrad = getRight().getGradient(target);
 
@@ -32,10 +36,5 @@ public class Multiply extends BinaryOp {
         Expression part2 = ExpressionFactory.createMultiply(part2Name, getLeft(), rightGrad);
 
         return ExpressionFactory.createAdd(gradName, part1, part2);
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Multiply;
     }
 }

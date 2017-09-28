@@ -23,15 +23,14 @@ public class Variable extends BaseExpression {
     }
 
     @Override
-    public Expression getGradient(Expression target) {
+    public ExpressionType getType() {
+        return ExpressionType.Variable;
+    }
+
+    protected Expression createGradient(Expression target) {
         if (target == this) {
             return Constant.ONE;
         }
         return Constant.ZERO;
-    }
-
-    @Override
-    public ExpressionType getType() {
-        return ExpressionType.Variable;
     }
 }
