@@ -1,6 +1,5 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.structure.Expression;
 import lombok.Getter;
 
@@ -21,11 +20,4 @@ public class Sigmoid {
         return null;
     }
 
-    public ComputeNode getComputeNode() {
-        return null;
-    }
-
-    ComputeNode createComputeNode() {
-        return null;
-    }
 }

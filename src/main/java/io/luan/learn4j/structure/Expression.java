@@ -31,6 +31,11 @@ public interface Expression {
     String getName();
 
     /**
+     * Set the name of the expression.
+     */
+    void setName(String name);
+
+    /**
      * Returns the type of the Expression
      */
     ExpressionType getType();

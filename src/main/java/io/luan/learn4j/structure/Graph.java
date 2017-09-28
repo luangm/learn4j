@@ -1,6 +1,5 @@
 package io.luan.learn4j.structure;
 
-import io.luan.learn4j.compute.ComputeGraph;
 import io.luan.learn4j.visitor.Visitor;
 
 import java.util.Set;
@@ -11,13 +10,12 @@ import java.util.Set;
  */
 public interface Graph {
 
+    void accept(Visitor visitor);
+
     void add(Expression exp);
 
     Expression get(String name);
 
-    void accept(Visitor visitor);
-
     Set<Expression> getNodes();
-
 
 }

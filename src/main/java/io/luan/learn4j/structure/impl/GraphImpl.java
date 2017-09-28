@@ -1,11 +1,9 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.compute.ComputeGraph;
-import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
-import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.Visitor;
+import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.impl.SourceVisitor;
 import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
@@ -26,22 +24,7 @@ public class GraphImpl implements Graph {
 
     private Map<String, Expression> nameDict = new HashMap<String, Expression>();
 
-    @Getter
-    private ComputeGraph computeGraph = new ComputeGraph();
-
-    public void add(Expression exp) {
-//        addInternal(exp);
-//
-//        DependencyVisitor visitor = new DependencyVisitor();
-//        exp.accept(visitor);
-//        for (Expression dep : visitor.getDependencies()) {
-//            addInternal(dep);
-//        }
-    }
-
-    public Expression get(String name) {
-        return nameDict.get(name);
-    }
+    private Map<String, Integer> countMap = new HashMap<>();
 
     public void accept(Visitor visitor) {
         Set<Expression> sources = getSources();
@@ -51,6 +34,25 @@ public class GraphImpl implements Graph {
             node.accept(visitor);
         }
     }
+
+    public void add(Expression exp) {
+        if (StringUtils.isBlank(exp.getName())) {
+            Integer existing = countMap.get(exp.getType().name());
+            int newCount = (existing != null) ? existing + 1 : 1;
+            String newName = exp.getType().name() + "_" + newCount;
+            countMap.put(exp.getType().name(), newCount);
+            exp.setName(newName);
+        }
+
+        addInternal(exp);
+        DependencyVisitor visitor = new DependencyVisitor();
+        exp.accept(visitor);
+        visitor.getDependencies().forEach(this::addInternal);
+    }
+
+    public Expression get(String name) {
+        return nameDict.get(name);
+    }
 //
 //    public void gradient(Expression exp, String target) {
 //        ComputeNode node = exp.getComputeNode();
@@ -58,22 +60,17 @@ public class GraphImpl implements Graph {
 //        computeGraph.add(gradient);
 //    }
 
-//    private void addInternal(Expression exp) {
-//        nodes.add(exp);
-//        String name = exp.getName();
-//        if (StringUtils.isNotBlank(name)) {
-//            nameDict.put(name, exp);
-//        }
-//
-//        // Add the compute node of the exp to the compute graph.
-//        computeGraph.add(exp.getComputeNode());
-//    }
+    private void addInternal(Expression exp) {
+        nodes.add(exp);
+        String name = exp.getName();
+        if (StringUtils.isNotBlank(name)) {
+            nameDict.put(name, exp);
+        }
+    }
 
     private Set<Expression> getSources() {
         SourceVisitor visitor = new SourceVisitor(nodes);
-        for (Expression node : nodes) {
-            visitor.visit(node);
-        }
+        nodes.forEach(visitor::visit);
 
         return visitor.getSources();
     }

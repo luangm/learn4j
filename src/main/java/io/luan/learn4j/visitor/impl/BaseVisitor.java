@@ -1,6 +1,6 @@
 package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.*;
 import io.luan.learn4j.visitor.Visitor;
 
@@ -11,12 +11,12 @@ import io.luan.learn4j.visitor.Visitor;
 abstract class BaseVisitor implements Visitor {
 
     public void visit(Expression node) {
-        switch(node.getType()) {
+        switch (node.getType()) {
             case Add:
                 visitAdd((Add) node);
                 break;
-            case Parameter:
-                visitParameter((Parameter) node);
+            case Constant:
+                visitConstant((Constant) node);
                 break;
             case MatMul:
                 visitMatMul((MatMul) node);
@@ -24,51 +24,70 @@ abstract class BaseVisitor implements Visitor {
             case Multiply:
                 visitMultiply((Multiply) node);
                 break;
+            case Parameter:
+                visitParameter((Parameter) node);
+                break;
+            case Power:
+                visitPower((Power) node);
+                break;
+            case ReduceMean:
+                visitReduceMean((ReduceMean) node);
+                break;
+            case Square:
+                visitSquare((Square) node);
+                break;
+            case Subtract:
+                visitSubtract((Subtract) node);
+                break;
             case Variable:
                 visitVariable((Variable) node);
                 break;
+
         }
     }
 
-    public void visitAdd(Add node) {
+    protected void visitAdd(Add node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
     }
 
-    public void visitParameter(Parameter node) {
+    protected void visitConstant(Constant node) {
+        // do nothing
+    }
+
+    protected void visitMatMul(MatMul node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
+
+    protected void visitMultiply(Multiply node) {
+        node.getLeft().accept(this);
+        node.getRight().accept(this);
+    }
+
+    protected void visitParameter(Parameter node) {
         // by default do nothing
     }
 
-    public void visitMatMul(MatMul node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-    }
-
-    public void visitMultiply(Multiply node) {
-        node.getLeft().accept(this);
-        node.getRight().accept(this);
-    }
-
-    public void visitPower(Power node) {
+    protected void visitPower(Power node) {
         node.getBase().accept(this);
         node.getPower().accept(this);
     }
 
-    public void visitSubtract(Subtract node) {
+    protected void visitReduceMean(ReduceMean node) {
+        node.getBase().accept(this);
+    }
+
+    protected void visitSquare(Square node) {
+        node.getBase().accept(this);
+    }
+
+    protected void visitSubtract(Subtract node) {
         node.getLeft().accept(this);
         node.getRight().accept(this);
-    }
-
-    public void visitReduceMean(ReduceMean node) {
-        node.getBase().accept(this);
-    }
-
-    public void visitSquare(Square node) {
-        node.getBase().accept(this);
     }
 
     protected void visitVariable(Variable node) {
         // do nothing
     }
-
 }

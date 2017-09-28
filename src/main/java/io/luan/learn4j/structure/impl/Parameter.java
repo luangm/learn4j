@@ -1,12 +1,9 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.Tensor;
-import io.luan.learn4j.compute.ComputeNode;
-import io.luan.learn4j.compute.impl.ParameterNode;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import lombok.Getter;
-import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
  * Parameter is holder for parameters to be updated on each gradient descend run

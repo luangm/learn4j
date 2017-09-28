@@ -1,10 +1,8 @@
 package io.luan.learn4j.optimizer;
 
-import io.luan.learn4j.compute.ComputeNode;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
 import lombok.Getter;
-import org.nd4j.linalg.api.ndarray.INDArray;
 
 /**
  * @author Guangmiao Luan

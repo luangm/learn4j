@@ -1,12 +1,13 @@
 package io.luan.learn4j.test.basics;
 
-import io.luan.learn4j.Session;
+import io.luan.learn4j.session.Session;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.Graph;
 import lombok.val;
 import org.junit.Test;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.Tensor.ones;
+import static io.luan.learn4j.structure.Tensor.ones;
 
 /**
  * @author Guangmiao Luan
@@ -25,19 +26,20 @@ public class BasicTest2 {
         val y = variable("y", new int[]{1, 1});
 
         val add2 = add(W, b);
-        val mul = mul("mul", W, x);
+        val mul = multiply("mul", W, x);
         val add = add("add", mul, b);
-        val error = sub("sub", add, y);
+        val error = subtract("sub", add, y);
         val square = square("square", error);
         val loss = reduceMean("mean", square);
 
-        val loss2 = reduceMean(square(sub(add(mul(W, x), b), y)));
+        val loss2 = reduceMean(square(subtract(add(multiply(W, x), b), y)));
 
         val gd = gradientDescentOptimizer(0.01);
 //        val train_step = gd.minimize(loss);
 
         Session sess = session("My Session");
 
-        sess.run(add2);
+        Tensor out = sess.run(mul);
+        System.out.println(out);
     }
 }

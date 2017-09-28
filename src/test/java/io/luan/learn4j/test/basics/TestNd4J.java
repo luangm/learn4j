@@ -14,6 +14,8 @@ public class TestNd4J {
     @Test
     public void testBroadcast() {
         INDArray array = Nd4j.linspace(1, 10, 6).reshape(3, 2);
+
+
         System.out.println(array);
         System.out.println(array.shapeInfoToString());
         INDArray one = Nd4j.linspace(1, 2, 2).broadcast(3, 2);

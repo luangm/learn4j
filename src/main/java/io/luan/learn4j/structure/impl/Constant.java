@@ -1,6 +1,6 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.Tensor;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import lombok.Getter;

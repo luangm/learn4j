@@ -1,8 +1,7 @@
 package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.Learn4j;
-import io.luan.learn4j.Session;
-import io.luan.learn4j.Tensor;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.*;
 import io.luan.learn4j.optimizer.GradientDescentOptimizer;
 import io.luan.learn4j.structure.impl.GraphImpl;
@@ -31,7 +30,7 @@ public class BasicTest {
         val x = Learn4j.parameter("x", Tensor.ones(1, 1));
         val y = Learn4j.parameter("y", Tensor.ones(1, 1));
 
-        val mul = Learn4j.mul("mul", W, x);
+        val mul = Learn4j.multiply("mul", W, x);
         val add = Learn4j.add("add", mul, b);
         val error = new Subtract("sub", add, y);
         val square = new Square("square", error);
@@ -50,12 +49,12 @@ public class BasicTest {
         feedDict.put("x", Nd4j.ones(1, 1).add(2));
         feedDict.put("y", Nd4j.ones(1, 1).add(17));
 
-        Session sess = new Session(graph);
+//        Session sess = new Session(graph);
 
         for (int i = 0; i < 1000; i++) {
 
 //
-            sess.run(feedDict);
+//            sess.run(feedDict);
 
 //            System.out.println(b);
 //            System.out.println(W);

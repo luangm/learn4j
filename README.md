@@ -2,11 +2,7 @@
 Machine Learning Algorithm written in Java.
 
 ## Architecture
-The Learn4J algorithms are based on TWO graphs: an Expression graph and a Compute Graph, similar to Google's Tensorflow.
-
-The Expression Graph is where the user specifies all the mathematical expressions to form an algorithm.
-
-The Compute Graph is generated internally and organized for efficient computation.
+The Learn4J architecture is based on an Graph of expressions.
 
 
 ## Expression interface
@@ -38,3 +34,14 @@ API:
 
 in _accept_ method, the Graph is responsible for finding the root nodes to each expression tree,
 then pass the visitor to each root node
+
+
+
+
+# Graph Serialization
+
+Graph is serialized as a JSON formatted file.
+All the nodes (not the ones from gradient) are stored. If a node has a fixed tensor, it is stored in place.
+The order of nodes are done by topological sort
+
+String json = Learn4j.saveGraph(Graph)

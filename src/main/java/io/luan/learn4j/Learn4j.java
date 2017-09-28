@@ -1,7 +1,11 @@
 package io.luan.learn4j;
 
-import io.luan.learn4j.structure.*;
 import io.luan.learn4j.optimizer.GradientDescentOptimizer;
+import io.luan.learn4j.session.Session;
+import io.luan.learn4j.session.impl.SessionImpl;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.impl.*;
 import lombok.val;
 
@@ -19,10 +23,20 @@ public class Learn4j {
     /**
      * Stores the current active graph.
      * All subsequent calls are based on this graph
+     *
+     * This should be ThreadLocal
      */
     private static Graph activeGraph;
 
+    /**
+     * Stores all the graphs.
+     * This should be shared among Threads
+     */
     private static List<Graph> graphList = new ArrayList<Graph>();
+
+    static {
+        graph("DEFAULT"); // Creates a default graph
+    }
 
     public static Expression add(Expression left, Expression right) {
         return add("", left, right);
@@ -48,11 +62,11 @@ public class Learn4j {
         return graph;
     }
 
-    public static Expression mul(Expression left, Expression right) {
-        return mul("", left, right);
+    public static Expression multiply(Expression left, Expression right) {
+        return multiply("", left, right);
     }
 
-    public static Expression mul(String name, Expression left, Expression right) {
+    public static Expression multiply(String name, Expression left, Expression right) {
         return addToGraph(new Multiply(name, left, right));
     }
 
@@ -69,7 +83,7 @@ public class Learn4j {
     }
 
     public static Session session(String s) {
-        Session sess = new Session(activeGraph);
+        Session sess = new SessionImpl(activeGraph);
         return sess;
     }
 
@@ -81,11 +95,11 @@ public class Learn4j {
         return addToGraph(new Square(name, base));
     }
 
-    public static Expression sub(Expression left, Expression right) {
-        return sub("", left, right);
+    public static Expression subtract(Expression left, Expression right) {
+        return subtract("", left, right);
     }
 
-    public static Expression sub(String name, Expression left, Expression right) {
+    public static Expression subtract(String name, Expression left, Expression right) {
         return addToGraph(new Subtract(name, left, right));
     }
 
@@ -99,4 +113,5 @@ public class Learn4j {
         }
         return exp;
     }
+
 }

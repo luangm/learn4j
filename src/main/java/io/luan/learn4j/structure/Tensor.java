@@ -1,4 +1,4 @@
-package io.luan.learn4j;
+package io.luan.learn4j.structure;
 
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
@@ -27,8 +27,20 @@ public class Tensor {
         this.value = value;
     }
 
+    public static Tensor create(int[] data) {
+        return new Tensor(Nd4j.create(data));
+    }
+
+    public static Tensor create(double[] data) {
+        return new Tensor(Nd4j.create(data));
+    }
+
     public static Tensor create(float[] data) {
         return new Tensor(Nd4j.create(data));
+    }
+
+    public static Tensor create(INDArray array) {
+        return new Tensor(array);
     }
 
     public static Tensor ones(int columns) {
@@ -48,7 +60,7 @@ public class Tensor {
     }
 
     public static Tensor scalar(Number value) {
-        return new Tensor(Nd4j.zeros(1).addi(value));
+        return new Tensor(Nd4j.scalar(value));
     }
 
     public static Tensor scalars(Number value, int columns) {
@@ -70,9 +82,5 @@ public class Tensor {
     @Override
     public String toString() {
         return this.value.toString();
-    }
-
-    static Tensor create(INDArray array) {
-        return new Tensor(array);
     }
 }

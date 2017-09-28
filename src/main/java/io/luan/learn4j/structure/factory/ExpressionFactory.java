@@ -16,33 +16,32 @@ import io.luan.learn4j.structure.impl.*;
 public class ExpressionFactory {
 
     public static Expression createAdd(String name, Expression left, Expression right) {
-//
-//        if (left == Constant.ZERO) {
-//            return right;
-//        }
-//
-//        if (right == ConstantNode.ZERO) {
-//            return left;
-//        }
+        if (left == Constant.ZERO) {
+            return right;
+        }
+
+        if (right == Constant.ZERO) {
+            return left;
+        }
 
         return new Add(name, left, right);
     }
 
-    //
     public static Expression createMultiply(String name, Expression left, Expression right) {
 
-//        if (left == ConstantNode.IDENTITY) {
-//            return right;
-//        }
-//        if (left == ConstantNode.ZERO) {
-//            return ConstantNode.ZERO;
-//        }
-//        if (right == ConstantNode.IDENTITY) {
-//            return left;
-//        }
-//        if (right == ConstantNode.ZERO) {
-//            return ConstantNode.ZERO;
-//        }
+        if (left == Constant.ONE) {
+            return right;
+        }
+        if (left == Constant.ZERO) {
+            return Constant.ZERO;
+        }
+
+        if (right == Constant.ONE) {
+            return left;
+        }
+        if (right == Constant.ZERO) {
+            return Constant.ZERO;
+        }
 
         return new Multiply(name, left, right);
     }

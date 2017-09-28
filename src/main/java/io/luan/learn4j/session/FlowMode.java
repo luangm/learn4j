@@ -1,4 +1,4 @@
-package io.luan.learn4j;
+package io.luan.learn4j.session;
 
 /**
  * @author Guangmiao Luan
