@@ -17,6 +17,18 @@ public class Multiply extends BinaryOp {
     }
 
     @Override
+    public int getRank() {
+        // TODO: Should check for broadcast rules
+        return getLeft().getRank();
+    }
+
+    @Override
+    public int[] getShape() {
+        // TODO: Should check for broadcast rules
+        return getLeft().getShape();
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Multiply;
     }

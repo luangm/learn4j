@@ -23,6 +23,11 @@ public class Variable extends BaseExpression {
     }
 
     @Override
+    public int getRank() {
+        return shape.length;
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Variable;
     }

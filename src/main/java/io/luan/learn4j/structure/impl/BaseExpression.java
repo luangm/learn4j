@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * A base implementation of the Expression interface.
+ *
  * @author Guangmiao Luan
  * @since 31/08/2017.
  */
@@ -25,25 +27,23 @@ public abstract class BaseExpression implements Expression {
     }
 
     @Override
-    public void accept(Visitor visitor) {
-        visitor.visit(this);
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visit(this, params);
     }
 
     @Override
     public Expression getGradient(Expression target) {
-        Expression grad = gradientMap.get(target);
-        if (grad == null) {
-            grad = createGradient(target);
-            gradientMap.put(target, grad);
-        }
-        return grad;
+        return gradientMap.get(target);
+    }
+
+    @Override
+    public void setGradient(Expression target, Expression gradient) {
+        gradientMap.put(target, gradient);
     }
 
     @Override
     public String toString() {
         return this.getType() + "[" + this.getName() + "]";
     }
-
-    protected abstract Expression createGradient(Expression target);
 
 }

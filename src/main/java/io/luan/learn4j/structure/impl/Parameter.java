@@ -26,6 +26,16 @@ public class Parameter extends BaseExpression {
     }
 
     @Override
+    public int getRank() {
+        return value.getRank();
+    }
+
+    @Override
+    public int[] getShape() {
+        return value.getShape();
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Parameter;
     }

@@ -1,6 +1,6 @@
 package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.*;
 import lombok.Getter;
 
@@ -19,54 +19,54 @@ public class DependencyVisitor extends BaseVisitor {
     private Set<Expression> dependencies = new HashSet<Expression>();
 
     @Override
-    public void visitAdd(Add node) {
+    public void visitAdd(Add node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitAdd(node);
     }
 
     @Override
-    public void visitMatMul(MatMul node) {
+    public void visitMatMul(MatMul node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitMatMul(node);
     }
 
     @Override
-    public void visitMultiply(Multiply node) {
+    public void visitMultiply(Multiply node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitMultiply(node);
     }
 
     @Override
-    public void visitSubtract(Subtract node) {
-        dependencies.add(node.getLeft());
-        dependencies.add(node.getRight());
-        super.visitSubtract(node);
-    }
-
-    @Override
-    public void visitPower(Power node) {
+    public void visitPower(Power node, Object... params) {
         dependencies.add(node.getBase());
         dependencies.add(node.getPower());
         super.visitPower(node);
     }
 
     @Override
-    public void visitReduceMean(ReduceMean node) {
+    public void visitReduceMean(ReduceMean node, Object... params) {
         dependencies.add(node.getBase());
         super.visitReduceMean(node);
     }
 
     @Override
-    public void visitSquare(Square node) {
+    public void visitSquare(Square node, Object... params) {
         dependencies.add(node.getBase());
         super.visitSquare(node);
     }
 
     @Override
-    protected void visitAssign(Assign node) {
+    public void visitSubtract(Subtract node, Object... params) {
+        dependencies.add(node.getLeft());
+        dependencies.add(node.getRight());
+        super.visitSubtract(node);
+    }
+
+    @Override
+    protected void visitAssign(Assign node, Object... params) {
         dependencies.add(node.getTarget());
         dependencies.add(node.getNewValue());
         super.visitAssign(node);

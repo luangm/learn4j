@@ -31,6 +31,16 @@ public class TensorMath {
         return Tensor.create(prod);
     }
 
+    public static Tensor matmul(Tensor left, Tensor right) {
+        INDArray leftArray = left.getValue();
+        INDArray rightArray = right.getValue();
+
+        System.out.println("left: " + leftArray);
+        System.out.println("right: " + rightArray);
+        INDArray prod = leftArray.mmul(rightArray);
+        return Tensor.create(prod);
+    }
+
     public static Tensor reduceMean(Tensor base) {
         INDArray array = base.getValue();
         INDArray mean = Nd4j.mean(array);

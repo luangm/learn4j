@@ -29,48 +29,48 @@ public class SourceVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitAdd(Add node) {
+    public void visitAdd(Add node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
         super.visitAdd(node);
     }
 
     @Override
-    public void visitMatMul(MatMul node) {
+    public void visitMatMul(MatMul node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
         super.visitMatMul(node);
     }
 
     @Override
-    public void visitMultiply(Multiply node) {
+    public void visitMultiply(Multiply node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
         super.visitMultiply(node);
     }
 
     @Override
-    public void visitSubtract(Subtract node) {
+    public void visitSubtract(Subtract node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
         super.visitSubtract(node);
     }
 
     @Override
-    public void visitPower(Power node) {
+    public void visitPower(Power node, Object... params) {
         nonSource.add(node.getBase());
         nonSource.add(node.getPower());
         super.visitPower(node);
     }
 
     @Override
-    public void visitReduceMean(ReduceMean node) {
+    public void visitReduceMean(ReduceMean node, Object... params) {
         nonSource.add(node.getBase());
         super.visitReduceMean(node);
     }
 
     @Override
-    public void visitSquare(Square node) {
+    public void visitSquare(Square node, Object... params) {
         nonSource.add(node.getBase());
         super.visitSquare(node);
     }

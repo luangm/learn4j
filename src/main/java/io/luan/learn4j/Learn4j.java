@@ -46,6 +46,10 @@ public class Learn4j {
         return addToGraph(new Add(name, left, right));
     }
 
+    public static Expression assign(Expression target, Expression newValue) {
+        return null;
+    }
+
     public static Expression constant(String name, Tensor tensor) {
         return addToGraph(new Constant(name, tensor));
     }
@@ -60,6 +64,14 @@ public class Learn4j {
         graphList.add(graph);
         activeGraph = graph;
         return graph;
+    }
+
+    public static Expression matmul(Expression left, Expression right) {
+        return matmul("", left, right);
+    }
+
+    public static Expression matmul(String name, Expression left, Expression right) {
+        return addToGraph(new MatMul(name, left, right));
     }
 
     public static Expression multiply(Expression left, Expression right) {
@@ -109,10 +121,6 @@ public class Learn4j {
 
     public static Expression variable(String name, int[] shape) {
         return addToGraph(new Variable(name, shape));
-    }
-
-    public static Expression assign(Expression target, Expression newValue) {
-        return null;
     }
 
     private static Expression addToGraph(Expression exp) {

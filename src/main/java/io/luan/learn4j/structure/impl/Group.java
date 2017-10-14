@@ -22,6 +22,18 @@ public class Group extends BaseExpression {
     }
 
     @Override
+    public int getRank() {
+        // TODO: Should check for broadcast rules
+        return expList[0].getRank();
+    }
+
+    @Override
+    public int[] getShape() {
+        // TODO: Should check for broadcast rules
+        return expList[0].getShape();
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Group;
     }

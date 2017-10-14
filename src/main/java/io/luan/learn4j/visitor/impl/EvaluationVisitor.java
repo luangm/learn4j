@@ -30,7 +30,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitAdd(Add node) {
+    protected void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -40,12 +40,22 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitConstant(Constant node) {
+    protected void visitConstant(Constant node, Object... params) {
         valueMap.put(node, node.getValue());
     }
 
     @Override
-    public void visitMultiply(Multiply node) {
+    protected void visitMatMul(MatMul node, Object... params) {
+        super.visitMatMul(node);
+        Tensor left = valueMap.get(node.getLeft());
+        Tensor right = valueMap.get(node.getRight());
+
+        Tensor prod = TensorMath.matmul(left, right);
+        valueMap.put(node, prod);
+    }
+
+    @Override
+    protected void visitMultiply(Multiply node, Object... params) {
         super.visitMultiply(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -55,7 +65,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitParameter(Parameter node) {
+    protected void visitParameter(Parameter node, Object... params) {
         valueMap.put(node, node.getValue());
     }
 
@@ -75,25 +85,15 @@ public class EvaluationVisitor extends BaseVisitor {
 //    }
 //
     @Override
-    public void visitReduceMean(ReduceMean node) {
+    protected void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node);
         Tensor base = valueMap.get(node.getBase());
         Tensor reduced = TensorMath.reduceMean(base);
         valueMap.put(node, reduced);
     }
-//
-//    @Override
-//    public void visitMatMul(MatMulNode node) {
-//        super.visitMatMul(node);
-//        INDArray left = node.getLeft().getValue();
-//        INDArray right = node.getRight().getValue();
-//        INDArray product = left.mmul(right);
-//        node.setValue(product);
-//    }
-//
 
     @Override
-    public void visitSquare(Square node) {
+    protected void visitSquare(Square node, Object... params) {
         super.visitSquare(node);
         Tensor base = valueMap.get(node.getBase());
         Tensor squared = TensorMath.square(base);
@@ -101,7 +101,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitSubtract(Subtract node) {
+    protected void visitSubtract(Subtract node, Object... params) {
         super.visitSubtract(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -111,7 +111,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitVariable(Variable node) {
+    protected void visitVariable(Variable node, Object... params) {
         Tensor feedVal = feedMap.get(node);
         if (feedVal != null) {
             valueMap.put(node, feedVal);
@@ -119,7 +119,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitAssign(Assign node) {
+    protected void visitAssign(Assign node, Object... params) {
         super.visitAssign(node);
         Tensor newTensor = valueMap.get(node.getNewValue());
 

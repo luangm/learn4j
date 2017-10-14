@@ -17,6 +17,18 @@ public class Square extends UnaryOp {
     }
 
     @Override
+    public int getRank() {
+        // TODO: Should check for broadcast rules
+        return getBase().getRank();
+    }
+
+    @Override
+    public int[] getShape() {
+        // TODO: Should check for broadcast rules
+        return getBase().getShape();
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Square;
     }

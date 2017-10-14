@@ -47,6 +47,10 @@ public class ExpressionFactory {
         return new Multiply(name, left, right);
     }
 
+    public static Expression createMatMul(String name, Expression left, Expression right) {
+        return new MatMul(name, left, right);
+    }
+
     public static Expression createPower(String name, Expression base, Expression power) {
         return new Power(name, base, power);
     }

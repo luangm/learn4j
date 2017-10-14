@@ -5,6 +5,8 @@ import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
+import java.util.ArrayList;
+
 /**
  * @author Guangmiao Luan
  * @since 28/08/2017.
@@ -26,6 +28,17 @@ public class TestNd4J {
         INDArray sum = array.add(one);
 
         System.out.println(sum);
+    }
+
+    @Test
+    public void testMatmul() {
+        INDArray a = Nd4j.linspace(1, 10, 6).reshape(2, 3);
+        INDArray b = Nd4j.linspace(1, 3, 3).reshape(3, 1);
+        INDArray c = a.mmul(b);
+        System.out.println(c);
+        System.out.println(c.shapeInfoToString());
+
+        System.out.println(c.shape());
     }
 
     @Test

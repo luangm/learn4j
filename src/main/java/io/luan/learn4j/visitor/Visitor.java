@@ -1,6 +1,6 @@
 package io.luan.learn4j.visitor;
 
-import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.Expression;
 
 /**
  * This is the base interface for a Graph Visitor
@@ -12,6 +12,5 @@ import io.luan.learn4j.structure.*;
  */
 public interface Visitor {
 
-    void visit(Expression node);
-
+    void visit(Expression node, Object... params);
 }

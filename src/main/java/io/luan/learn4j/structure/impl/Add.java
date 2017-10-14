@@ -15,16 +15,19 @@ public class Add extends BinaryOp {
     }
 
     @Override
-    public ExpressionType getType() {
-        return ExpressionType.Add;
+    public int getRank() {
+        // TODO: Should check for broadcast rules
+        return getLeft().getRank();
     }
 
-    protected Expression createGradient(Expression target) {
-        Expression leftGrad = getLeft().getGradient(target);
-        Expression rightGrad = getRight().getGradient(target);
+    @Override
+    public int[] getShape() {
+        // TODO: Should check for broadcast rules
+        return getLeft().getShape();
+    }
 
-        String gradName = this.getName() + "_" + target.getName();
-
-        return ExpressionFactory.createAdd(gradName, leftGrad, rightGrad);
+    @Override
+    public ExpressionType getType() {
+        return ExpressionType.Add;
     }
 }

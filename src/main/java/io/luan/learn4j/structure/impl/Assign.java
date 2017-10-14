@@ -23,6 +23,18 @@ public class Assign extends BaseExpression {
     }
 
     @Override
+    public int getRank() {
+        // TODO: Should check for broadcast rules
+        return target.getRank();
+    }
+
+    @Override
+    public int[] getShape() {
+        // TODO: Should check for broadcast rules
+        return target.getShape();
+    }
+
+    @Override
     public ExpressionType getType() {
         return ExpressionType.Assign;
     }

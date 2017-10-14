@@ -11,15 +11,15 @@ import io.luan.learn4j.visitor.Visitor;
 public interface Expression {
 
     /**
-     * Generic Visitor Pattern
+     * Generic Visitor Pattern with passed params
      */
-    void accept(Visitor visitor);
+    void accept(Visitor visitor, Object... params);
 
     /**
-     * Returns a Gradient expression wrt the Target expression
+     * Returns the gradient wrt to the target.
      * <p>
-     * Note this is only for creating the Expression, not attaching it to the Graph.
-     * Use a GradientVisitor for that
+     * Note, Since this is only for storing the compute graph structure, this interface does NOT enforce
+     * the correctness of the gradient.
      */
     Expression getGradient(Expression target);
 
@@ -36,7 +36,24 @@ public interface Expression {
     void setName(String name);
 
     /**
+     * Returns the rank of the expression
+     */
+    int getRank();
+
+    /**
+     * Returns the shape of the expression
+     */
+    int[] getShape();
+
+    /**
      * Returns the type of the Expression
      */
     ExpressionType getType();
+
+    /**
+     * Sets the gradient expression of the current Expresson wrt the target.
+     * <p>
+     * Note, this is only storing the relation, it does NOT enforce the correctness.
+     */
+    void setGradient(Expression target, Expression gradient);
 }
