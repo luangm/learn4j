@@ -30,6 +30,10 @@ public abstract class BaseExpression implements Expression {
         return gradientMap.get(target);
     }
 
+    public Expression getGradient() {
+        return gradientMap.values().stream().findFirst().get();
+    }
+
     @Override
     public void setGradient(Expression target, Expression gradient) {
         gradientMap.put(target, gradient);

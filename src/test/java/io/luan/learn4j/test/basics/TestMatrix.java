@@ -7,6 +7,7 @@ import lombok.experimental.var;
 import lombok.val;
 import org.junit.Test;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -28,17 +29,12 @@ public class TestMatrix {
         var y = variable("y", new int[]{2, 1});
 
         var mmul = matmul(W1, x);
-        Expression gradient = mmul.getGradient(W1);
-        println(gradient);
-
         var add = add(mmul, b1);
-        var sub = subtract(add, y);
+        var sub = subtract(y, add);
         var square = square(sub);
-        var mean = reduceMean(square);
+        var loss = reduceSum(square);
 
-        var loss = mean;
-
-        var gd = gradientDescentOptimizer(0.01);
+        var gd = gradientDescentOptimizer(0.00001);
         var train = gd.minimize(loss);
 
         Map<Expression, Tensor> feed = new HashMap<Expression, Tensor>();
@@ -53,14 +49,20 @@ public class TestMatrix {
         println("add: " + sess.run(add, feed));
         println("sub: " + sess.run(sub, feed));
         println("square: " + sess.run(square, feed));
-        println("mean: " + sess.run(mean, feed));
+        println("loss: " + sess.run(loss, feed));
 
-        sess.run(train, feed);
-//        for (int i = 0; i < 100; i++) {
+        long now = new Date().getTime();
 
+        for (int i = 0; i < 100000; i++) {
+            sess.run(train, feed);
+            println("loss: " + sess.run(loss, feed));
+        }
+        println("W1: " + sess.run(W1, feed));
+        println("b1: " + sess.run(b1, feed));
 
-//            println("W1_Train: " + sess.run(train, feed));
-//        }
+        long now2 = new Date().getTime();
+
+        System.out.println("Finished in: " + (now2 - now) + " ms");
     }
 
 

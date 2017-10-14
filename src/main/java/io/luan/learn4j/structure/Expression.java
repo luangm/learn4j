@@ -23,6 +23,8 @@ public interface Expression {
      */
     Expression getGradient(Expression target);
 
+    Expression getGradient();
+
     /**
      * Returns the name of the expression.
      * <p>
