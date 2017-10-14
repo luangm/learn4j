@@ -126,6 +126,21 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitFill(Fill node, Object... params) {
+        super.visitFill(node, params);
+        Tensor value = Tensor.fill(node.getScalar(), node.getShape());
+        valueMap.put(node, value);
+    }
+
+    @Override
+    public void visitNegate(Negate node, Object... params) {
+        super.visitNegate(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor negValue = TensorMath.negate(base);
+        valueMap.put(node, negValue);
+    }
+
+    @Override
     public void visitVariable(Variable node, Object... params) {
         Tensor feedVal = feedMap.get(node);
         if (feedVal != null) {

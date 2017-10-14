@@ -1,7 +1,5 @@
 package io.luan.learn4j.test.basics;
 
-import io.luan.learn4j.session.Session;
-import io.luan.learn4j.visitor.impl.ForwardGradientVisitor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
 import org.junit.Test;
@@ -18,12 +16,14 @@ public class TestReverseGradient {
     @Test
     public void testGradientDescent() {
 
-        val a = parameter("a", scalar(5));
-        val b = parameter("b", scalar(3));
-        val c = parameter("c", scalar(4));
+        val a = parameter("a", scalar(3));
+        val b = parameter("b", scalar(4));
+        val c = parameter("c", scalar(5));
 
         val add = add(a, b);
         val mul = multiply(add, c);
+        val square = square(a);
+        val sub = subtract(a, b);
 
         val sess = session("My Session");
 
@@ -32,11 +32,15 @@ public class TestReverseGradient {
         println("c: " + sess.run(c));
         println("add: " + sess.run(add));
         println("mul: " + sess.run(mul));
+        println("square: " + sess.run(square));
+        println("sub: " + sess.run(sub));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
-        mul.accept(visitor);
+        sub.accept(visitor);
 
-        println(sess.getGraph());
+        val grad = a.getGradient(sub);
+        println("grad: " + sess.run(grad));
 //        println(add.getGradients());
+        println(sess.getGraph());
     }
 }

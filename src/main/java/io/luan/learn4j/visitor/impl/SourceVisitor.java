@@ -1,6 +1,6 @@
 package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.structure.*;
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.*;
 
 import java.util.HashSet;
@@ -32,46 +32,52 @@ public class SourceVisitor extends BaseVisitor {
     public void visitAdd(Add node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
-        super.visitAdd(node);
+        super.visitAdd(node, params);
     }
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
-        super.visitMatMul(node);
+        super.visitMatMul(node, params);
     }
 
     @Override
     public void visitMultiply(Multiply node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());
-        super.visitMultiply(node);
+        super.visitMultiply(node, params);
     }
 
     @Override
-    public void visitSubtract(Subtract node, Object... params) {
-        nonSource.add(node.getLeft());
-        nonSource.add(node.getRight());
-        super.visitSubtract(node);
+    public void visitNegate(Negate node, Object... params) {
+        nonSource.add(node.getBase());
+        super.visitNegate(node, params);
     }
 
     @Override
     public void visitPower(Power node, Object... params) {
         nonSource.add(node.getBase());
         nonSource.add(node.getPower());
-        super.visitPower(node);
+        super.visitPower(node, params);
     }
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         nonSource.add(node.getBase());
-        super.visitReduceMean(node);
+        super.visitReduceMean(node, params);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
         nonSource.add(node.getBase());
-        super.visitSquare(node);
+        super.visitSquare(node, params);
+    }
+
+    @Override
+    public void visitSubtract(Subtract node, Object... params) {
+        nonSource.add(node.getLeft());
+        nonSource.add(node.getRight());
+        super.visitSubtract(node, params);
     }
 }

@@ -18,11 +18,15 @@ public interface Visitor {
 
     void visitConstant(Constant node, Object... params);
 
+    void visitFill(Fill node, Object... params);
+
     void visitGroup(Group node, Object... params);
 
     void visitMatMul(MatMul node, Object... params);
 
     void visitMultiply(Multiply node, Object... params);
+
+    void visitNegate(Negate negate, Object[] params);
 
     void visitParameter(Parameter node, Object... params);
 

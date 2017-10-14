@@ -78,4 +78,8 @@ public class ExpressionFactory {
     public static Expression createGroup(String name, Expression[] expList) {
         return new Group(name, expList);
     }
+
+    public static Expression createNegate(String name, Expression base) {
+        return new Negate(name, base);
+    }
 }

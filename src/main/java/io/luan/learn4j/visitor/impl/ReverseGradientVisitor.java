@@ -1,24 +1,14 @@
 package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
-import io.luan.learn4j.structure.impl.Add;
-import io.luan.learn4j.structure.impl.Constant;
-import io.luan.learn4j.structure.impl.Multiply;
-import lombok.Getter;
+import io.luan.learn4j.structure.impl.*;
 
 /**
  * @author Guangmiao Luan
  * @since 06/10/2017.
  */
 public class ReverseGradientVisitor extends BaseVisitor {
-
-    @Getter
-    private Expression source;
-
-    @Getter
-    private Expression target;
 
     public ReverseGradientVisitor() {
 
@@ -42,8 +32,43 @@ public class ReverseGradientVisitor extends BaseVisitor {
     public void visitMultiply(Multiply node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
-        Expression leftGrad = ExpressionFactory.createMultiply("LEFT/MUL", grad, node.getRight());
-        Expression rightGrad = ExpressionFactory.createMultiply("RIGHT/MUL", node.getLeft(), grad);
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        Expression leftGrad = ExpressionFactory.createMultiply(leftGradName, grad, node.getRight());
+        Expression rightGrad = ExpressionFactory.createMultiply(rightGradName, node.getLeft(), grad);
+
+        node.getLeft().setGradient(node, leftGrad);
+        node.getRight().setGradient(node, rightGrad);
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitSquare(Square node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+
+        String mulName = gradName + "/mul";
+        Expression mul = ExpressionFactory.createMultiply(mulName, Constant.TWO, node.getBase());
+
+        Expression result = ExpressionFactory.createMultiply(gradName, grad, mul);
+
+        node.getBase().setGradient(node, result);
+
+        node.getBase().accept(this, result);
+    }
+
+    @Override
+    public void visitSubtract(Subtract node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        Expression leftGrad = grad;
+        Expression rightGrad = ExpressionFactory.createNegate(rightGradName, grad);
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
@@ -57,7 +82,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
             return (Expression) params[0];
         }
 
-        return new Constant("FILL", Tensor.scalars(1, node.getShape()[0], node.getShape()[1]));
+        return new Fill("FILL", 1, node.getShape());
     }
 
 }

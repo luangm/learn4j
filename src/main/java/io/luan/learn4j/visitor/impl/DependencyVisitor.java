@@ -22,53 +22,59 @@ public class DependencyVisitor extends BaseVisitor {
     public void visitAdd(Add node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
-        super.visitAdd(node);
+        super.visitAdd(node, params);
     }
 
     @Override
     public void visitAssign(Assign node, Object... params) {
         dependencies.add(node.getTarget());
         dependencies.add(node.getNewValue());
-        super.visitAssign(node);
+        super.visitAssign(node, params);
     }
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
-        super.visitMatMul(node);
+        super.visitMatMul(node, params);
     }
 
     @Override
     public void visitMultiply(Multiply node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
-        super.visitMultiply(node);
+        super.visitMultiply(node, params);
+    }
+
+    @Override
+    public void visitNegate(Negate node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitNegate(node, params);
     }
 
     @Override
     public void visitPower(Power node, Object... params) {
         dependencies.add(node.getBase());
         dependencies.add(node.getPower());
-        super.visitPower(node);
+        super.visitPower(node, params);
     }
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         dependencies.add(node.getBase());
-        super.visitReduceMean(node);
+        super.visitReduceMean(node, params);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
         dependencies.add(node.getBase());
-        super.visitSquare(node);
+        super.visitSquare(node, params);
     }
 
     @Override
     public void visitSubtract(Subtract node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
-        super.visitSubtract(node);
+        super.visitSubtract(node, params);
     }
 }

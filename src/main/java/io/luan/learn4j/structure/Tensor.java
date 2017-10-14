@@ -40,6 +40,10 @@ public interface Tensor {
         return new TensorImpl(Nd4j.create(data, shape));
     }
 
+    static Tensor fill(Number scalar, int[] shape) {
+        return new TensorImpl(Nd4j.zeros(shape).addi(scalar));
+    }
+
     static Tensor ones(int columns) {
         return new TensorImpl(Nd4j.ones(columns));
     }

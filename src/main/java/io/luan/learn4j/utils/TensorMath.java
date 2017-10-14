@@ -20,6 +20,16 @@ public class TensorMath {
         return Tensor.create(sum);
     }
 
+    public static Tensor matmul(Tensor left, Tensor right) {
+        INDArray leftArray = left.getValue();
+        INDArray rightArray = right.getValue();
+
+        System.out.println("left: " + leftArray);
+        System.out.println("right: " + rightArray);
+        INDArray prod = leftArray.mmul(rightArray);
+        return Tensor.create(prod);
+    }
+
     /**
      * This is the Hadamard Product (element-wise product)
      */
@@ -31,14 +41,10 @@ public class TensorMath {
         return Tensor.create(prod);
     }
 
-    public static Tensor matmul(Tensor left, Tensor right) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
-
-        System.out.println("left: " + leftArray);
-        System.out.println("right: " + rightArray);
-        INDArray prod = leftArray.mmul(rightArray);
-        return Tensor.create(prod);
+    public static Tensor negate(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray neg = array.neg();
+        return Tensor.create(neg);
     }
 
     public static Tensor reduceMean(Tensor base) {

@@ -2,47 +2,43 @@ package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
+ * Scalar Multiply
+ *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Assign extends BaseExpression {
+public class Fill extends BaseExpression {
 
     @Getter
-    private Expression target;
+    private Number scalar;
 
     @Getter
-    private Expression newValue;
+    private int[] shape;
 
-    public Assign(String name, Expression target, Expression newValue) {
+    public Fill(String name, Number scalar, int[] shape) {
         super(name);
-        this.target = target;
-        this.newValue = newValue;
+        this.scalar = scalar;
+        this.shape = shape;
     }
 
     @Override
     public void accept(Visitor visitor, Object... params) {
-        visitor.visitAssign(this, params);
+        visitor.visitFill(this, params);
     }
 
     @Override
     public int getRank() {
         // TODO: Should check for broadcast rules
-        return target.getRank();
-    }
-
-    @Override
-    public int[] getShape() {
-        // TODO: Should check for broadcast rules
-        return target.getShape();
+        return shape.length;
     }
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.Assign;
+        return ExpressionType.Fill;
     }
-
 }

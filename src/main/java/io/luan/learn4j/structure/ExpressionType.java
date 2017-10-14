@@ -5,20 +5,22 @@ package io.luan.learn4j.structure;
  * @since 27/09/2017.
  */
 public enum ExpressionType {
-    Constant,
-    Parameter,
-    Variable,
     Add,
-    Subtract,
-    Multiply,
+    Assign,
+    Constant,
+    Fill,
+    Group,
     MatMul,
+    Multiply,
+    Negate,
+    Parameter,
     Power,
-    Square,
-    Sigmoid,
-    Relu,
-    Softmax,
     ReduceMean,
     ReduceSum,
-    Assign,
-    Group
+    Relu,
+    Sigmoid,
+    Softmax,
+    Square,
+    Subtract,
+    Variable,
 }
