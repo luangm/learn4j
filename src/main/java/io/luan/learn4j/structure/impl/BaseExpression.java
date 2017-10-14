@@ -1,7 +1,6 @@
 package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,11 +23,6 @@ public abstract class BaseExpression implements Expression {
 
     protected BaseExpression(String name) {
         this.name = name;
-    }
-
-    @Override
-    public void accept(Visitor visitor, Object... params) {
-        visitor.visit(this, params);
     }
 
     @Override

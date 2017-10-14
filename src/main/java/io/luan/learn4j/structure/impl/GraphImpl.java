@@ -70,8 +70,9 @@ public class GraphImpl implements Graph {
 
     private Set<Expression> getSources() {
         SourceVisitor visitor = new SourceVisitor(nodes);
-        nodes.forEach(visitor::visit);
-
+        for (Expression node : nodes) {
+            node.accept(visitor);
+        }
         return visitor.getSources();
     }
 }

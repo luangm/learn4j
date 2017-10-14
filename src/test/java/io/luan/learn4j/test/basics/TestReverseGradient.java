@@ -20,22 +20,23 @@ public class TestReverseGradient {
 
         val a = parameter("a", scalar(5));
         val b = parameter("b", scalar(3));
+        val c = parameter("c", scalar(4));
 
         val add = add(a, b);
+        val mul = multiply(add, c);
 
-//        val gd = gradientDescentOptimizer(0.01);
-//        val train = gd.minimize(loss2);
-
-        Session sess = session("My Session");
+        val sess = session("My Session");
 
         println("a: " + sess.run(a));
         println("b: " + sess.run(b));
+        println("c: " + sess.run(c));
         println("add: " + sess.run(add));
+        println("mul: " + sess.run(mul));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
-        add.accept(visitor);
+        mul.accept(visitor);
 
-        println(add);
+        println(sess.getGraph());
 //        println(add.getGradients());
     }
 }

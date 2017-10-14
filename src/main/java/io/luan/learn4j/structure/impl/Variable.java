@@ -2,6 +2,7 @@ package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -20,6 +21,11 @@ public class Variable extends BaseExpression {
     public Variable(String name, int[] shape) {
         super(name);
         this.shape = shape;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitVariable(this, params);
     }
 
     @Override

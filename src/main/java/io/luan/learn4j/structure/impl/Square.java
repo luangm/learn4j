@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 
 /**
  * Scalar Multiply
@@ -14,6 +15,11 @@ public class Square extends UnaryOp {
 
     public Square(String name, Expression base) {
         super(name, base);
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitSquare(this, params);
     }
 
     @Override

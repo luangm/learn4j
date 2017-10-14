@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -21,6 +22,11 @@ public class Power extends BaseExpression {
         super(name);
         this.base = base;
         this.power = power;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitPower(this, params);
     }
 
     @Override

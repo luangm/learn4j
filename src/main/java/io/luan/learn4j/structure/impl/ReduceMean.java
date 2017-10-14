@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -23,6 +24,11 @@ public class ReduceMean extends BaseExpression {
         super(name);
         this.base = base;
         this.dimension = dimension;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitReduceMean(this, params);
     }
 
     @Override

@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,6 +24,11 @@ public class Parameter extends BaseExpression {
     public Parameter(String name, Tensor value) {
         super(name);
         this.value = value;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitParameter(this, params);
     }
 
     @Override

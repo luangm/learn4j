@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 
 /**
  * @author Guangmiao Luan
@@ -12,6 +13,11 @@ public class Subtract extends BinaryOp {
 
     public Subtract(String name, Expression left, Expression right) {
         super(name, left, right);
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitSubtract(this, params);
     }
 
     @Override

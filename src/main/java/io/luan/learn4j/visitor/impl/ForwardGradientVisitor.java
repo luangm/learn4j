@@ -26,7 +26,7 @@ public class ForwardGradientVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitAdd(Add node, Object... params) {
+    public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         String gradName = createNameForGradient(node);
         Expression leftGrad = node.getLeft().getGradient(target);
@@ -36,13 +36,13 @@ public class ForwardGradientVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitConstant(Constant node, Object... params) {
+    public void visitConstant(Constant node, Object... params) {
         Expression gradient = Constant.ZERO;
         node.setGradient(target, gradient);
     }
 
     @Override
-    protected void visitParameter(Parameter node, Object... params) {
+    public void visitParameter(Parameter node, Object... params) {
         Expression gradient = target == node ? Constant.ONE : Constant.ZERO;
         node.setGradient(target, gradient);
     }

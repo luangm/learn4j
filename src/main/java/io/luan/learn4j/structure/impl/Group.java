@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -19,6 +20,11 @@ public class Group extends BaseExpression {
     public Group(String name, Expression[] expList) {
         super(name);
         this.expList = expList;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitGroup(this, params);
     }
 
     @Override

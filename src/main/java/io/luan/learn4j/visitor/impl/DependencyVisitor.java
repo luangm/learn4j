@@ -26,6 +26,13 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitAssign(Assign node, Object... params) {
+        dependencies.add(node.getTarget());
+        dependencies.add(node.getNewValue());
+        super.visitAssign(node);
+    }
+
+    @Override
     public void visitMatMul(MatMul node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
@@ -63,12 +70,5 @@ public class DependencyVisitor extends BaseVisitor {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitSubtract(node);
-    }
-
-    @Override
-    protected void visitAssign(Assign node, Object... params) {
-        dependencies.add(node.getTarget());
-        dependencies.add(node.getNewValue());
-        super.visitAssign(node);
     }
 }

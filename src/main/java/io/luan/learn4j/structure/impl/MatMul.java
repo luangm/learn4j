@@ -3,6 +3,7 @@ package io.luan.learn4j.structure.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
@@ -27,6 +28,11 @@ public class MatMul extends BinaryOp {
         super(name, left, right);
         this.transposeLeft = transposeLeft;
         this.transposeRight = transposeRight;
+    }
+
+    @Override
+    public void accept(Visitor visitor, Object... params) {
+        visitor.visitMatMul(this, params);
     }
 
     @Override

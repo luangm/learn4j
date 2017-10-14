@@ -30,7 +30,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitAdd(Add node, Object... params) {
+    public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -40,12 +40,27 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitConstant(Constant node, Object... params) {
+    public void visitAssign(Assign node, Object... params) {
+        super.visitAssign(node);
+        Tensor newTensor = valueMap.get(node.getNewValue());
+
+        Expression target = node.getTarget();
+        if (target instanceof Parameter) {
+            Parameter targetParam = (Parameter) target;
+            targetParam.setValue(newTensor);
+        }
+
+        valueMap.put(node, newTensor);
+        valueMap.put(target, newTensor);
+    }
+
+    @Override
+    public void visitConstant(Constant node, Object... params) {
         valueMap.put(node, node.getValue());
     }
 
     @Override
-    protected void visitMatMul(MatMul node, Object... params) {
+    public void visitMatMul(MatMul node, Object... params) {
         super.visitMatMul(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -55,7 +70,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitMultiply(Multiply node, Object... params) {
+    public void visitMultiply(Multiply node, Object... params) {
         super.visitMultiply(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -65,7 +80,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitParameter(Parameter node, Object... params) {
+    public void visitParameter(Parameter node, Object... params) {
         valueMap.put(node, node.getValue());
     }
 
@@ -85,7 +100,7 @@ public class EvaluationVisitor extends BaseVisitor {
 //    }
 //
     @Override
-    protected void visitReduceMean(ReduceMean node, Object... params) {
+    public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node);
         Tensor base = valueMap.get(node.getBase());
         Tensor reduced = TensorMath.reduceMean(base);
@@ -93,7 +108,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitSquare(Square node, Object... params) {
+    public void visitSquare(Square node, Object... params) {
         super.visitSquare(node);
         Tensor base = valueMap.get(node.getBase());
         Tensor squared = TensorMath.square(base);
@@ -101,7 +116,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitSubtract(Subtract node, Object... params) {
+    public void visitSubtract(Subtract node, Object... params) {
         super.visitSubtract(node);
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
@@ -111,26 +126,11 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    protected void visitVariable(Variable node, Object... params) {
+    public void visitVariable(Variable node, Object... params) {
         Tensor feedVal = feedMap.get(node);
         if (feedVal != null) {
             valueMap.put(node, feedVal);
         }
-    }
-
-    @Override
-    protected void visitAssign(Assign node, Object... params) {
-        super.visitAssign(node);
-        Tensor newTensor = valueMap.get(node.getNewValue());
-
-        Expression target = node.getTarget();
-        if (target instanceof Parameter) {
-            Parameter targetParam = (Parameter) target;
-            targetParam.setValue(newTensor);
-        }
-
-        valueMap.put(node, newTensor);
-        valueMap.put(target, newTensor);
     }
 
 }
