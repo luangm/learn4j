@@ -108,6 +108,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitReduceSum(ReduceSum node, Object... params) {
+        super.visitReduceSum(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor reduced = TensorMath.reduceSum(base);
+        valueMap.put(node, reduced);
+    }
+
+    @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         super.visitSigmoid(node, params);
         Tensor base = valueMap.get(node.getBase());

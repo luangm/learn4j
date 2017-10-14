@@ -29,6 +29,22 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitMatMul(MatMul node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        Expression leftGrad = ExpressionFactory.createMatMul(leftGradName, grad, node.getRight(), false, true);
+        Expression rightGrad = ExpressionFactory.createMatMul(rightGradName, node.getLeft(), grad, true, false);
+
+        node.getLeft().setGradient(node, leftGrad);
+        node.getRight().setGradient(node, rightGrad);
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
     public void visitMultiply(Multiply node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
@@ -43,6 +59,35 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitReduceMean(ReduceMean node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+        node.getBase().setGradient(node, grad);
+        node.getBase().accept(this, grad);
+    }
+
+    @Override
+    public void visitReduceSum(ReduceSum node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+        node.getBase().setGradient(node, grad);
+        node.getBase().accept(this, grad);
+    }
+
+    @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+        String sigGradName = gradName + "/sigGrad";
+
+        Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
+        Expression result = ExpressionFactory.createMultiply(gradName, grad, sigGrad);
+
+        node.getBase().setGradient(node, result);
+
+        node.getBase().accept(this, result);
     }
 
     @Override
@@ -62,21 +107,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitSigmoid(Sigmoid node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String gradName = node.getName() + "/grad_" + node.getBase().getName();
-        String sigGradName = gradName + "/sigGrad";
-
-        Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
-        Expression result = ExpressionFactory.createMultiply(gradName, grad, sigGrad);
-
-        node.getBase().setGradient(node, result);
-
-        node.getBase().accept(this, result);
-    }
-
-    @Override
     public void visitSubtract(Subtract node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
@@ -84,22 +114,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         Expression leftGrad = grad;
         Expression rightGrad = ExpressionFactory.createNegate(rightGradName, grad);
-
-        node.getLeft().setGradient(node, leftGrad);
-        node.getRight().setGradient(node, rightGrad);
-
-        node.getLeft().accept(this, leftGrad);
-        node.getRight().accept(this, rightGrad);
-    }
-
-    @Override
-    public void visitMatMul(MatMul node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
-        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
-
-        Expression leftGrad = ExpressionFactory.createMatMul(leftGradName, grad, node.getRight(), false, true);
-        Expression rightGrad = ExpressionFactory.createMatMul(rightGradName, node.getLeft(), grad, true, false);
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);

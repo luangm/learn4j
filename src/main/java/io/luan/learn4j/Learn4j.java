@@ -98,6 +98,14 @@ public class Learn4j {
         return addToGraph(new ReduceMean(name, base, 0));
     }
 
+    public static Expression reduceSum(Expression base) {
+        return reduceSum("", base);
+    }
+
+    public static Expression reduceSum(String name, Expression base) {
+        return addToGraph(new ReduceSum(name, base, 0));
+    }
+
     public static Session session(String s) {
         Session sess = new SessionImpl(activeGraph);
         return sess;

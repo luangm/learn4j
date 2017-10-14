@@ -85,4 +85,10 @@ public class TensorMath {
         INDArray diff = leftArray.dup().subi(rightArray);
         return Tensor.create(diff);
     }
+
+    public static Tensor reduceSum(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray sum = Nd4j.sum(array);
+        return Tensor.create(sum);
+    }
 }

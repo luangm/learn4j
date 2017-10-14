@@ -6,12 +6,12 @@ import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
- * Reduce Mean
+ * Reduce Sum
  *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class ReduceMean extends BaseExpression {
+public class ReduceSum extends BaseExpression {
 
     @Getter
     private Expression base;
@@ -19,7 +19,7 @@ public class ReduceMean extends BaseExpression {
     @Getter
     private int dimension;
 
-    public ReduceMean(String name, Expression base, int dimension) {
+    public ReduceSum(String name, Expression base, int dimension) {
         super(name);
         this.base = base;
         this.dimension = dimension;
@@ -27,7 +27,7 @@ public class ReduceMean extends BaseExpression {
 
     @Override
     public void accept(Visitor visitor, Object... params) {
-        visitor.visitReduceMean(this, params);
+        visitor.visitReduceSum(this, params);
     }
 
     @Override
@@ -44,6 +44,6 @@ public class ReduceMean extends BaseExpression {
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.ReduceMean;
+        return ExpressionType.ReduceSum;
     }
 }

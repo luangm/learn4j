@@ -23,7 +23,6 @@ abstract class BaseVisitor implements Visitor {
         // do nothing
     }
 
-    @Override
     public void visitFill(Fill node, Object... params) {
         // do nothing
     }
@@ -61,12 +60,14 @@ abstract class BaseVisitor implements Visitor {
         node.getBase().accept(this, params);
     }
 
-    @Override
+    public void visitReduceSum(ReduceSum node, Object... params) {
+        node.getBase().accept(this, params);
+    }
+
     public void visitSigmoid(Sigmoid node, Object... params) {
         node.getBase().accept(this, params);
     }
 
-    @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
         node.getBase().accept(this, params);
     }

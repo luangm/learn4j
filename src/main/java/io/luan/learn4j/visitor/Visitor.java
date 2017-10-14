@@ -34,6 +34,8 @@ public interface Visitor {
 
     void visitReduceMean(ReduceMean node, Object... params);
 
+    void visitReduceSum(ReduceSum reduceSum, Object[] params);
+
     void visitSigmoid(Sigmoid node, Object[] params);
 
     void visitSigmoidGrad(SigmoidGrad node, Object[] params);

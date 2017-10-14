@@ -1,5 +1,6 @@
 package io.luan.learn4j.test.basics;
 
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
 import org.junit.Test;
@@ -24,6 +25,7 @@ public class TestReverseGradient {
         val sigmoid = sigmoid(matmul);
         val sub = subtract(y, sigmoid);
         val square = square(sub);
+        val reduceSum = reduceSum(square);
 
         val sess = session("My Session");
 
@@ -34,9 +36,10 @@ public class TestReverseGradient {
         println("sigmoid: " + sess.run(sigmoid));
         println("sub: " + sess.run(sub));
         println("square: " + sess.run(square));
+        println("reduceSum: " + sess.run(reduceSum));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
-        square.accept(visitor);
+        reduceSum.accept(visitor);
 
         val gradA = a.getGradient(matmul);
         println("gradA: " + sess.run(gradA));
@@ -47,4 +50,6 @@ public class TestReverseGradient {
 //        println(add.getGradients());
         println(sess.getGraph());
     }
+
+
 }
