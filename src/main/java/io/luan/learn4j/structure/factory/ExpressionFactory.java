@@ -28,6 +28,26 @@ public class ExpressionFactory {
         return new Add(name, left, right);
     }
 
+    public static Expression createAssign(String name, Expression target, Expression newValue) {
+        return new Assign(name, target, newValue);
+    }
+
+    public static Expression createConstant(String name, Tensor value) {
+        return new Constant(name, value);
+    }
+
+    public static Expression createGroup(String name, Expression[] expList) {
+        return new Group(name, expList);
+    }
+
+    public static Expression createMatMul(String name, Expression left, Expression right) {
+        return new MatMul(name, left, right);
+    }
+
+    public static Expression createMatMul(String name, Expression left, Expression right, boolean transposeLeft, boolean transposeRight) {
+        return new MatMul(name, left, right, transposeLeft, transposeRight);
+    }
+
     public static Expression createMultiply(String name, Expression left, Expression right) {
 
         if (left == Constant.ONE) {
@@ -47,8 +67,8 @@ public class ExpressionFactory {
         return new Multiply(name, left, right);
     }
 
-    public static Expression createMatMul(String name, Expression left, Expression right) {
-        return new MatMul(name, left, right);
+    public static Expression createNegate(String name, Expression base) {
+        return new Negate(name, base);
     }
 
     public static Expression createPower(String name, Expression base, Expression power) {
@@ -65,21 +85,5 @@ public class ExpressionFactory {
         }
 
         return new Subtract(name, left, right);
-    }
-
-    public static Expression createAssign(String name, Expression target, Expression newValue) {
-        return new Assign(name, target, newValue);
-    }
-
-    public static Expression createConstant(String name, Tensor value) {
-        return new Constant(name, value);
-    }
-
-    public static Expression createGroup(String name, Expression[] expList) {
-        return new Group(name, expList);
-    }
-
-    public static Expression createNegate(String name, Expression base) {
-        return new Negate(name, base);
     }
 }

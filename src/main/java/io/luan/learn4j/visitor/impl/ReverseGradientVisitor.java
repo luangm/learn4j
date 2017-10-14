@@ -52,7 +52,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String gradName = node.getName() + "/grad_" + node.getBase().getName();
 
         String mulName = gradName + "/mul";
-        Expression mul = ExpressionFactory.createMultiply(mulName, Constant.TWO, node.getBase());
+        Expression mul = ExpressionFactory.createMultiply(mulName, node.getBase(), Constant.TWO);
 
         Expression result = ExpressionFactory.createMultiply(gradName, grad, mul);
 
@@ -69,6 +69,22 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         Expression leftGrad = grad;
         Expression rightGrad = ExpressionFactory.createNegate(rightGradName, grad);
+
+        node.getLeft().setGradient(node, leftGrad);
+        node.getRight().setGradient(node, rightGrad);
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitMatMul(MatMul node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        Expression leftGrad = ExpressionFactory.createMatMul(leftGradName, grad, node.getRight(), false, true);
+        Expression rightGrad = ExpressionFactory.createMatMul(rightGradName, node.getLeft(), grad, true, false);
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);

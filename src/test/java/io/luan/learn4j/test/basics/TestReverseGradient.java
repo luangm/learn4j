@@ -5,7 +5,7 @@ import lombok.val;
 import org.junit.Test;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.scalar;
+import static io.luan.learn4j.structure.Tensor.create;
 
 /**
  * @author Guangmiao Luan
@@ -16,30 +16,32 @@ public class TestReverseGradient {
     @Test
     public void testGradientDescent() {
 
-        val a = parameter("a", scalar(3));
-        val b = parameter("b", scalar(4));
-        val c = parameter("c", scalar(5));
+        val a = parameter("a", create(new double[]{1, 2, 3, 4, 5, 6}, new int[]{2, 3}));
+        val b = parameter("b", create(new double[]{1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6}, new int[]{3, 4}));
+        val y = parameter("y", create(new double[]{12, 18, 27, 32, 33, 48, 63, 76}, new int[]{2, 4}));
 
-        val add = add(a, b);
-        val mul = multiply(add, c);
-        val square = square(a);
-        val sub = subtract(a, b);
+        val matmul = matmul(a, b);
+        val sub = subtract(y, matmul);
+        val square = square(sub);
 
         val sess = session("My Session");
 
         println("a: " + sess.run(a));
         println("b: " + sess.run(b));
-        println("c: " + sess.run(c));
-        println("add: " + sess.run(add));
-        println("mul: " + sess.run(mul));
-        println("square: " + sess.run(square));
+        println("y: " + sess.run(y));
+        println("matmul: " + sess.run(matmul));
         println("sub: " + sess.run(sub));
+        println("square: " + sess.run(square));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
-        sub.accept(visitor);
+        square.accept(visitor);
 
-        val grad = a.getGradient(sub);
-        println("grad: " + sess.run(grad));
+        val gradA = a.getGradient(matmul);
+        println("gradA: " + sess.run(gradA));
+
+        val gradB = b.getGradient(matmul);
+        println("gradB: " + sess.run(gradB));
+
 //        println(add.getGradients());
         println(sess.getGraph());
     }

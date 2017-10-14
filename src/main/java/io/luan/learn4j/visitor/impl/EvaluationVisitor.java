@@ -65,7 +65,7 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
 
-        Tensor prod = TensorMath.matmul(left, right);
+        Tensor prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight());
         valueMap.put(node, prod);
     }
 

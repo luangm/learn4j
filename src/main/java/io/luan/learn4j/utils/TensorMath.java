@@ -20,12 +20,18 @@ public class TensorMath {
         return Tensor.create(sum);
     }
 
-    public static Tensor matmul(Tensor left, Tensor right) {
+    public static Tensor matmul(Tensor left, Tensor right, boolean transposeLeft, boolean transposeRight) {
         INDArray leftArray = left.getValue();
         INDArray rightArray = right.getValue();
 
-        System.out.println("left: " + leftArray);
-        System.out.println("right: " + rightArray);
+        if (transposeLeft) {
+            leftArray = leftArray.transpose();
+        }
+
+        if (transposeRight) {
+            rightArray = rightArray.transpose();
+        }
+
         INDArray prod = leftArray.mmul(rightArray);
         return Tensor.create(prod);
     }
