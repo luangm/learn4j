@@ -72,6 +72,12 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitSigmoid(node, params);
+    }
+
+    @Override
     public void visitSubtract(Subtract node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());

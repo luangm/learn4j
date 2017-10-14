@@ -2,10 +2,9 @@ package io.luan.learn4j.test.basics;
 
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.impl.transforms.Sigmoid;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
-
-import java.util.ArrayList;
 
 /**
  * @author Guangmiao Luan
@@ -39,6 +38,18 @@ public class TestNd4J {
         System.out.println(c.shapeInfoToString());
 
         System.out.println(c.shape());
+    }
+
+    @Test
+    public void testSigmoid() {
+        INDArray array = Nd4j.linspace(-2, 2, 6).reshape(3, 2);
+        System.out.println(array);
+
+        INDArray sig2 = Transforms.sigmoid(array, true);
+        System.out.println(sig2);
+
+        INDArray sigDev = Transforms.sigmoidDerivative(array, true);
+        System.out.println(sigDev);
     }
 
     @Test

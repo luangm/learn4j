@@ -62,6 +62,21 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+        String sigGradName = gradName + "/sigGrad";
+
+        Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
+        Expression result = ExpressionFactory.createMultiply(gradName, grad, sigGrad);
+
+        node.getBase().setGradient(node, result);
+
+        node.getBase().accept(this, result);
+    }
+
+    @Override
     public void visitSubtract(Subtract node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 

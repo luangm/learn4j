@@ -16,12 +16,13 @@ public class TestReverseGradient {
     @Test
     public void testGradientDescent() {
 
-        val a = parameter("a", create(new double[]{1, 2, 3, 4, 5, 6}, new int[]{2, 3}));
-        val b = parameter("b", create(new double[]{1, 2, 3, 4, 2, 3, 4, 5, 3, 4, 5, 6}, new int[]{3, 4}));
-        val y = parameter("y", create(new double[]{12, 18, 27, 32, 33, 48, 63, 76}, new int[]{2, 4}));
+        val a = parameter("a", create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3}));
+        val b = parameter("b", create(new double[]{.1, .2, .3, .4, .2, .3, .4, .5, .3, .4, .5, .6}, new int[]{3, 4}));
+        val y = parameter("y", create(new double[]{1, 0, 1, 0, 0, 1, 0, 1}, new int[]{2, 4}));
 
         val matmul = matmul(a, b);
-        val sub = subtract(y, matmul);
+        val sigmoid = sigmoid(matmul);
+        val sub = subtract(y, sigmoid);
         val square = square(sub);
 
         val sess = session("My Session");
@@ -30,6 +31,7 @@ public class TestReverseGradient {
         println("b: " + sess.run(b));
         println("y: " + sess.run(y));
         println("matmul: " + sess.run(matmul));
+        println("sigmoid: " + sess.run(sigmoid));
         println("sub: " + sess.run(sub));
         println("square: " + sess.run(square));
 

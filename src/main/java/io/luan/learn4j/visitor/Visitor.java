@@ -26,13 +26,17 @@ public interface Visitor {
 
     void visitMultiply(Multiply node, Object... params);
 
-    void visitNegate(Negate negate, Object[] params);
+    void visitNegate(Negate node, Object[] params);
 
     void visitParameter(Parameter node, Object... params);
 
     void visitPower(Power node, Object... params);
 
     void visitReduceMean(ReduceMean node, Object... params);
+
+    void visitSigmoid(Sigmoid node, Object[] params);
+
+    void visitSigmoidGrad(SigmoidGrad node, Object[] params);
 
     void visitSquare(Square node, Object... params);
 

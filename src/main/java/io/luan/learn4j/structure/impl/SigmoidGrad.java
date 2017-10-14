@@ -8,15 +8,15 @@ import io.luan.learn4j.visitor.Visitor;
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Sigmoid extends UnaryOp {
+public class SigmoidGrad extends UnaryOp {
 
-    public Sigmoid(String name, Expression base) {
+    public SigmoidGrad(String name, Expression base) {
         super(name, base);
     }
 
     @Override
     public void accept(Visitor visitor, Object... params) {
-        visitor.visitSigmoid(this, params);
+        visitor.visitSigmoidGrad(this, params);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class Sigmoid extends UnaryOp {
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.Sigmoid;
+        return ExpressionType.SigmoidGrad;
     }
 
 }

@@ -19,6 +19,7 @@ public enum ExpressionType {
     ReduceSum,
     Relu,
     Sigmoid,
+    SigmoidGrad,
     Softmax,
     Square,
     Subtract,

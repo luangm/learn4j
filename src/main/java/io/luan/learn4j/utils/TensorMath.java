@@ -3,6 +3,7 @@ package io.luan.learn4j.utils;
 import io.luan.learn4j.structure.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
+import org.nd4j.linalg.ops.transforms.Transforms;
 
 /**
  * Utility class for encapsulate all Tensor operations
@@ -57,6 +58,18 @@ public class TensorMath {
         INDArray array = base.getValue();
         INDArray mean = Nd4j.mean(array);
         return Tensor.create(mean);
+    }
+
+    public static Tensor sigmoid(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray sigmoid = Transforms.sigmoid(array, true);
+        return Tensor.create(sigmoid);
+    }
+
+    public static Tensor sigmoidGrad(Tensor base) {
+        INDArray array = base.getValue();
+        INDArray sigGrad = Transforms.sigmoidDerivative(array, true);
+        return Tensor.create(sigGrad);
     }
 
     public static Tensor square(Tensor base) {

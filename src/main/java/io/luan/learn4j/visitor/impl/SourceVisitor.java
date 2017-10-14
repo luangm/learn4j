@@ -75,6 +75,12 @@ public class SourceVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        nonSource.add(node.getBase());
+        super.visitSigmoid(node, params);
+    }
+
+    @Override
     public void visitSubtract(Subtract node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());

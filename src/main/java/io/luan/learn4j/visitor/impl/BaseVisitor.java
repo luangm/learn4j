@@ -61,6 +61,16 @@ abstract class BaseVisitor implements Visitor {
         node.getBase().accept(this, params);
     }
 
+    @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
+        node.getBase().accept(this, params);
+    }
+
     public void visitSquare(Square node, Object... params) {
         node.getBase().accept(this, params);
     }

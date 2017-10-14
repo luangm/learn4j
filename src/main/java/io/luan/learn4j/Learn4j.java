@@ -103,6 +103,14 @@ public class Learn4j {
         return sess;
     }
 
+    public static Expression sigmoid(Expression base) {
+        return sigmoid("", base);
+    }
+
+    public static Expression sigmoid(String name, Expression base) {
+        return addToGraph(new Sigmoid(name, base));
+    }
+
     public static Expression square(Expression base) {
         return square("", base);
     }

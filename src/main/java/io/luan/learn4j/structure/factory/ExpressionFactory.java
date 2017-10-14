@@ -79,6 +79,14 @@ public class ExpressionFactory {
         return new ReduceMean(name, base, dimension);
     }
 
+    public static Expression createSigmoid(String name, Expression base) {
+        return new Sigmoid(name, base);
+    }
+
+    public static Expression createSigmoidGrad(String name, Expression base) {
+        return new SigmoidGrad(name, base);
+    }
+
     public static Expression createSubtract(String name, Expression left, Expression right) {
         if (right == Constant.ZERO) {
             return left;
