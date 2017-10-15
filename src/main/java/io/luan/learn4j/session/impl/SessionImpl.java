@@ -1,10 +1,10 @@
 package io.luan.learn4j.session.impl;
 
-import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.session.FlowMode;
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.visitor.impl.EvaluationVisitor;
 import lombok.Getter;
 import lombok.Setter;
@@ -27,6 +27,7 @@ public class SessionImpl implements Session {
     @Setter
     private FlowMode flowMode = FlowMode.Store;
 
+
     private Map<Expression, Tensor> valueMap = new HashMap<>();
 
     public SessionImpl(Graph graph) {
@@ -39,6 +40,8 @@ public class SessionImpl implements Session {
 
     public Tensor run(Expression exp, Map<Expression, Tensor> feed) {
 //        System.out.println("Session.run: exp = " + exp);
+//        System.out.println(valueMap);
+
         EvaluationVisitor visitor = new EvaluationVisitor(feed, valueMap);
         exp.accept(visitor);
 

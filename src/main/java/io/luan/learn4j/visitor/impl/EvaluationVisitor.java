@@ -35,8 +35,13 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
 
-        Tensor sum = TensorMath.add(left, right);
-        valueMap.put(node, sum);
+        Tensor sum = valueMap.get(node);
+        if (sum == null) {
+            sum = TensorMath.add(left, right);
+            valueMap.put(node, sum);
+        } else {
+            TensorMath.add(left, right, sum);
+        }
     }
 
     @Override
@@ -56,14 +61,18 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitConstant(Constant node, Object... params) {
-        valueMap.put(node, node.getValue());
+        if (!valueMap.containsKey(node)) {
+            valueMap.put(node, node.getValue());
+        }
     }
 
     @Override
     public void visitFill(Fill node, Object... params) {
         super.visitFill(node, params);
-        Tensor value = Tensor.fill(node.getScalar(), node.getShape());
-        valueMap.put(node, value);
+        if (valueMap.get(node) == null) {
+            Tensor value = Tensor.fill(node.getScalar(), node.getShape());
+            valueMap.put(node, value);
+        }
     }
 
     @Override
@@ -72,8 +81,13 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
 
-        Tensor prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight());
-        valueMap.put(node, prod);
+        Tensor prod = valueMap.get(node);
+        if (prod == null) {
+            prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight());
+            valueMap.put(node, prod);
+        } else {
+            prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight(), prod);
+        }
     }
 
     @Override
@@ -82,8 +96,13 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
 
-        Tensor prod = TensorMath.multiply(left, right);
-        valueMap.put(node, prod);
+        Tensor prod = valueMap.get(node);
+        if (prod == null) {
+            prod = TensorMath.multiply(left, right);
+            valueMap.put(node, prod);
+        } else {
+            prod = TensorMath.multiply(left, right, prod);
+        }
     }
 
     @Override
@@ -145,8 +164,13 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor left = valueMap.get(node.getLeft());
         Tensor right = valueMap.get(node.getRight());
 
-        Tensor diff = TensorMath.subtract(left, right);
-        valueMap.put(node, diff);
+        Tensor diff = valueMap.get(node);
+        if (diff == null) {
+            diff = TensorMath.subtract(left, right);
+            valueMap.put(node, diff);
+        } else {
+            diff = TensorMath.subtract(left, right, diff);
+        }
     }
 
     @Override
