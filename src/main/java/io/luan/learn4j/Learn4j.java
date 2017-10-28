@@ -111,7 +111,7 @@ public class Learn4j {
     }
 
     public static Expression reduceSum(String name, Expression base) {
-        return addToGraph(new ReduceSum(name, base, 0));
+        return addToGraph(new ReduceSum(name, base, -1));
     }
 
     public static Session session(String s) {

@@ -20,14 +20,20 @@ public class MatMul extends BinaryOp {
     @Getter
     private boolean transposeRight = false;
 
+    private int[] _shape;
+
     public MatMul(String name, Expression left, Expression right) {
-        super(name, left, right);
+        this(name, left, right, false, false);
     }
 
     public MatMul(String name, Expression left, Expression right, boolean transposeLeft, boolean transposeRight) {
         super(name, left, right);
         this.transposeLeft = transposeLeft;
         this.transposeRight = transposeRight;
+
+        _shape = new int[2];
+        _shape[0] = transposeLeft ? left.getShape()[1] : left.getShape()[0];
+        _shape[1] = transposeRight ? right.getShape()[0] : right.getShape()[1];
     }
 
     @Override
@@ -43,11 +49,7 @@ public class MatMul extends BinaryOp {
 
     @Override
     public int[] getShape() {
-        // TODO: Should check for broadcast rules
-        int[] shape = new int[2];
-        shape[0] = getLeft().getShape()[0];
-        shape[1] = getRight().getShape()[1];
-        return shape;
+        return _shape;
     }
 
     @Override

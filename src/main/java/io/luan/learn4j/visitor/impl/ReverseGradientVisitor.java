@@ -26,7 +26,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
 
         val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
-        System.out.println(pair);
 
         Expression leftGrad = createReduceSum(leftGradName, grad, pair.getLeft());
         Expression rightGrad = createReduceSum(rightGradName, grad, pair.getRight());

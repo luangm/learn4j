@@ -36,6 +36,10 @@ public class ExpressionFactory {
         return new Constant(name, value);
     }
 
+    public static Expression createDivide(String name, Expression left, Expression right) {
+        return new Divide(name, left, right);
+    }
+
     public static Expression createGroup(String name, Expression[] expList) {
         return new Group(name, expList);
     }
@@ -80,7 +84,10 @@ public class ExpressionFactory {
     }
 
     public static Expression createReduceSum(String name, Expression base, int dimension) {
-        return new ReduceSum(name, base, dimension);
+        if (dimension >= 0) {
+            return new ReduceSum(name, base, dimension);
+        }
+        return base;
     }
 
     public static Expression createSigmoid(String name, Expression base) {
@@ -97,9 +104,5 @@ public class ExpressionFactory {
         }
 
         return new Subtract(name, left, right);
-    }
-
-    public static Expression createDivide(String name, Expression left, Expression right) {
-        return new Divide(name, left, right);
     }
 }

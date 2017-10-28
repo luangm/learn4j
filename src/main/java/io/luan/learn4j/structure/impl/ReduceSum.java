@@ -19,10 +19,20 @@ public class ReduceSum extends BaseExpression {
     @Getter
     private int dimension;
 
+    private int[] _shape;
+
     public ReduceSum(String name, Expression base, int dimension) {
         super(name);
         this.base = base;
         this.dimension = dimension;
+        this._shape = base.getShape().clone();
+        if (dimension >= 0) {
+            this._shape[dimension] = 1;
+        } else {
+            for (int i = 0; i < _shape.length; i++) {
+                _shape[i] = 1;
+            }
+        }
     }
 
     @Override
@@ -38,8 +48,7 @@ public class ReduceSum extends BaseExpression {
 
     @Override
     public int[] getShape() {
-        // TODO: Should check for broadcast rules
-        return base.getShape();
+        return _shape;
     }
 
     @Override

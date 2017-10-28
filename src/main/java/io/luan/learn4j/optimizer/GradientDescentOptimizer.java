@@ -42,7 +42,7 @@ public class GradientDescentOptimizer {
         for (Expression exp : depVisitor.getDependencies()) {
             if (exp.getType() == ExpressionType.Parameter) {
                 Expression grad = exp.getGradient();
-                Expression newGrad = ExpressionFactory.createMultiply(null, grad, this.learnRate);
+                Expression newGrad = ExpressionFactory.createMultiply("", grad, this.learnRate);
                 Expression sub = ExpressionFactory.createSubtract("", exp, newGrad);
                 Expression assign = ExpressionFactory.createAssign("", exp, sub);
                 assignList.add(assign);

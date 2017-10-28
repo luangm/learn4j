@@ -17,23 +17,9 @@ public class TensorMath {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
 
-//        println("Left: " + leftArray + leftArray.shapeInfoToString());
-//        println("Right: " + rightArray + rightArray.shapeInfoToString());
-
-//        println(ShapeUtils.printShape(leftArray.shape()));
-//        println(ShapeUtils.printShape(rightArray.shape()));
-
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-
-//        println(ShapeUtils.printShape(resultShape));
-
-        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
-            leftArray = leftArray.broadcast(resultShape);
-        }
-
-        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
-            rightArray = rightArray.broadcast(resultShape);
-        }
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         INDArray sum = leftArray.add(rightArray);
         return Tensor.create(sum);
@@ -44,11 +30,12 @@ public class TensorMath {
         INDArray rightArray = right.getArray();
         INDArray resultArray = result.getArray();
 
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
+
         // INPLACE add
         leftArray.add(rightArray, resultArray);
-//        INDArray sum = leftArray.add(rightArray);
-//        return Tensor.create(sum);
-
         return result;
     }
 
@@ -57,14 +44,8 @@ public class TensorMath {
         INDArray rightArray = right.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-
-        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
-            leftArray = leftArray.broadcast(resultShape);
-        }
-
-        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
-            rightArray = rightArray.broadcast(resultShape);
-        }
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         INDArray div = leftArray.div(rightArray);
         return Tensor.create(div);
@@ -74,6 +55,10 @@ public class TensorMath {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
         INDArray resultArray = result.getArray();
+
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         leftArray.div(rightArray, resultArray);
         return result;
@@ -119,14 +104,8 @@ public class TensorMath {
         INDArray rightArray = right.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-
-        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
-            leftArray = leftArray.broadcast(resultShape);
-        }
-
-        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
-            rightArray = rightArray.broadcast(resultShape);
-        }
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         INDArray prod = leftArray.mul(rightArray);
         return Tensor.create(prod);
@@ -136,6 +115,10 @@ public class TensorMath {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
         INDArray resultArray = result.getArray();
+
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         leftArray.mul(rightArray, resultArray);
         return result;
@@ -188,16 +171,8 @@ public class TensorMath {
         INDArray rightArray = right.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-
-//        println(ShapeUtils.printShape(resultShape));
-
-        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
-            leftArray = leftArray.broadcast(resultShape);
-        }
-
-        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
-            rightArray = rightArray.broadcast(resultShape);
-        }
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         INDArray diff = leftArray.sub(rightArray);
         return Tensor.create(diff);
@@ -207,6 +182,10 @@ public class TensorMath {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
         INDArray resultArray = result.getArray();
+
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+        leftArray = leftArray.broadcast(resultShape);
+        rightArray = rightArray.broadcast(resultShape);
 
         leftArray.sub(rightArray, resultArray);
         return result;
