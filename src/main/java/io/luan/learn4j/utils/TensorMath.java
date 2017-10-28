@@ -94,6 +94,16 @@ public class TensorMath {
         INDArray leftArray = left.getValue();
         INDArray rightArray = right.getValue();
 
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+
+        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
+            leftArray = leftArray.broadcast(resultShape);
+        }
+
+        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
+            rightArray = rightArray.broadcast(resultShape);
+        }
+
         INDArray prod = leftArray.mul(rightArray);
         return Tensor.create(prod);
     }

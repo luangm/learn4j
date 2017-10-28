@@ -59,8 +59,13 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
         String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
 
+        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
+
         Expression leftGrad = ExpressionFactory.createMultiply(leftGradName, grad, node.getRight());
         Expression rightGrad = ExpressionFactory.createMultiply(rightGradName, node.getLeft(), grad);
+
+        leftGrad = ExpressionFactory.createReduceSum(leftGradName, leftGrad, pair.getLeft());
+        rightGrad = ExpressionFactory.createReduceSum(rightGradName, rightGrad, pair.getRight());
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
@@ -122,7 +127,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
 
         val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
-        System.out.println(pair);
 
         Expression leftGrad = ExpressionFactory.createReduceSum(leftGradName, grad, pair.getLeft());
         Expression rightGrad = ExpressionFactory.createReduceSum(rightGradName, grad, pair.getRight());
