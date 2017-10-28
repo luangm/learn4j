@@ -28,20 +28,6 @@ public class TestBroadcast {
 
         var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
         var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
-
-        var z = add(a, b);
-
-        Session sess = session("My Session");
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("z: " + sess.run(z));
-    }
-
-    @Test
-    public void testAddGradient() throws IOException {
-
-        var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
-        var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
         var z = add(a, b);
 
         var visitor = new ReverseGradientVisitor();
@@ -60,19 +46,25 @@ public class TestBroadcast {
     }
 
     @Test
-    public void testAddNd4j() {
+    public void testSubtract() throws IOException {
 
-        var a = Nd4j.create(new double[]{2, 3, 4, 5, 6, 7}, new int[]{2, 3});
-        var b = Nd4j.create(new double[]{3, 2}, new int[]{2, 1});
+        var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
+        var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
+        var z = subtract(a, b);
 
-        println(a);
-        println(a.shapeInfoToString());
-        println(b);
-        println(b.shapeInfoToString());
+        var visitor = new ReverseGradientVisitor();
+        z.accept(visitor);
 
-        var z = a.add(b);
+        Session sess = session("My Session");
+        println("a: " + sess.run(a));
+        println("b: " + sess.run(b));
+        println("z: " + sess.run(z));
 
-        println(z);
+        var da = a.getGradient();
+        println("da: " + sess.run(da));
+
+        var db = b.getGradient();
+        println("db: " + sess.run(db));
     }
 
 }

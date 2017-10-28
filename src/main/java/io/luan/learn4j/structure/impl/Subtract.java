@@ -2,7 +2,7 @@ package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
-import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.utils.ShapeUtils;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -11,8 +11,13 @@ import io.luan.learn4j.visitor.Visitor;
  */
 public class Subtract extends BinaryOp {
 
+    // Stores the broadcasted shape
+    private int[] _shape;
+
     public Subtract(String name, Expression left, Expression right) {
         super(name, left, right);
+
+        this._shape = ShapeUtils.broadcastShapes(left.getShape(), right.getShape());
     }
 
     @Override
@@ -28,8 +33,7 @@ public class Subtract extends BinaryOp {
 
     @Override
     public int[] getShape() {
-        // TODO: Should check for broadcast rules
-        return getLeft().getShape();
+        return _shape;
     }
 
     @Override
@@ -37,12 +41,4 @@ public class Subtract extends BinaryOp {
         return ExpressionType.Subtract;
     }
 
-    protected Expression createGradient(Expression target) {
-        Expression leftGrad = getLeft().getGradient(target);
-        Expression rightGrad = getRight().getGradient(target);
-
-        String gradName = this.getName() + "_" + target.getName();
-
-        return ExpressionFactory.createSubtract(gradName, leftGrad, rightGrad);
-    }
 }

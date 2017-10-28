@@ -153,7 +153,19 @@ public class TensorMath {
         INDArray leftArray = left.getValue();
         INDArray rightArray = right.getValue();
 
-        INDArray diff = leftArray.dup().subi(rightArray);
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+
+//        println(ShapeUtils.printShape(resultShape));
+
+        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
+            leftArray = leftArray.broadcast(resultShape);
+        }
+
+        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
+            rightArray = rightArray.broadcast(resultShape);
+        }
+
+        INDArray diff = leftArray.sub(rightArray);
         return Tensor.create(diff);
     }
 
