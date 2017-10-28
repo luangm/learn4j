@@ -43,6 +43,11 @@ abstract class BaseVisitor implements Visitor {
         node.getRight().accept(this, params);
     }
 
+    public void visitDivide(Divide node, Object... params) {
+        node.getLeft().accept(this, params);
+        node.getRight().accept(this, params);
+    }
+
     public void visitNegate(Negate node, Object... params) {
         node.getBase().accept(this, params);
     }

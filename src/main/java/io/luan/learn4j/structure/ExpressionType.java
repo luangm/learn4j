@@ -8,6 +8,7 @@ public enum ExpressionType {
     Add,
     Assign,
     Constant,
+    Divide,
     Fill,
     Group,
     MatMul,

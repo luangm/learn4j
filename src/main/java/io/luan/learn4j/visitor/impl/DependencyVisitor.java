@@ -47,6 +47,13 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitDivide(Divide node, Object... params) {
+        dependencies.add(node.getLeft());
+        dependencies.add(node.getRight());
+        super.visitDivide(node, params);
+    }
+
+    @Override
     public void visitNegate(Negate node, Object... params) {
         dependencies.add(node.getBase());
         super.visitNegate(node, params);

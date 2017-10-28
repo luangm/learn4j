@@ -2,11 +2,8 @@ package io.luan.learn4j.utils;
 
 import io.luan.learn4j.structure.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.accum.Sum;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
-
-import static io.luan.learn4j.Learn4j.println;
 
 /**
  * Utility class for encapsulate all Tensor operations
@@ -17,8 +14,8 @@ import static io.luan.learn4j.Learn4j.println;
 public class TensorMath {
 
     public static Tensor add(Tensor left, Tensor right) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
 
 //        println("Left: " + leftArray + leftArray.shapeInfoToString());
 //        println("Right: " + rightArray + rightArray.shapeInfoToString());
@@ -43,9 +40,9 @@ public class TensorMath {
     }
 
     public static Tensor add(Tensor left, Tensor right, Tensor result) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
-        INDArray resultArray = result.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
+        INDArray resultArray = result.getArray();
 
         // INPLACE add
         leftArray.add(rightArray, resultArray);
@@ -55,9 +52,36 @@ public class TensorMath {
         return result;
     }
 
+    public static Tensor divide(Tensor left, Tensor right) {
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
+
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+
+        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
+            leftArray = leftArray.broadcast(resultShape);
+        }
+
+        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
+            rightArray = rightArray.broadcast(resultShape);
+        }
+
+        INDArray div = leftArray.div(rightArray);
+        return Tensor.create(div);
+    }
+
+    public static Tensor divide(Tensor left, Tensor right, Tensor result) {
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
+        INDArray resultArray = result.getArray();
+
+        leftArray.div(rightArray, resultArray);
+        return result;
+    }
+
     public static Tensor matmul(Tensor left, Tensor right, boolean transposeLeft, boolean transposeRight) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
 
         if (transposeLeft) {
             leftArray = leftArray.transpose();
@@ -72,8 +96,8 @@ public class TensorMath {
     }
 
     public static Tensor matmul(Tensor left, Tensor right, boolean transposeLeft, boolean transposeRight, Tensor result) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
 
         if (transposeLeft) {
             leftArray = leftArray.transpose();
@@ -83,7 +107,7 @@ public class TensorMath {
             rightArray = rightArray.transpose();
         }
 
-        leftArray.mmul(rightArray, result.getValue());
+        leftArray.mmul(rightArray, result.getArray());
         return result;
     }
 
@@ -91,8 +115,8 @@ public class TensorMath {
      * This is the Hadamard Product (element-wise product)
      */
     public static Tensor multiply(Tensor left, Tensor right) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
 
@@ -109,29 +133,29 @@ public class TensorMath {
     }
 
     public static Tensor multiply(Tensor left, Tensor right, Tensor result) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
-        INDArray resultArray = result.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
+        INDArray resultArray = result.getArray();
 
         leftArray.mul(rightArray, resultArray);
         return result;
     }
 
     public static Tensor negate(Tensor base) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray neg = array.negi();
         return base;
 //        return Tensor.create(neg);
     }
 
     public static Tensor reduceMean(Tensor base) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray mean = Nd4j.mean(array);
         return Tensor.create(mean);
     }
 
     public static Tensor reduceSum(Tensor base, int dimension) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray sum;
         if (dimension != -1) {
             sum = Nd4j.sum(array, dimension);
@@ -142,26 +166,26 @@ public class TensorMath {
     }
 
     public static Tensor sigmoid(Tensor base) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray sigmoid = Transforms.sigmoid(array, true);
         return Tensor.create(sigmoid);
     }
 
     public static Tensor sigmoidGrad(Tensor base) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray sigGrad = Transforms.sigmoidDerivative(array, true);
         return Tensor.create(sigGrad);
     }
 
     public static Tensor square(Tensor base) {
-        INDArray array = base.getValue();
+        INDArray array = base.getArray();
         INDArray squared = array.mul(array);
         return Tensor.create(squared);
     }
 
     public static Tensor subtract(Tensor left, Tensor right) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
 
@@ -180,18 +204,12 @@ public class TensorMath {
     }
 
     public static Tensor subtract(Tensor left, Tensor right, Tensor result) {
-        INDArray leftArray = left.getValue();
-        INDArray rightArray = right.getValue();
-        INDArray resultArray = result.getValue();
+        INDArray leftArray = left.getArray();
+        INDArray rightArray = right.getArray();
+        INDArray resultArray = result.getArray();
 
         leftArray.sub(rightArray, resultArray);
         return result;
     }
 
-    private static int[] mergeShapes(int[] shape1, int[] shape2) {
-
-        int maxRank = Math.max(shape1.length, shape2.length);
-
-        return null;
-    }
 }

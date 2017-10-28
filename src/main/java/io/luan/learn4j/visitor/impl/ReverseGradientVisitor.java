@@ -6,6 +6,8 @@ import io.luan.learn4j.structure.impl.*;
 import io.luan.learn4j.utils.ShapeUtils;
 import lombok.val;
 
+import static io.luan.learn4j.structure.factory.ExpressionFactory.*;
+
 /**
  * @author Guangmiao Luan
  * @since 06/10/2017.
@@ -26,8 +28,8 @@ public class ReverseGradientVisitor extends BaseVisitor {
         val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
         System.out.println(pair);
 
-        Expression leftGrad = ExpressionFactory.createReduceSum(leftGradName, grad, pair.getLeft());
-        Expression rightGrad = ExpressionFactory.createReduceSum(rightGradName, grad, pair.getRight());
+        Expression leftGrad = createReduceSum(leftGradName, grad, pair.getLeft());
+        Expression rightGrad = createReduceSum(rightGradName, grad, pair.getRight());
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
@@ -61,11 +63,11 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
 
-        Expression leftGrad = ExpressionFactory.createMultiply(leftGradName, grad, node.getRight());
-        Expression rightGrad = ExpressionFactory.createMultiply(rightGradName, node.getLeft(), grad);
+        Expression leftGrad = createMultiply(leftGradName, grad, node.getRight());
+        Expression rightGrad = createMultiply(rightGradName, node.getLeft(), grad);
 
-        leftGrad = ExpressionFactory.createReduceSum(leftGradName, leftGrad, pair.getLeft());
-        rightGrad = ExpressionFactory.createReduceSum(rightGradName, rightGrad, pair.getRight());
+        leftGrad = createReduceSum(leftGradName, leftGrad, pair.getLeft());
+        rightGrad = createReduceSum(rightGradName, rightGrad, pair.getRight());
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
@@ -73,6 +75,31 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
     }
+
+    @Override
+    public void visitDivide(Divide node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
+
+        Expression leftGrad = createDivide(leftGradName, grad, node.getRight());
+        Expression rightGrad = createDivide(rightGradName, createNegate("", node.getLeft()), node.getRight());
+        rightGrad = createDivide("", rightGrad, node.getRight());
+        rightGrad = createMultiply("", grad, rightGrad);
+
+        leftGrad = createReduceSum(leftGradName, leftGrad, pair.getLeft());
+        rightGrad = createReduceSum(rightGradName, rightGrad, pair.getRight());
+
+        node.getLeft().setGradient(node, leftGrad);
+        node.getRight().setGradient(node, rightGrad);
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
@@ -96,7 +123,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String sigGradName = gradName + "/sigGrad";
 
         Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
-        Expression result = ExpressionFactory.createMultiply(gradName, grad, sigGrad);
+        Expression result = createMultiply(gradName, grad, sigGrad);
 
         node.getBase().setGradient(node, result);
 
@@ -110,9 +137,9 @@ public class ReverseGradientVisitor extends BaseVisitor {
         String gradName = node.getName() + "/grad_" + node.getBase().getName();
 
         String mulName = gradName + "/mul";
-        Expression mul = ExpressionFactory.createMultiply(mulName, node.getBase(), Constant.TWO);
+        Expression mul = createMultiply(mulName, node.getBase(), Constant.TWO);
 
-        Expression result = ExpressionFactory.createMultiply(gradName, grad, mul);
+        Expression result = createMultiply(gradName, grad, mul);
 
         node.getBase().setGradient(node, result);
 
@@ -128,8 +155,8 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
 
-        Expression leftGrad = ExpressionFactory.createReduceSum(leftGradName, grad, pair.getLeft());
-        Expression rightGrad = ExpressionFactory.createReduceSum(rightGradName, grad, pair.getRight());
+        Expression leftGrad = createReduceSum(leftGradName, grad, pair.getLeft());
+        Expression rightGrad = createReduceSum(rightGradName, grad, pair.getRight());
         rightGrad = ExpressionFactory.createNegate(rightGradName, rightGrad);
 
         node.getLeft().setGradient(node, leftGrad);

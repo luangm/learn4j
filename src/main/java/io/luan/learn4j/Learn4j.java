@@ -54,6 +54,14 @@ public class Learn4j {
         return addToGraph(new Constant(name, tensor));
     }
 
+    public static Expression divide(Expression left, Expression right) {
+        return divide("", left, right);
+    }
+
+    public static Expression divide(String name, Expression left, Expression right) {
+        return addToGraph(new Divide(name, left, right));
+    }
+
     public static GradientDescentOptimizer gradientDescentOptimizer(double learnRate) {
         val optimizer = new GradientDescentOptimizer(activeGraph, learnRate);
         return optimizer;

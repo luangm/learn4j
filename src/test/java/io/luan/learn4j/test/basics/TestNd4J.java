@@ -34,6 +34,8 @@ public class TestNd4J {
         INDArray a = Nd4j.linspace(1, 10, 6).reshape(2, 3);
         INDArray b = Nd4j.linspace(1, 3, 3).reshape(3, 1);
         INDArray c = a.mmul(b);
+
+
         System.out.println(c);
         System.out.println(c.shapeInfoToString());
 

@@ -50,6 +50,13 @@ public class SourceVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitDivide(Divide node, Object... params) {
+        nonSource.add(node.getLeft());
+        nonSource.add(node.getRight());
+        super.visitDivide(node, params);
+    }
+
+    @Override
     public void visitNegate(Negate node, Object... params) {
         nonSource.add(node.getBase());
         super.visitNegate(node, params);
@@ -69,15 +76,15 @@ public class SourceVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitSquare(Square node, Object... params) {
-        nonSource.add(node.getBase());
-        super.visitSquare(node, params);
-    }
-
-    @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         nonSource.add(node.getBase());
         super.visitSigmoid(node, params);
+    }
+
+    @Override
+    public void visitSquare(Square node, Object... params) {
+        nonSource.add(node.getBase());
+        super.visitSquare(node, params);
     }
 
     @Override

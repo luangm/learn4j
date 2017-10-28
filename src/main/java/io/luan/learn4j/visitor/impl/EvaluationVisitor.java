@@ -106,6 +106,21 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitDivide(Divide node, Object... params) {
+        super.visitDivide(node, params);
+        Tensor left = valueMap.get(node.getLeft());
+        Tensor right = valueMap.get(node.getRight());
+
+        Tensor divide = valueMap.get(node);
+        if (divide == null) {
+            divide = TensorMath.divide(left, right);
+            valueMap.put(node, divide);
+        } else {
+            divide = TensorMath.divide(left, right, divide);
+        }
+    }
+
+    @Override
     public void visitNegate(Negate node, Object... params) {
         super.visitNegate(node, params);
         Tensor base = valueMap.get(node.getBase());

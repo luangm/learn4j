@@ -98,4 +98,8 @@ public class ExpressionFactory {
 
         return new Subtract(name, left, right);
     }
+
+    public static Expression createDivide(String name, Expression left, Expression right) {
+        return new Divide(name, left, right);
+    }
 }

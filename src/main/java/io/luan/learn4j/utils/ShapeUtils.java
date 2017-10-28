@@ -51,16 +51,4 @@ public class ShapeUtils {
         }
         return true;
     }
-
-    public static String shapeToString(int[] shape) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("[");
-        for (int i = 0; i < shape.length; i++) {
-            sb.append(shape[i]);
-            if (i < shape.length - 1)
-                sb.append(",");
-        }
-        sb.append("]");
-        return sb.toString();
-    }
 }

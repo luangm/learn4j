@@ -4,7 +4,7 @@ import io.luan.learn4j.structure.Tensor;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
-import static io.luan.learn4j.utils.ShapeUtils.shapeToString;
+import java.util.Arrays;
 
 /**
  * A Tensor in Mathematics is similar to a multi-dimensional array.
@@ -23,25 +23,25 @@ public class TensorImpl implements Tensor {
      * This MAY change to a different type
      */
     @Getter
-    private INDArray value;
+    private INDArray array;
 
     public TensorImpl(INDArray value) {
-        this.value = value;
+        this.array = value;
     }
 
     public int getRank() {
-        return value.rank();
+        return array.rank();
     }
 
     public int[] getShape() {
-        return value.shape();
+        return array.shape();
     }
 
     @Override
     public String toString() {
-        if (this.value.isScalar()) {
-            return "" + this.value.getDouble(0);
+        if (this.array.isScalar()) {
+            return "" + this.array.getDouble(0);
         }
-        return this.value.toString() + " @ " + shapeToString(this.value.shape());
+        return this.array.toString() + " @ " + Arrays.toString(this.array.shape());
     }
 }

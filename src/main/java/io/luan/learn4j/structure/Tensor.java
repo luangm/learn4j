@@ -88,5 +88,5 @@ public interface Tensor {
      * The underlying value of the tensor.
      * This MAY change to a different type
      */
-    INDArray getValue();
+    INDArray getArray();
 }

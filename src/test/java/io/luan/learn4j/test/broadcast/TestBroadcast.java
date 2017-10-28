@@ -89,4 +89,26 @@ public class TestBroadcast {
         println("db: " + sess.run(db));
     }
 
+    @Test
+    public void testDivide() throws IOException {
+
+        var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
+        var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
+        var z = divide(a, b);
+
+        var visitor = new ReverseGradientVisitor();
+        z.accept(visitor);
+
+        Session sess = session("My Session");
+        println("a: " + sess.run(a));
+        println("b: " + sess.run(b));
+        println("z: " + sess.run(z));
+
+        var da = a.getGradient();
+        println("da: " + sess.run(da));
+
+        var db = b.getGradient();
+        println("db: " + sess.run(db));
+    }
+
 }

@@ -18,6 +18,8 @@ public interface Visitor {
 
     void visitConstant(Constant node, Object... params);
 
+    void visitDivide(Divide node, Object[] params);
+
     void visitFill(Fill node, Object... params);
 
     void visitGroup(Group node, Object... params);
