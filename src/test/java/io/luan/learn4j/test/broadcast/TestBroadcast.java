@@ -1,0 +1,78 @@
+package io.luan.learn4j.test.broadcast;
+
+import io.luan.learn4j.session.Session;
+import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
+import lombok.experimental.var;
+import org.junit.Test;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.factory.Nd4j;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import static io.luan.learn4j.Learn4j.*;
+import static io.luan.learn4j.structure.Tensor.create;
+
+/**
+ * @author Guangmiao Luan
+ * @since 28/08/2017.
+ */
+public class TestBroadcast {
+
+    @Test
+    public void testAdd() throws IOException {
+
+        var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
+        var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
+
+        var z = add(a, b);
+
+        Session sess = session("My Session");
+        println("a: " + sess.run(a));
+        println("b: " + sess.run(b));
+        println("z: " + sess.run(z));
+    }
+
+    @Test
+    public void testAddGradient() throws IOException {
+
+        var a = constant("a", create(new double[]{2, 5}, new int[]{1, 2}));
+        var b = constant("b", create(new double[]{3, 7}, new int[]{2, 1}));
+        var z = add(a, b);
+
+        var visitor = new ReverseGradientVisitor();
+        z.accept(visitor);
+
+        Session sess = session("My Session");
+        println("a: " + sess.run(a));
+        println("b: " + sess.run(b));
+        println("z: " + sess.run(z));
+
+        var da = a.getGradient();
+        println("da: " + sess.run(da));
+
+        var db = b.getGradient();
+        println("db: " + sess.run(db));
+    }
+
+    @Test
+    public void testAddNd4j() {
+
+        var a = Nd4j.create(new double[]{2, 3, 4, 5, 6, 7}, new int[]{2, 3});
+        var b = Nd4j.create(new double[]{3, 2}, new int[]{2, 1});
+
+        println(a);
+        println(a.shapeInfoToString());
+        println(b);
+        println(b.shapeInfoToString());
+
+        var z = a.add(b);
+
+        println(z);
+    }
+
+}

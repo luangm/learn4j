@@ -130,7 +130,7 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitReduceSum(ReduceSum node, Object... params) {
         super.visitReduceSum(node, params);
         Tensor base = valueMap.get(node.getBase());
-        Tensor reduced = TensorMath.reduceSum(base);
+        Tensor reduced = TensorMath.reduceSum(base, node.getDimension());
         valueMap.put(node, reduced);
     }
 

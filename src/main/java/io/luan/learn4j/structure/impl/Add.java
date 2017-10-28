@@ -2,6 +2,7 @@ package io.luan.learn4j.structure.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.utils.ShapeUtils;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -10,8 +11,13 @@ import io.luan.learn4j.visitor.Visitor;
  */
 public class Add extends BinaryOp {
 
+    // Stores the broadcasted shape
+    private int[] _shape;
+
     public Add(String name, Expression left, Expression right) {
         super(name, left, right);
+
+        this._shape = ShapeUtils.broadcastShapes(left.getShape(), right.getShape());
     }
 
     @Override
@@ -27,8 +33,7 @@ public class Add extends BinaryOp {
 
     @Override
     public int[] getShape() {
-        // TODO: Should check for broadcast rules
-        return getLeft().getShape();
+        return _shape;
     }
 
     @Override

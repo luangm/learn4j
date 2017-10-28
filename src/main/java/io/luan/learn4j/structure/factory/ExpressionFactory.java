@@ -79,6 +79,10 @@ public class ExpressionFactory {
         return new ReduceMean(name, base, dimension);
     }
 
+    public static Expression createReduceSum(String name, Expression base, int dimension) {
+        return new ReduceSum(name, base, dimension);
+    }
+
     public static Expression createSigmoid(String name, Expression base) {
         return new Sigmoid(name, base);
     }

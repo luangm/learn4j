@@ -2,8 +2,11 @@ package io.luan.learn4j.utils;
 
 import io.luan.learn4j.structure.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.impl.accum.Sum;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
+
+import static io.luan.learn4j.Learn4j.println;
 
 /**
  * Utility class for encapsulate all Tensor operations
@@ -13,10 +16,27 @@ import org.nd4j.linalg.ops.transforms.Transforms;
  */
 public class TensorMath {
 
-
     public static Tensor add(Tensor left, Tensor right) {
         INDArray leftArray = left.getValue();
         INDArray rightArray = right.getValue();
+
+//        println("Left: " + leftArray + leftArray.shapeInfoToString());
+//        println("Right: " + rightArray + rightArray.shapeInfoToString());
+
+//        println(ShapeUtils.printShape(leftArray.shape()));
+//        println(ShapeUtils.printShape(rightArray.shape()));
+
+        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+
+//        println(ShapeUtils.printShape(resultShape));
+
+        if (!ShapeUtils.isSameShape(leftArray.shape(), resultShape)) {
+            leftArray = leftArray.broadcast(resultShape);
+        }
+
+        if (!ShapeUtils.isSameShape(rightArray.shape(), resultShape)) {
+            rightArray = rightArray.broadcast(resultShape);
+        }
 
         INDArray sum = leftArray.add(rightArray);
         return Tensor.create(sum);
@@ -100,9 +120,14 @@ public class TensorMath {
         return Tensor.create(mean);
     }
 
-    public static Tensor reduceSum(Tensor base) {
+    public static Tensor reduceSum(Tensor base, int dimension) {
         INDArray array = base.getValue();
-        INDArray sum = Nd4j.sum(array);
+        INDArray sum;
+        if (dimension != -1) {
+            sum = Nd4j.sum(array, dimension);
+        } else {
+            sum = Nd4j.sum(array);
+        }
         return Tensor.create(sum);
     }
 
@@ -139,5 +164,12 @@ public class TensorMath {
 
         leftArray.sub(rightArray, resultArray);
         return result;
+    }
+
+    private static int[] mergeShapes(int[] shape1, int[] shape2) {
+
+        int maxRank = Math.max(shape1.length, shape2.length);
+
+        return null;
     }
 }

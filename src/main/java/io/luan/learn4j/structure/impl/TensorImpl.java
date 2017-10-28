@@ -4,6 +4,8 @@ import io.luan.learn4j.structure.Tensor;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 
+import static io.luan.learn4j.utils.ShapeUtils.shapeToString;
+
 /**
  * A Tensor in Mathematics is similar to a multi-dimensional array.
  * <p>
@@ -40,6 +42,6 @@ public class TensorImpl implements Tensor {
         if (this.value.isScalar()) {
             return "" + this.value.getDouble(0);
         }
-        return this.value.toString();
+        return this.value.toString() + " @ " + shapeToString(this.value.shape());
     }
 }

@@ -3,6 +3,8 @@ package io.luan.learn4j.visitor.impl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.utils.ShapeUtils;
+import lombok.val;
 
 /**
  * @author Guangmiao Luan
@@ -18,8 +20,14 @@ public class ReverseGradientVisitor extends BaseVisitor {
     public void visitAdd(Add node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
-        Expression leftGrad = grad;
-        Expression rightGrad = grad;
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
+        System.out.println(pair);
+
+        Expression leftGrad = ExpressionFactory.createReduceSum(leftGradName, grad, pair.getLeft());
+        Expression rightGrad = ExpressionFactory.createReduceSum(rightGradName, grad, pair.getRight());
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
