@@ -154,6 +154,12 @@ public class TensorMath {
         return Tensor.create(sigmoid);
     }
 
+    public static Tensor relu(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray relu = Transforms.relu(array, true);
+        return Tensor.create(relu);
+    }
+
     public static Tensor sigmoidGrad(Tensor base) {
         INDArray array = base.getArray();
         INDArray sigGrad = Transforms.sigmoidDerivative(array, true);
@@ -191,4 +197,9 @@ public class TensorMath {
         return result;
     }
 
+    public static Tensor step(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray step = Transforms.step(array, true);
+        return Tensor.create(step);
+    }
 }

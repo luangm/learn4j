@@ -18,7 +18,7 @@ public interface Visitor {
 
     void visitConstant(Constant node, Object... params);
 
-    void visitDivide(Divide node, Object[] params);
+    void visitDivide(Divide node, Object... params);
 
     void visitFill(Fill node, Object... params);
 
@@ -28,7 +28,7 @@ public interface Visitor {
 
     void visitMultiply(Multiply node, Object... params);
 
-    void visitNegate(Negate node, Object[] params);
+    void visitNegate(Negate node, Object... params);
 
     void visitParameter(Parameter node, Object... params);
 
@@ -36,16 +36,20 @@ public interface Visitor {
 
     void visitReduceMean(ReduceMean node, Object... params);
 
-    void visitReduceSum(ReduceSum reduceSum, Object[] params);
+    void visitReduceSum(ReduceSum reduceSum, Object... params);
 
-    void visitSigmoid(Sigmoid node, Object[] params);
+    void visitSigmoid(Sigmoid node, Object... params);
 
-    void visitSigmoidGrad(SigmoidGrad node, Object[] params);
+    void visitSigmoidGrad(SigmoidGrad node, Object... params);
 
     void visitSquare(Square node, Object... params);
+
+    void visitStep(Step step, Object... params);
 
     void visitSubtract(Subtract node, Object... params);
 
     void visitVariable(Variable node, Object... params);
+
+    void visitRelu(Relu node, Object... params);
 
 }

@@ -23,6 +23,7 @@ public enum ExpressionType {
     SigmoidGrad,
     Softmax,
     Square,
+    Step,
     Subtract,
     Variable,
 }

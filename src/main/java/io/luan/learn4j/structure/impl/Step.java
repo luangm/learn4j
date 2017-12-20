@@ -5,18 +5,20 @@ import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
+ * A Step operation returns 1 if base is > 0, or 0 if <= 0
+ *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Relu extends UnaryOp {
+public class Step extends UnaryOp {
 
-    public Relu(String name, Expression base) {
+    public Step(String name, Expression base) {
         super(name, base);
     }
 
     @Override
     public void accept(Visitor visitor, Object... params) {
-        visitor.visitRelu(this, params);
+        visitor.visitStep(this, params);
     }
 
     @Override
@@ -31,6 +33,6 @@ public class Relu extends UnaryOp {
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.Relu;
+        return ExpressionType.Step;
     }
 }

@@ -35,7 +35,8 @@ public class Learn4j {
     private static List<Graph> graphList = new ArrayList<Graph>();
 
     static {
-        graph("DEFAULT"); // Creates a default graph
+        // Creates a default graph
+        graph("DEFAULT");
     }
 
     public static Expression add(Expression left, Expression right) {
@@ -126,6 +127,23 @@ public class Learn4j {
     public static Expression sigmoid(String name, Expression base) {
         return addToGraph(new Sigmoid(name, base));
     }
+
+    public static Expression relu(Expression base) {
+        return relu("", base);
+    }
+
+    public static Expression relu(String name, Expression base) {
+        return addToGraph(new Relu(name, base));
+    }
+
+    public static Expression step(Expression base) {
+        return step("", base);
+    }
+
+    public static Expression step(String name, Expression base) {
+        return addToGraph(new Step(name, base));
+    }
+
 
     public static Expression square(Expression base) {
         return square("", base);

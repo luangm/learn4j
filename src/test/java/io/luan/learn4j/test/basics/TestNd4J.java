@@ -1,8 +1,9 @@
 package io.luan.learn4j.test.basics;
 
+import lombok.val;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
-import org.nd4j.linalg.api.ops.impl.transforms.Sigmoid;
+import org.nd4j.linalg.convolution.Convolution;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
@@ -27,6 +28,54 @@ public class TestNd4J {
         INDArray sum = array.add(one);
 
         System.out.println(sum);
+    }
+
+    @Test
+    public void testConv2() {
+        INDArray nd = Nd4j.ones(5,5);
+        INDArray kernel = Nd4j.ones(3,3);
+        INDArray conv = Nd4j.getConvolution().conv2d(nd, kernel, Convolution.Type.VALID);
+        System.out.println(conv);
+    }
+
+    @Test
+    public void testConv() {
+        int nEx = 1;
+        int depth = 1;
+        int width = 3;
+        int height = 3;
+        int prod = nEx * depth * width * height;
+        INDArray in = Nd4j.linspace(1, prod, prod).reshape(nEx, depth, width, height);
+        System.out.println(in);
+//        int[] kernel = new int[]{2, 2};
+//        int[] stride = new int[]{1, 1};
+//        int[] padding = new int[]{0, 0};
+//        INDArray out = Convolution.im2col(in, kernel, stride, padding);
+//        System.out.println(out);
+//        System.out.println(out.shapeInfoToString());
+
+        val myKernel = Nd4j.ones(1, 1, 1, 1);
+        INDArray out2 = Convolution.conv2d(in, myKernel, Convolution.Type.SAME);
+        System.out.println(out2);
+        System.out.println(out2.shapeInfoToString());
+    }
+
+    @Test
+    public void testIm2Col() {
+        int nEx = 1;
+        int depth = 1;
+        int width = 5;
+        int height = 5;
+        int prod = nEx * depth * width * height;
+        INDArray in = Nd4j.linspace(1, prod, prod).reshape(nEx, depth, width, height);
+        System.out.println(in);
+        int[] kernel = new int[]{2, 2};
+        int[] stride = new int[]{1, 1};
+        int[] padding = new int[]{0, 0};
+        INDArray out = Convolution.im2col(in, kernel, stride, padding);
+        System.out.println(out);
+        System.out.println(out.shapeInfoToString());
+
     }
 
     @Test

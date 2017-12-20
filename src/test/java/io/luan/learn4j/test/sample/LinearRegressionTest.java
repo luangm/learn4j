@@ -58,7 +58,7 @@ public class LinearRegressionTest {
         for (int i = 0; i < 100000; i++) {
             sess.run(train, feed);
 //            sess.run(loss, feed);
-            println("loss: " + sess.run(loss, feed));
+//            println("loss: " + sess.run(loss, feed));
         }
         println("W1: " + sess.run(W1, feed));
         println("b1: " + sess.run(b1, feed));

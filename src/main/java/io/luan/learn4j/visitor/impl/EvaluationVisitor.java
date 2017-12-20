@@ -158,6 +158,22 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitRelu(Relu node, Object... params) {
+        super.visitRelu(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor relu = TensorMath.relu(base);
+        valueMap.put(node, relu);
+    }
+
+    @Override
+    public void visitStep(Step node, Object... params) {
+        super.visitStep(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor step = TensorMath.step(base);
+        valueMap.put(node, step);
+    }
+
+    @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
         super.visitSigmoidGrad(node, params);
         Tensor base = valueMap.get(node.getBase());

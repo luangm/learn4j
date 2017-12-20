@@ -57,7 +57,7 @@ public class TestMatrix {
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
 
-        for (int i = 0; i < 100000; i++) {
+        for (int i = 0; i < 10000; i++) {
             sess.run(train, feed);
 //            println(sess.run(loss, feed));
 //            println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
@@ -84,20 +84,22 @@ public class TestMatrix {
     public void testNd4j() throws IOException {
         var W1 = Nd4j.create(new double[]{1, 2, 3, 4, 5, 6}, new int[]{2, 3});
         var b1 = Nd4j.create(new double[]{6, 5}, new int[]{2, 1});
-        var x = Nd4j.create(new double[]{2, 3, 1}, new int[]{3, 1});
-        var y = Nd4j.create(new double[]{3, 4}, new int[]{2, 1});
+        var x = Nd4j.create(new double[]{2, 3, 1, 2 , 3 ,1 , 3, 1, 2,2 ,3 ,1}, new int[]{3, 4});
+        var y = Nd4j.create(new double[]{3, 4, 2, 4, 4, 3, 4, 3}, new int[]{2, 4});
 
-        var mmul = Nd4j.zeros(2, 1);
+        var mmul = Nd4j.zeros(2, 4);
         var xT = x.transpose();
         var dW = Nd4j.zeros(2, 3);
-        var dB = Nd4j.zeros(2, 1);
+        var dB = Nd4j.zeros(2, 4);
 
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
 
         for (int i = 0; i < 100000; i++) {
+//            var b2 = b1.broadcast(2, 4);
             mmul = W1.mmul(x, mmul);
-            mmul.addi(b1);
+            mmul.addiColumnVector(b1);
+//            mmul.addi(b2);
             mmul.subi(y);
             mmul.muli(0.00002);
 
@@ -105,7 +107,7 @@ public class TestMatrix {
             dB = mmul;
 
             W1.subi(dW);
-            b1.subi(dB);
+            b1.subi(dB.getColumn(0));
         }
 
         System.out.println("W1: " + W1);
@@ -113,10 +115,7 @@ public class TestMatrix {
 
         long now2 = new Date().getTime();
 
-
         System.out.println("Finished in: " + (now2 - now) + " ms");
-        println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
-        runtime.gc();
-        println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
+
     }
 }

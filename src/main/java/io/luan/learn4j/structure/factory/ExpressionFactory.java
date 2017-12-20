@@ -105,4 +105,8 @@ public class ExpressionFactory {
 
         return new Subtract(name, left, right);
     }
+
+    public static Expression createStep(String name, Expression base) {
+        return new Step(name, base);
+    }
 }

@@ -130,6 +130,21 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitRelu(Relu node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+        String stepName = gradName + "/step";
+
+        Expression step = ExpressionFactory.createStep(stepName, node.getBase());
+        Expression result = createMultiply(gradName, grad, step);
+
+        node.getBase().setGradient(node, result);
+
+        node.getBase().accept(this, result);
+    }
+
+    @Override
     public void visitSquare(Square node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 

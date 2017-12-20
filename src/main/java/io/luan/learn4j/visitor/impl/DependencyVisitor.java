@@ -85,6 +85,18 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitRelu(Relu node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitRelu(node, params);
+    }
+
+    @Override
+    public void visitStep(Step node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitStep(node, params);
+    }
+
+    @Override
     public void visitSubtract(Subtract node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
