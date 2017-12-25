@@ -5,6 +5,7 @@ package io.luan.learn4j.structure;
  * @since 27/09/2017.
  */
 public enum ExpressionType {
+    Abs,
     Add,
     Assign,
     Constant,
@@ -25,5 +26,5 @@ public enum ExpressionType {
     Square,
     Step,
     Subtract,
-    Variable,
+    Variable, Sign,
 }

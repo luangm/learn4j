@@ -98,15 +98,19 @@ public class ExpressionFactory {
         return new SigmoidGrad(name, base);
     }
 
+    public static Expression createSign(String name, Expression base) {
+        return new Sign(name, base);
+    }
+
+    public static Expression createStep(String name, Expression base) {
+        return new Step(name, base);
+    }
+
     public static Expression createSubtract(String name, Expression left, Expression right) {
         if (right == Constant.ZERO) {
             return left;
         }
 
         return new Subtract(name, left, right);
-    }
-
-    public static Expression createStep(String name, Expression base) {
-        return new Step(name, base);
     }
 }

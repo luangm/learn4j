@@ -22,10 +22,10 @@ public class TestReverseGradient {
         val y = parameter("y", create(new double[]{1, 0, 1, 0, 0, 1, 0, 1}, new int[]{2, 4}));
 
         val matmul = matmul(a, b);
-        val sigmoid = sigmoid(matmul);
-        val sub = subtract(y, sigmoid);
-        val square = square(sub);
-        val reduceSum = reduceSum(square);
+//        val sigmoid = sigmoid(matmul);
+//        val sub = subtract(y, sigmoid);
+//        val square = square(sub);
+//        val reduceSum = reduceSum(square);
 
         val sess = session("My Session");
 
@@ -33,13 +33,13 @@ public class TestReverseGradient {
         println("b: " + sess.run(b));
         println("y: " + sess.run(y));
         println("matmul: " + sess.run(matmul));
-        println("sigmoid: " + sess.run(sigmoid));
-        println("sub: " + sess.run(sub));
-        println("square: " + sess.run(square));
-        println("reduceSum: " + sess.run(reduceSum));
+//        println("sigmoid: " + sess.run(sigmoid));
+//        println("sub: " + sess.run(sub));
+//        println("square: " + sess.run(square));
+//        println("reduceSum: " + sess.run(reduceSum));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
-        reduceSum.accept(visitor);
+        matmul.accept(visitor);
 
         val gradA = a.getGradient(matmul);
         println("gradA: " + sess.run(gradA));

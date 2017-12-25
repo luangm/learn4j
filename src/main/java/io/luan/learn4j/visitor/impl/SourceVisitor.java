@@ -88,6 +88,12 @@ public class SourceVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitAbs(Abs node, Object... params) {
+        nonSource.add(node.getBase());
+        super.visitAbs(node, params);
+    }
+
+    @Override
     public void visitSubtract(Subtract node, Object... params) {
         nonSource.add(node.getLeft());
         nonSource.add(node.getRight());

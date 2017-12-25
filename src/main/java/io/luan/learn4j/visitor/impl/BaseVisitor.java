@@ -11,6 +11,11 @@ import io.luan.learn4j.visitor.Visitor;
 abstract class BaseVisitor implements Visitor {
 
     @Override
+    public void visitAbs(Abs node, Object... params) {
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitAdd(Add node, Object... params) {
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
@@ -24,6 +29,12 @@ abstract class BaseVisitor implements Visitor {
     @Override
     public void visitConstant(Constant node, Object... params) {
         // do nothing
+    }
+
+    @Override
+    public void visitDivide(Divide node, Object... params) {
+        node.getLeft().accept(this, params);
+        node.getRight().accept(this, params);
     }
 
     @Override
@@ -46,12 +57,6 @@ abstract class BaseVisitor implements Visitor {
 
     @Override
     public void visitMultiply(Multiply node, Object... params) {
-        node.getLeft().accept(this, params);
-        node.getRight().accept(this, params);
-    }
-
-    @Override
-    public void visitDivide(Divide node, Object... params) {
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
     }
@@ -88,22 +93,22 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
-    public void visitRelu(Relu node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitStep(Step node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
         node.getBase().accept(this, params);
     }
 
     @Override
+    public void visitSign(Sign node, Object... params) {
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitSquare(Square node, Object... params) {
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitStep(Step node, Object... params) {
         node.getBase().accept(this, params);
     }
 
@@ -116,5 +121,10 @@ abstract class BaseVisitor implements Visitor {
     @Override
     public void visitVariable(Variable node, Object... params) {
         // do nothing
+    }
+
+    @Override
+    public void visitRelu(Relu node, Object... params) {
+        node.getBase().accept(this, params);
     }
 }

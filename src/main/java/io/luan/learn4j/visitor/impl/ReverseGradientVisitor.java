@@ -19,6 +19,21 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitAbs(Abs node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+
+        String signName = gradName + "/sign";
+        Expression sign = createSign(signName, node.getBase());
+        Expression mul = createMultiply(gradName, grad, sign);
+
+        node.getBase().setGradient(node, mul);
+
+        node.getBase().accept(this, mul);
+    }
+
+    @Override
     public void visitAdd(Add node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
@@ -29,6 +44,30 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         Expression leftGrad = createReduceSum(leftGradName, grad, pair.getLeft());
         Expression rightGrad = createReduceSum(rightGradName, grad, pair.getRight());
+
+        node.getLeft().setGradient(node, leftGrad);
+        node.getRight().setGradient(node, rightGrad);
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitDivide(Divide node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
+        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
+
+        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
+
+        Expression leftGrad = createDivide(leftGradName, grad, node.getRight());
+        Expression rightGrad = createDivide(rightGradName, createNegate("", node.getLeft()), node.getRight());
+        rightGrad = createDivide("", rightGrad, node.getRight());
+        rightGrad = createMultiply("", grad, rightGrad);
+
+        leftGrad = createReduceSum(leftGradName, leftGrad, pair.getLeft());
+        rightGrad = createReduceSum(rightGradName, rightGrad, pair.getRight());
 
         node.getLeft().setGradient(node, leftGrad);
         node.getRight().setGradient(node, rightGrad);
@@ -76,31 +115,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitDivide(Divide node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
-        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
-
-        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
-
-        Expression leftGrad = createDivide(leftGradName, grad, node.getRight());
-        Expression rightGrad = createDivide(rightGradName, createNegate("", node.getLeft()), node.getRight());
-        rightGrad = createDivide("", rightGrad, node.getRight());
-        rightGrad = createMultiply("", grad, rightGrad);
-
-        leftGrad = createReduceSum(leftGradName, leftGrad, pair.getLeft());
-        rightGrad = createReduceSum(rightGradName, rightGrad, pair.getRight());
-
-        node.getLeft().setGradient(node, leftGrad);
-        node.getRight().setGradient(node, rightGrad);
-
-        node.getLeft().accept(this, leftGrad);
-        node.getRight().accept(this, rightGrad);
-    }
-
-
-    @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
         node.getBase().setGradient(node, grad);
@@ -123,21 +137,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
         Expression result = createMultiply(gradName, grad, sigGrad);
-
-        node.getBase().setGradient(node, result);
-
-        node.getBase().accept(this, result);
-    }
-
-    @Override
-    public void visitRelu(Relu node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String gradName = node.getName() + "/grad_" + node.getBase().getName();
-        String stepName = gradName + "/step";
-
-        Expression step = ExpressionFactory.createStep(stepName, node.getBase());
-        Expression result = createMultiply(gradName, grad, step);
 
         node.getBase().setGradient(node, result);
 
@@ -178,6 +177,21 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitRelu(Relu node, Object... params) {
+        Expression grad = getGradientOrDefault(node, params);
+
+        String gradName = node.getName() + "/grad_" + node.getBase().getName();
+        String stepName = gradName + "/step";
+
+        Expression step = ExpressionFactory.createStep(stepName, node.getBase());
+        Expression result = createMultiply(gradName, grad, step);
+
+        node.getBase().setGradient(node, result);
+
+        node.getBase().accept(this, result);
     }
 
     private static Expression getGradientOrDefault(Expression node, Object... params) {

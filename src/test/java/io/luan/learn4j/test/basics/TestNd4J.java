@@ -15,19 +15,30 @@ public class TestNd4J {
 
     @Test
     public void testBroadcast() {
-        INDArray array = Nd4j.linspace(1, 10, 6).reshape(3, 2);
+        INDArray array = Nd4j.linspace(1, 6, 6).reshape(2, 3);
+        val result = Nd4j.sum(array);
+        System.out.println(result);
 
+//
+//        System.out.println(array);
+//        System.out.println(array.shapeInfoToString());
+//
+//        INDArray other = array.transpose();
+//
+//        System.out.println(other);
+//        System.out.println(other.shapeInfoToString());
+////        other.put(new int[]{0, 1, 2}, Nd4j.zeros(1, 1).addi(9999));
+//
+//        System.out.println(array);
 
-        System.out.println(array);
-        System.out.println(array.shapeInfoToString());
-        INDArray one = Nd4j.linspace(1, 2, 2).broadcast(3, 2);
-        System.out.println(one);
-        System.out.println(one.shapeInfoToString());
-
-
-        INDArray sum = array.add(one);
-
-        System.out.println(sum);
+//        INDArray one = Nd4j.linspace(1, 2, 2).broadcast(3, 2);
+//        System.out.println(one);
+//        System.out.println(one.shapeInfoToString());
+//
+//
+//        INDArray sum = array.add(one);
+//
+//        System.out.println(sum);
     }
 
     @Test

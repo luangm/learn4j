@@ -47,6 +47,14 @@ public class Learn4j {
         return addToGraph(new Add(name, left, right));
     }
 
+    public static Expression abs(Expression base) {
+        return abs("", base);
+    }
+
+    public static Expression abs(String name, Expression base) {
+        return addToGraph(new Abs(name, base));
+    }
+
     public static Expression assign(Expression target, Expression newValue) {
         return null;
     }

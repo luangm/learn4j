@@ -13,6 +13,12 @@ import org.nd4j.linalg.ops.transforms.Transforms;
  */
 public class TensorMath {
 
+    public static Tensor abs(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.abs(array, true);
+        return Tensor.create(result);
+    }
+
     public static Tensor add(Tensor left, Tensor right) {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
@@ -148,16 +154,16 @@ public class TensorMath {
         return Tensor.create(sum);
     }
 
-    public static Tensor sigmoid(Tensor base) {
-        INDArray array = base.getArray();
-        INDArray sigmoid = Transforms.sigmoid(array, true);
-        return Tensor.create(sigmoid);
-    }
-
     public static Tensor relu(Tensor base) {
         INDArray array = base.getArray();
         INDArray relu = Transforms.relu(array, true);
         return Tensor.create(relu);
+    }
+
+    public static Tensor sigmoid(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray sigmoid = Transforms.sigmoid(array, true);
+        return Tensor.create(sigmoid);
     }
 
     public static Tensor sigmoidGrad(Tensor base) {
@@ -166,10 +172,22 @@ public class TensorMath {
         return Tensor.create(sigGrad);
     }
 
+    public static Tensor sign(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.sign(array, true);
+        return Tensor.create(result);
+    }
+
     public static Tensor square(Tensor base) {
         INDArray array = base.getArray();
         INDArray squared = array.mul(array);
         return Tensor.create(squared);
+    }
+
+    public static Tensor step(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray step = Transforms.step(array, true);
+        return Tensor.create(step);
     }
 
     public static Tensor subtract(Tensor left, Tensor right) {
@@ -195,11 +213,5 @@ public class TensorMath {
 
         leftArray.sub(rightArray, resultArray);
         return result;
-    }
-
-    public static Tensor step(Tensor base) {
-        INDArray array = base.getArray();
-        INDArray step = Transforms.step(array, true);
-        return Tensor.create(step);
     }
 }

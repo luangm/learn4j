@@ -12,6 +12,8 @@ import io.luan.learn4j.structure.impl.*;
  */
 public interface Visitor {
 
+    void visitAbs(Abs abs, Object... params);
+
     void visitAdd(Add node, Object... params);
 
     void visitAssign(Assign node, Object... params);
@@ -41,6 +43,8 @@ public interface Visitor {
     void visitSigmoid(Sigmoid node, Object... params);
 
     void visitSigmoidGrad(SigmoidGrad node, Object... params);
+
+    void visitSign(Sign sign, Object... params);
 
     void visitSquare(Square node, Object... params);
 

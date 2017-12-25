@@ -30,6 +30,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitSign(Sign node, Object... params) {
+        super.visitSign(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor relu = TensorMath.sign(base);
+        valueMap.put(node, relu);
+    }
+
+    @Override
     public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         Tensor left = valueMap.get(node.getLeft());
@@ -187,6 +195,14 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor base = valueMap.get(node.getBase());
         Tensor squared = TensorMath.square(base);
         valueMap.put(node, squared);
+    }
+
+    @Override
+    public void visitAbs(Abs node, Object... params) {
+        super.visitAbs(node, params);
+        Tensor base = valueMap.get(node.getBase());
+        Tensor abs = TensorMath.abs(base);
+        valueMap.put(node, abs);
     }
 
     @Override
