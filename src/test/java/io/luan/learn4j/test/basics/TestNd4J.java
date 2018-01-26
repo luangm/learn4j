@@ -95,7 +95,7 @@ public class TestNd4J {
     public void testSoftmax() {
         INDArray a = Nd4j.linspace(1, 8, 8).reshape(4, 2);
         val c = Transforms.softmax(a);
-        SoftMaxDerivative
+//        SoftMaxDerivative
         System.out.println(a);
         System.out.println(c);
     }
