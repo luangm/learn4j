@@ -57,7 +57,7 @@ public class TestMatrix {
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
 
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             sess.run(train, feed);
 //            println(sess.run(loss, feed));
 //            println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
@@ -68,7 +68,7 @@ public class TestMatrix {
 
         println("W1: " + sess.run(W1, feed));
         println("b1: " + sess.run(b1, feed));
-        println("b1: " + sess.run(loss, feed));
+        println("loss: " + sess.run(loss, feed));
 
         long now2 = new Date().getTime();
 
@@ -82,15 +82,15 @@ public class TestMatrix {
 
     @Test
     public void testNd4j() throws IOException {
-        var W1 = Nd4j.create(new double[]{1, 2, 3, 4, 5, 6}, new int[]{2, 3});
-        var b1 = Nd4j.create(new double[]{6, 5}, new int[]{2, 1});
-        var x = Nd4j.create(new double[]{2, 3, 1, 2 , 3 ,1 , 3, 1, 2,2 ,3 ,1}, new int[]{3, 4});
-        var y = Nd4j.create(new double[]{3, 4, 2, 4, 4, 3, 4, 3}, new int[]{2, 4});
+        var W1 = Nd4j.create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3});
+        var b1 = Nd4j.create(new double[]{.6, .5}, new int[]{2, 1});
+        var x = Nd4j.create(new double[]{.2, .3, .3, .4 , .1 , .1}, new int[]{3, 2});
+        var y = Nd4j.create(new double[]{.3, .4, .4, .5}, new int[]{2, 2});
 
-        var mmul = Nd4j.zeros(2, 4);
+        var mmul = Nd4j.zeros(2, 2);
         var xT = x.transpose();
         var dW = Nd4j.zeros(2, 3);
-        var dB = Nd4j.zeros(2, 4);
+        var dB = Nd4j.zeros(2, 2);
 
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
@@ -101,7 +101,7 @@ public class TestMatrix {
             mmul.addiColumnVector(b1);
 //            mmul.addi(b2);
             mmul.subi(y);
-            mmul.muli(0.00002);
+            mmul.muli(0.2);
 
             dW = mmul.mmul(xT);
             dB = mmul;

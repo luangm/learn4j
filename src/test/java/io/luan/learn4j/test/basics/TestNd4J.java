@@ -3,6 +3,7 @@ package io.luan.learn4j.test.basics;
 import lombok.val;
 import org.junit.Test;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.impl.transforms.SoftMaxDerivative;
 import org.nd4j.linalg.convolution.Convolution;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
@@ -15,9 +16,10 @@ public class TestNd4J {
 
     @Test
     public void testBroadcast() {
-        INDArray array = Nd4j.linspace(1, 6, 6).reshape(2, 3);
-        val result = Nd4j.sum(array);
-        System.out.println(result);
+        INDArray array = Nd4j.linspace(1, 6, 6).reshape(2, 1, 3);
+        System.out.println(array);
+        System.out.println(array.broadcast(2, 2, 3));
+
 
 //
 //        System.out.println(array);
@@ -39,14 +41,6 @@ public class TestNd4J {
 //        INDArray sum = array.add(one);
 //
 //        System.out.println(sum);
-    }
-
-    @Test
-    public void testConv2() {
-        INDArray nd = Nd4j.ones(5,5);
-        INDArray kernel = Nd4j.ones(3,3);
-        INDArray conv = Nd4j.getConvolution().conv2d(nd, kernel, Convolution.Type.VALID);
-        System.out.println(conv);
     }
 
     @Test
@@ -72,6 +66,14 @@ public class TestNd4J {
     }
 
     @Test
+    public void testConv2() {
+        INDArray nd = Nd4j.ones(5, 5);
+        INDArray kernel = Nd4j.ones(3, 3);
+        INDArray conv = Nd4j.getConvolution().conv2d(nd, kernel, Convolution.Type.VALID);
+        System.out.println(conv);
+    }
+
+    @Test
     public void testIm2Col() {
         int nEx = 1;
         int depth = 1;
@@ -90,16 +92,83 @@ public class TestNd4J {
     }
 
     @Test
+    public void testSoftmax() {
+        INDArray a = Nd4j.linspace(1, 8, 8).reshape(4, 2);
+        val c = Transforms.softmax(a);
+        SoftMaxDerivative
+        System.out.println(a);
+        System.out.println(c);
+    }
+
+    @Test
+    public void testExp() {
+        INDArray a = Nd4j.linspace(1, 8, 8).reshape(2, 4);
+        val z = Transforms.exp(a);
+        System.out.println(a);
+        System.out.println(z);
+    }
+
+    @Test
+    public void testLog() {
+        INDArray a = Nd4j.linspace(1, 8, 8).reshape(2, 4);
+        val z = Transforms.log(a);
+        System.out.println(a);
+        System.out.println(z);
+    }
+
+    @Test
+    public void testAbs() {
+        INDArray a = Nd4j.linspace(-4, 5, 8).reshape(2, 4);
+        val z = Transforms.abs(a);
+        System.out.println(a);
+        System.out.println(z);
+    }
+
+    @Test
+    public void test3() {
+        INDArray a = Nd4j.linspace(1, 5, 8).reshape(2, 4);
+        val z = Transforms.sqrt(a);
+        System.out.println(a);
+        System.out.println(z);
+    }
+
+    @Test
     public void testMatmul() {
         INDArray a = Nd4j.linspace(1, 10, 6).reshape(2, 3);
         INDArray b = Nd4j.linspace(1, 3, 3).reshape(3, 1);
         INDArray c = a.mmul(b);
 
-
         System.out.println(c);
         System.out.println(c.shapeInfoToString());
 
         System.out.println(c.shape());
+    }
+
+    @Test
+    public void testReshape() {
+        INDArray array = Nd4j.linspace(1, 3 * 3 * 3, 3 * 3 * 3).reshape(3, 3, 3);
+        INDArray kernel = Nd4j.linspace(1, 3 * 2 * 2, 3 * 2 * 2).reshape(3, 2, 2);
+        System.out.println(array);
+        array.transpose();
+        System.out.println(array.shapeInfoToString());
+        INDArray indArray = Nd4j.getConvolution().conv2d(array, kernel, Convolution.Type.VALID);
+        System.out.println(indArray);
+    }
+
+
+    @Test
+    public void testArgMax() {
+        INDArray array = Nd4j.linspace(1, 6, 6).reshape(2, 3);
+        System.out.println(array);
+
+        INDArray argmax = Nd4j.argMax(array);
+        System.out.println(argmax);
+
+        INDArray argmax0 = Nd4j.argMax(array, 0);
+        System.out.println(argmax0);
+
+        INDArray argmax1 = Nd4j.argMax(array, 1);
+        System.out.println(argmax1);
     }
 
     @Test
@@ -114,8 +183,31 @@ public class TestNd4J {
         System.out.println(sigDev);
     }
 
+
+
     @Test
     public void testTranspose() {
+        INDArray array = Nd4j.linspace(1, 6, 6).reshape(2, 3);
+        System.out.println(array);
+        System.out.println(array.shapeInfoToString());
+        INDArray trans = array.transpose();
+        System.out.println(trans);
+        System.out.println(trans.shapeInfoToString());
+        INDArray slice = trans.slice(0);
+        System.out.println(slice);
+        System.out.println(slice.shapeInfoToString());
+        slice = trans.slice(1);
+        System.out.println(slice);
+        System.out.println(slice.shapeInfoToString());
+        slice = trans.slice(2);
+        System.out.println(slice);
+        System.out.println(slice.shapeInfoToString());
+        slice.put(0, 0, 10);
+        System.out.println(array);
+    }
+
+    @Test
+    public void testTranspose2() {
         INDArray testConst = Nd4j.linspace(1, 10, 6);
         INDArray test2 = testConst.reshape(3, 2);
 

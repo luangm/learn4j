@@ -19,6 +19,12 @@ public class DependencyVisitor extends BaseVisitor {
     private Set<Expression> dependencies = new HashSet<Expression>();
 
     @Override
+    public void visitAbs(Abs node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitAbs(node, params);
+    }
+
+    @Override
     public void visitAdd(Add node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
@@ -33,6 +39,13 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitDivide(Divide node, Object... params) {
+        dependencies.add(node.getLeft());
+        dependencies.add(node.getRight());
+        super.visitDivide(node, params);
+    }
+
+    @Override
     public void visitMatMul(MatMul node, Object... params) {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
@@ -44,13 +57,6 @@ public class DependencyVisitor extends BaseVisitor {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitMultiply(node, params);
-    }
-
-    @Override
-    public void visitDivide(Divide node, Object... params) {
-        dependencies.add(node.getLeft());
-        dependencies.add(node.getRight());
-        super.visitDivide(node, params);
     }
 
     @Override
@@ -72,19 +78,6 @@ public class DependencyVisitor extends BaseVisitor {
         super.visitReduceMean(node, params);
     }
 
-
-    @Override
-    public void visitAbs(Abs node, Object... params) {
-        dependencies.add(node.getBase());
-        super.visitAbs(node, params);
-    }
-
-    @Override
-    public void visitSquare(Square node, Object... params) {
-        dependencies.add(node.getBase());
-        super.visitSquare(node, params);
-    }
-
     @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         dependencies.add(node.getBase());
@@ -92,9 +85,9 @@ public class DependencyVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitRelu(Relu node, Object... params) {
+    public void visitSquare(Square node, Object... params) {
         dependencies.add(node.getBase());
-        super.visitRelu(node, params);
+        super.visitSquare(node, params);
     }
 
     @Override
@@ -108,5 +101,11 @@ public class DependencyVisitor extends BaseVisitor {
         dependencies.add(node.getLeft());
         dependencies.add(node.getRight());
         super.visitSubtract(node, params);
+    }
+
+    @Override
+    public void visitRelu(Relu node, Object... params) {
+        dependencies.add(node.getBase());
+        super.visitRelu(node, params);
     }
 }
