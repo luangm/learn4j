@@ -1,6 +1,6 @@
 package io.luan.learn4j.test.tensor;
 
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import org.junit.Test;
 
 /**

@@ -1,11 +1,11 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.base;
 
 import io.luan.learn4j.structure.Expression;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * A base implementation of the Expression interface.
@@ -15,14 +15,19 @@ import java.util.Map;
  */
 public abstract class BaseExpression implements Expression {
 
+    private static AtomicInteger ID_COUNTER = new AtomicInteger(1);
+
     private Map<Expression, Expression> gradientMap = new HashMap<>();
 
     @Getter
-    @Setter
+    private int id;
+
+    @Getter
     private String name;
 
     protected BaseExpression(String name) {
         this.name = name;
+        this.id = ID_COUNTER.getAndIncrement();
     }
 
     @Override
@@ -41,7 +46,7 @@ public abstract class BaseExpression implements Expression {
 
     @Override
     public String toString() {
-        return this.getType() + "[" + this.getName() + "]";
+        return this.getType() + "[" + this.getId() + "]";
     }
 
 }

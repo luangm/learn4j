@@ -1,8 +1,8 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.core;
 
-import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
+import io.luan.learn4j.structure.impl.base.BaseExpression;
 import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class Parameter extends BaseExpression {
     @Setter
     private Tensor value;
 
-    public Parameter(String name, Tensor value) {
+    public Parameter(Tensor value, String name) {
         super(name);
         this.value = value;
     }
@@ -32,11 +32,6 @@ public class Parameter extends BaseExpression {
     }
 
     @Override
-    public int getRank() {
-        return value.getRank();
-    }
-
-    @Override
     public int[] getShape() {
         return value.getShape();
     }
@@ -44,13 +39,6 @@ public class Parameter extends BaseExpression {
     @Override
     public ExpressionType getType() {
         return ExpressionType.Parameter;
-    }
-
-    protected Expression createGradient(Expression target) {
-        if (target == this) {
-            return Constant.ONE;
-        }
-        return Constant.ZERO;
     }
 
 }

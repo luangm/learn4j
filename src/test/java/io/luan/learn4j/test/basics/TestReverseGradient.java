@@ -1,20 +1,15 @@
 package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.session.Session;
-import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Tensor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.experimental.var;
 import lombok.val;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.create;
+import static io.luan.learn4j.core.Tensor.create;
 
 /**
  * @author Guangmiao Luan
@@ -25,9 +20,9 @@ public class TestReverseGradient {
     @Test
     public void testGradientDescent() {
 
-        val a = parameter("a", create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3}));
-        val b = parameter("b", create(new double[]{.1, .2, .3, .4, .2, .3, .4, .5, .3, .4, .5, .6}, new int[]{3, 4}));
-        val y = parameter("y", create(new double[]{1, 0, 1, 0, 0, 1, 0, 1}, new int[]{2, 4}));
+        val a = parameter( create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3}));
+        val b = parameter( create(new double[]{.1, .2, .3, .4, .2, .3, .4, .5, .3, .4, .5, .6}, new int[]{3, 4}));
+        val y = parameter( create(new double[]{1, 0, 1, 0, 0, 1, 0, 1}, new int[]{2, 4}));
 
         val matmul = matmul(a, b);
         val sigmoid = sigmoid(matmul);
@@ -62,10 +57,10 @@ public class TestReverseGradient {
     @Test
     public void testMatrixGradientDescent() throws IOException {
 
-        var W1 = parameter("W1", create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3}));
-        var b1 = parameter("b1", create(new double[]{.6, .5}, new int[]{2, 1}));
-        var x = parameter("x", create(new double[]{0.2, 0.3, 0.3, 0.4, 0.1, 0.1}, new int[]{3, 2}));
-        var y = parameter("y", create(new double[]{0.3, 0.4, 0.4, 0.5}, new int[]{2, 2}));
+        var W1 = parameter(create(new double[]{.1, .2, .3, .4, .5, .6}, new int[]{2, 3}));
+        var b1 = parameter(create(new double[]{.6, .5}, new int[]{2, 1}));
+        var x = parameter(create(new double[]{0.2, 0.3, 0.3, 0.4, 0.1, 0.1}, new int[]{3, 2}));
+        var y = parameter( create(new double[]{0.3, 0.4, 0.4, 0.5}, new int[]{2, 2}));
 
         var mmul = matmul(W1, x);
         var add = add(mmul, b1);

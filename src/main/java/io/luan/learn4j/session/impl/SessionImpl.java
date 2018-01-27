@@ -4,7 +4,7 @@ import io.luan.learn4j.session.FlowMode;
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.visitor.impl.EvaluationVisitor;
 import lombok.Getter;
 import lombok.Setter;

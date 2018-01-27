@@ -1,7 +1,7 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.core;
 
-import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.impl.base.BaseExpression;
 import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
@@ -18,7 +18,7 @@ public class Variable extends BaseExpression {
     @Getter
     private int[] shape;
 
-    public Variable(String name, int[] shape) {
+    public Variable(int[] shape, String name) {
         super(name);
         this.shape = shape;
     }
@@ -29,19 +29,8 @@ public class Variable extends BaseExpression {
     }
 
     @Override
-    public int getRank() {
-        return shape.length;
-    }
-
-    @Override
     public ExpressionType getType() {
         return ExpressionType.Variable;
     }
 
-    protected Expression createGradient(Expression target) {
-        if (target == this) {
-            return Constant.ONE;
-        }
-        return Constant.ZERO;
-    }
 }

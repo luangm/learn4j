@@ -1,6 +1,6 @@
 package io.luan.learn4j.utils;
 
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;

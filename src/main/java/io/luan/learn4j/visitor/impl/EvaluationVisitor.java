@@ -1,8 +1,16 @@
 package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Tensor;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.core.Tensor;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.core.Parameter;
+import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.Assign;
+import io.luan.learn4j.structure.impl.special.Fill;
+import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.utils.TensorMath;
 import lombok.Getter;
 

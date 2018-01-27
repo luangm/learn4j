@@ -6,7 +6,7 @@ import lombok.val;
 import org.junit.Test;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.scalar;
+import static io.luan.learn4j.core.Tensor.scalar;
 
 /**
  * @author Guangmiao Luan
@@ -17,8 +17,8 @@ public class ForwardGradientTest {
     @Test
     public void testForward() {
 
-        val a = parameter("a", scalar(5));
-        val b = parameter("b", scalar(3));
+        val a = parameter(scalar(5));
+        val b = parameter(scalar(3));
 
         val add = add(a, b);
 

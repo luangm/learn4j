@@ -1,4 +1,4 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.base;
 
 import io.luan.learn4j.structure.Expression;
 import lombok.Getter;
@@ -7,7 +7,7 @@ import lombok.Getter;
  * @author Guangmiao Luan
  * @since 27/09/2017.
  */
-abstract class BinaryOp extends BaseExpression {
+public abstract class BinaryExpression extends BaseExpression {
 
     @Getter
     private Expression left;
@@ -15,9 +15,10 @@ abstract class BinaryOp extends BaseExpression {
     @Getter
     private Expression right;
 
-    BinaryOp(String name, Expression left, Expression right) {
+    public BinaryExpression(Expression left, Expression right, String name) {
         super(name);
         this.left = left;
         this.right = right;
     }
+
 }

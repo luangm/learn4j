@@ -1,7 +1,16 @@
 package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.core.Parameter;
+import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.Assign;
+import io.luan.learn4j.structure.impl.special.Fill;
+import io.luan.learn4j.structure.impl.special.Group;
+import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -44,7 +53,7 @@ abstract class BaseVisitor implements Visitor {
 
     @Override
     public void visitGroup(Group node, Object... params) {
-        for (Expression exp : node.getExpList()) {
+        for (Expression exp : node.getList()) {
             exp.accept(this, params);
         }
     }
@@ -93,7 +102,7 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
-    public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
+    public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
         node.getBase().accept(this, params);
     }
 
@@ -121,6 +130,11 @@ abstract class BaseVisitor implements Visitor {
     @Override
     public void visitVariable(Variable node, Object... params) {
         // do nothing
+    }
+
+    @Override
+    public void visitSoftmax(Softmax node, Object... params) {
+        node.getBase().accept(this, params);
     }
 
     @Override

@@ -1,7 +1,10 @@
 package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.special.Assign;
+import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 
 import java.util.HashSet;

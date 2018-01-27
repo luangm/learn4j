@@ -8,6 +8,14 @@ import org.apache.commons.lang3.tuple.Pair;
  */
 public class ShapeUtils {
 
+    public static int[] reduce(int[] shape, int dimension) {
+        int[] result = new int[shape.length];
+        for (int i = 0; i < shape.length; i++) {
+            result[i] = (dimension == -1 || dimension == i) ? 1 : shape[i];
+        }
+        return result;
+    }
+
     public static int[] broadcastShapes(int[] shape1, int[] shape2) {
 
         int[] result = new int[2];

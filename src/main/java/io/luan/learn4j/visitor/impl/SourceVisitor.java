@@ -1,7 +1,9 @@
 package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.transform.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -79,6 +81,11 @@ public class SourceVisitor extends BaseVisitor {
     public void visitSigmoid(Sigmoid node, Object... params) {
         nonSource.add(node.getBase());
         super.visitSigmoid(node, params);
+    }
+
+    @Override
+    public void visitSoftmax(Softmax softmax, Object... params) {
+
     }
 
     @Override

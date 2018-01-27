@@ -2,7 +2,7 @@ package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import lombok.val;
 import org.junit.Test;
 
@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.scalar;
+import static io.luan.learn4j.core.Tensor.scalar;
 
 /**
  * @author Guangmiao Luan
@@ -21,16 +21,13 @@ public class TestScalar {
     @Test
     public void testGradientDescent() {
 
-        val W1 = parameter("W1", scalar(5));
-        val b1 = parameter("b1", scalar(3));
-        val x = variable("x", new int[]{1, 1});
-        val y = variable("y", new int[]{1, 1});
+        val W1 = parameter(scalar(5), "a");
+        val b1 = parameter(scalar(3));
+        val x = variable( new int[]{1, 1});
+        val y = variable(new int[]{1, 1});
 
-        println(W1.getRank());
         println(W1.getShape()[0]);
         println(W1.getShape()[1]);
-        println(x.getRank());
-        println(y.getRank());
 
         val loss2 = reduceMean(square(subtract(add(multiply(W1, x), b1), y)));
 

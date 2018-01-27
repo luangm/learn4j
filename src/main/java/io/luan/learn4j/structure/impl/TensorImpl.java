@@ -1,6 +1,6 @@
 package io.luan.learn4j.structure.impl;
 
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
 

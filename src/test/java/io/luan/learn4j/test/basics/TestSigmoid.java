@@ -5,7 +5,7 @@ import lombok.val;
 import org.junit.Test;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.create;
+import static io.luan.learn4j.core.Tensor.create;
 
 /**
  * @author Guangmiao Luan
@@ -16,7 +16,7 @@ public class TestSigmoid {
     @Test
     public void testSigmoid() {
 
-        val a = parameter("a", create(new double[]{-2, -1.2, -0.4, 0.4, 1.2, 2}, new int[]{2, 3}));
+        val a = parameter(create(new double[]{-2, -1.2, -0.4, 0.4, 1.2, 2}, new int[]{2, 3}), "A");
 
         val sigmoid = sigmoid(a);
 

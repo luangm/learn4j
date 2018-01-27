@@ -2,7 +2,12 @@ package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.Fill;
+import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.utils.ShapeUtils;
 import lombok.val;
 
@@ -144,6 +149,11 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitSoftmax(Softmax softmax, Object... params) {
+
+    }
+
+    @Override
     public void visitSquare(Square node, Object... params) {
         Expression grad = getGradientOrDefault(node, params);
 
@@ -199,7 +209,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
             return (Expression) params[0];
         }
 
-        return new Fill("FILL", 1, node.getShape());
+        return new Fill(1, node.getShape(), null);
     }
 
 }

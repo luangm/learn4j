@@ -1,7 +1,8 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.transform;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.impl.base.TransformExpression;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -10,10 +11,10 @@ import io.luan.learn4j.visitor.Visitor;
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Step extends UnaryOp {
+public class Step extends TransformExpression {
 
-    public Step(String name, Expression base) {
-        super(name, base);
+    public Step(Expression base, String name) {
+        super(base, name);
     }
 
     @Override
@@ -22,17 +23,8 @@ public class Step extends UnaryOp {
     }
 
     @Override
-    public int getRank() {
-        return getBase().getRank();
-    }
-
-    @Override
-    public int[] getShape() {
-        return getBase().getShape();
-    }
-
-    @Override
     public ExpressionType getType() {
         return ExpressionType.Step;
     }
+
 }

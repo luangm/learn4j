@@ -1,7 +1,8 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.transform;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
+import io.luan.learn4j.structure.impl.base.TransformExpression;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -10,25 +11,15 @@ import io.luan.learn4j.visitor.Visitor;
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
-public class Sign extends UnaryOp {
+public class Sign extends TransformExpression {
 
-    public Sign(String name, Expression base) {
-        super(name, base);
+    public Sign(Expression base, String name) {
+        super(base, name);
     }
 
     @Override
     public void accept(Visitor visitor, Object... params) {
         visitor.visitSign(this, params);
-    }
-
-    @Override
-    public int getRank() {
-        return getBase().getRank();
-    }
-
-    @Override
-    public int[] getShape() {
-        return getBase().getShape();
     }
 
     @Override

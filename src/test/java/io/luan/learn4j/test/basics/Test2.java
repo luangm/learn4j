@@ -2,7 +2,7 @@ package io.luan.learn4j.test.basics;
 
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import lombok.experimental.var;
 import lombok.val;
 import org.junit.Test;
@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.structure.Tensor.create;
+import static io.luan.learn4j.core.Tensor.create;
 
 /**
  * @author Guangmiao Luan
@@ -25,9 +25,9 @@ public class Test2 {
     @Test
     public void testMatrixGradientDescent() throws IOException {
 
-        var W = parameter("W1", create(new double[]{1, 1}, new int[]{1, 2}));
-        var b = parameter("b1", create(new double[]{1}, new int[]{1, 1}));
-        var x = variable("x", new int[]{2, 1});
+        var W = parameter(create(new double[]{1, 1}, new int[]{1, 2}));
+        var b = parameter(create(new double[]{1}, new int[]{1, 1}));
+        var x = variable( new int[]{2, 1});
 
         var mmul = matmul(W, x);
         var add = add(mmul, b);

@@ -1,14 +1,11 @@
-package io.luan.learn4j.structure.impl;
+package io.luan.learn4j.structure.impl.special;
 
-import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.structure.impl.base.BaseExpression;
 import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
 
 /**
- * Scalar Multiply
- *
  * @author Guangmiao Luan
  * @since 28/08/2017.
  */
@@ -20,7 +17,7 @@ public class Fill extends BaseExpression {
     @Getter
     private int[] shape;
 
-    public Fill(String name, Number scalar, int[] shape) {
+    public Fill(Number scalar, int[] shape, String name) {
         super(name);
         this.scalar = scalar;
         this.shape = shape;
@@ -32,13 +29,8 @@ public class Fill extends BaseExpression {
     }
 
     @Override
-    public int getRank() {
-        // TODO: Should check for broadcast rules
-        return shape.length;
-    }
-
-    @Override
     public ExpressionType getType() {
         return ExpressionType.Fill;
     }
+
 }

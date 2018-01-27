@@ -1,16 +1,20 @@
 package io.luan.learn4j;
 
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.optimizer.GradientDescentOptimizer;
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.session.impl.SessionImpl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
-import io.luan.learn4j.structure.Tensor;
-import io.luan.learn4j.structure.impl.*;
+import io.luan.learn4j.structure.impl.GraphImpl;
+import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.core.Parameter;
+import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.transform.*;
 import lombok.val;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * This is a main factory class for creating nodes
@@ -23,52 +27,48 @@ public class Learn4j {
     /**
      * Stores the current active graph.
      * All subsequent calls are based on this graph
-     * <p>
      * This should be ThreadLocal
      */
-    private static Graph activeGraph;
+    private static Graph activeGraph = new GraphImpl();
 
-    /**
-     * Stores all the graphs.
-     * This should be shared among Threads
-     */
-    private static List<Graph> graphList = new ArrayList<Graph>();
+    public static Expression abs(Expression base) {
+        return abs(base, null);
+    }
 
-    static {
-        // Creates a default graph
-        graph("DEFAULT");
+    public static Expression abs(Expression base, String name) {
+        return addToGraph(new Abs(base, name));
     }
 
     public static Expression add(Expression left, Expression right) {
-        return add("", left, right);
+        return add(left, right, null);
     }
 
-    public static Expression add(String name, Expression left, Expression right) {
-        return addToGraph(new Add(name, left, right));
-    }
-
-    public static Expression abs(Expression base) {
-        return abs("", base);
-    }
-
-    public static Expression abs(String name, Expression base) {
-        return addToGraph(new Abs(name, base));
+    public static Expression add(Expression left, Expression right, String name) {
+        return addToGraph(new Add(left, right, name));
     }
 
     public static Expression assign(Expression target, Expression newValue) {
         return null;
     }
 
-    public static Expression constant(String name, Tensor tensor) {
-        return addToGraph(new Constant(name, tensor));
+    public static Expression constant(double[] data, int[] shape) {
+        return constant(data, shape, null);
+    }
+
+    public static Expression constant(double[] data, int[] shape, String name) {
+        return constant(Tensor.create(data, shape), name);
+    }
+
+    public static Expression constant(Tensor tensor, String name) {
+        return addToGraph(new Constant(tensor, name));
     }
 
     public static Expression divide(Expression left, Expression right) {
-        return divide("", left, right);
+        return divide(left, right, null);
     }
 
-    public static Expression divide(String name, Expression left, Expression right) {
-        return addToGraph(new Divide(name, left, right));
+    public static Expression divide(Expression left, Expression right, String name) {
+        return addToGraph(new Divide(left, right, name));
     }
 
     public static GradientDescentOptimizer gradientDescentOptimizer(double learnRate) {
@@ -76,31 +76,32 @@ public class Learn4j {
         return optimizer;
     }
 
-    public static Graph graph(String name) {
-        Graph graph = new GraphImpl();
-        graphList.add(graph);
-        activeGraph = graph;
-        return graph;
-    }
-
     public static Expression matmul(Expression left, Expression right) {
-        return matmul("", left, right);
+        return matmul(left, right, null);
     }
 
-    public static Expression matmul(String name, Expression left, Expression right) {
-        return addToGraph(new MatMul(name, left, right));
+    public static Expression matmul(Expression left, Expression right, String name) {
+        return matmul(left, right, false, false, name);
+    }
+
+    public static Expression matmul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight, String name) {
+        return addToGraph(new MatMul(left, right, transposeLeft, transposeRight, name));
     }
 
     public static Expression multiply(Expression left, Expression right) {
-        return multiply("", left, right);
+        return multiply(left, right, null);
     }
 
-    public static Expression multiply(String name, Expression left, Expression right) {
-        return addToGraph(new Multiply(name, left, right));
+    public static Expression multiply(Expression left, Expression right, String name) {
+        return addToGraph(new Multiply(left, right, name));
     }
 
-    public static Expression parameter(String name, Tensor tensor) {
-        return addToGraph(new Parameter(name, tensor));
+    public static Expression parameter(Tensor tensor) {
+        return parameter(tensor, null);
+    }
+
+    public static Expression parameter(Tensor tensor, String name) {
+        return addToGraph(new Parameter(tensor, name));
     }
 
     public static void println(Object obj) {
@@ -108,19 +109,43 @@ public class Learn4j {
     }
 
     public static Expression reduceMean(Expression base) {
-        return reduceMean("", base);
+        return reduceMean(base, null);
     }
 
-    public static Expression reduceMean(String name, Expression base) {
-        return addToGraph(new ReduceMean(name, base, 0));
+    public static Expression reduceMean(Expression base, String name) {
+        return reduceMean(base, -1, name);
+    }
+
+    public static Expression reduceMean(Expression base, int dimension) {
+        return reduceMean(base, dimension, null);
+    }
+
+    public static Expression reduceMean(Expression base, int dimension, String name) {
+        return addToGraph(new ReduceMean(base, dimension, name));
     }
 
     public static Expression reduceSum(Expression base) {
-        return reduceSum("", base);
+        return reduceSum(base, null);
     }
 
-    public static Expression reduceSum(String name, Expression base) {
-        return addToGraph(new ReduceSum(name, base, -1));
+    public static Expression reduceSum(Expression base, String name) {
+        return reduceSum(base, -1, name);
+    }
+
+    public static Expression reduceSum(Expression base, int dimension) {
+        return reduceSum(base, dimension, null);
+    }
+
+    public static Expression reduceSum(Expression base, int dimension, String name) {
+        return addToGraph(new ReduceSum(base, dimension, name));
+    }
+
+    public static Expression relu(Expression base) {
+        return relu(base, null);
+    }
+
+    public static Expression relu(Expression base, String name) {
+        return addToGraph(new Relu(base, name));
     }
 
     public static Session session(String s) {
@@ -129,48 +154,43 @@ public class Learn4j {
     }
 
     public static Expression sigmoid(Expression base) {
-        return sigmoid("", base);
+        return sigmoid(base, null);
     }
 
-    public static Expression sigmoid(String name, Expression base) {
-        return addToGraph(new Sigmoid(name, base));
+    public static Expression sigmoid(Expression base, String name) {
+        return addToGraph(new Sigmoid(base, name));
     }
 
-    public static Expression relu(Expression base) {
-        return relu("", base);
+    public static Expression square(Expression base) {
+        return square(base, null);
     }
 
-    public static Expression relu(String name, Expression base) {
-        return addToGraph(new Relu(name, base));
+    public static Expression square(Expression base, String name) {
+        return addToGraph(new Square(base, name));
     }
 
     public static Expression step(Expression base) {
-        return step("", base);
+        return step(base, null);
     }
 
-    public static Expression step(String name, Expression base) {
-        return addToGraph(new Step(name, base));
-    }
-
-
-    public static Expression square(Expression base) {
-        return square("", base);
-    }
-
-    public static Expression square(String name, Expression base) {
-        return addToGraph(new Square(name, base));
+    public static Expression step(Expression base, String name) {
+        return addToGraph(new Step(base, name));
     }
 
     public static Expression subtract(Expression left, Expression right) {
-        return subtract("", left, right);
+        return subtract(left, right, null);
     }
 
-    public static Expression subtract(String name, Expression left, Expression right) {
-        return addToGraph(new Subtract(name, left, right));
+    public static Expression subtract(Expression left, Expression right, String name) {
+        return addToGraph(new Subtract(left, right, name));
     }
 
-    public static Expression variable(String name, int[] shape) {
-        return addToGraph(new Variable(name, shape));
+    public static Expression variable(int[] shape) {
+        return variable(shape, null);
+    }
+
+    public static Expression variable(int[] shape, String name) {
+        return addToGraph(new Variable(shape, name));
     }
 
     private static Expression addToGraph(Expression exp) {

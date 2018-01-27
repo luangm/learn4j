@@ -26,21 +26,14 @@ public interface Expression {
     Expression getGradient();
 
     /**
+     * @return the unique ID of the Expression.
+     */
+    int getId();
+
+    /**
      * Returns the name of the expression.
-     * <p>
-     * The name can be null, by which the expression node cannot be found by name in a Graph
      */
     String getName();
-
-    /**
-     * Set the name of the expression.
-     */
-    void setName(String name);
-
-    /**
-     * Returns the rank of the expression
-     */
-    int getRank();
 
     /**
      * Returns the shape of the expression

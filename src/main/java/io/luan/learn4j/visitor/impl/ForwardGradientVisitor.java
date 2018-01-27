@@ -2,9 +2,9 @@ package io.luan.learn4j.visitor.impl;
 
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
-import io.luan.learn4j.structure.impl.Add;
-import io.luan.learn4j.structure.impl.Constant;
-import io.luan.learn4j.structure.impl.Parameter;
+import io.luan.learn4j.structure.impl.binary.Add;
+import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.core.Parameter;
 
 /**
  * Apply a forward-mode AD pass through a compute graph,
@@ -20,18 +20,13 @@ public class ForwardGradientVisitor extends BaseVisitor {
         this.target = target;
     }
 
-    private String createNameForGradient(Expression node) {
-        String gradName = node.getName() + "/grad_" + target.getName();
-        return gradName;
-    }
-
     @Override
     public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         String gradName = createNameForGradient(node);
         Expression leftGrad = node.getLeft().getGradient(target);
         Expression rightGrad = node.getRight().getGradient(target);
-        Expression gradient = ExpressionFactory.createAdd(gradName, leftGrad, rightGrad);
+        Expression gradient = ExpressionFactory.add(leftGrad, rightGrad, gradName);
         node.setGradient(target, gradient);
     }
 
@@ -45,5 +40,10 @@ public class ForwardGradientVisitor extends BaseVisitor {
     public void visitParameter(Parameter node, Object... params) {
         Expression gradient = target == node ? Constant.ONE : Constant.ZERO;
         node.setGradient(target, gradient);
+    }
+
+    private String createNameForGradient(Expression node) {
+        String gradName = node.getName() + "/grad_" + target.getName();
+        return gradName;
     }
 }

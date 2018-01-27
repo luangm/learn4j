@@ -3,7 +3,7 @@ package io.luan.learn4j.optimizer;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.Graph;
-import io.luan.learn4j.structure.Tensor;
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;

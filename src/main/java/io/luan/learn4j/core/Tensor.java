@@ -1,4 +1,4 @@
-package io.luan.learn4j.structure;
+package io.luan.learn4j.core;
 
 import io.luan.learn4j.structure.impl.TensorImpl;
 import org.nd4j.linalg.api.ndarray.INDArray;
