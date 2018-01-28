@@ -7,7 +7,9 @@ import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 
 /**
- * Apply a forward-mode AD pass through a compute graph,
+ * Apply a forward-mode AD pass through a compute graph
+ *
+ * TODO: DO NOT USE. This does NOT work at this time.
  *
  * @author Guangmiao Luan
  * @since 06/10/2017.

@@ -1,7 +1,9 @@
 package io.luan.learn4j.visitor.impl;
 
-import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.core.Tensor;
+import io.luan.learn4j.core.utils.TensorMath;
+import io.luan.learn4j.session.Session;
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
@@ -11,7 +13,6 @@ import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Assign;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
-import io.luan.learn4j.utils.TensorMath;
 import lombok.Getter;
 
 import java.util.Map;
@@ -23,38 +24,34 @@ import java.util.Map;
 public class EvaluationVisitor extends BaseVisitor {
 
     @Getter
-    private Map<Expression, Tensor> feedMap;
+    private Map<Expression, Tensor> feed;
 
     @Getter
-    private Map<Expression, Tensor> valueMap;
+    private Session session;
 
-    public EvaluationVisitor(Map<Expression, Tensor> feedMap, Map<Expression, Tensor> valueMap) {
-        this.feedMap = feedMap;
-        this.valueMap = valueMap;
-    }
-
-    public Tensor getValue(Expression exp) {
-        return valueMap.get(exp);
+    public EvaluationVisitor(Session session, Map<Expression, Tensor> feed) {
+        this.feed = feed;
+        this.session = session;
     }
 
     @Override
-    public void visitSign(Sign node, Object... params) {
-        super.visitSign(node, params);
-        Tensor base = valueMap.get(node.getBase());
-        Tensor relu = TensorMath.sign(base);
-        valueMap.put(node, relu);
+    public void visitAbs(Abs node, Object... params) {
+        super.visitAbs(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor abs = TensorMath.abs(base);
+        session.setValue(node, abs);
     }
 
     @Override
     public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
-        Tensor left = valueMap.get(node.getLeft());
-        Tensor right = valueMap.get(node.getRight());
+        Tensor left = session.getValue(node.getLeft());
+        Tensor right = session.getValue(node.getRight());
 
-        Tensor sum = valueMap.get(node);
+        Tensor sum = session.getValue(node);
         if (sum == null) {
             sum = TensorMath.add(left, right);
-            valueMap.put(node, sum);
+            session.setValue(node, sum);
         } else {
             TensorMath.add(left, right, sum);
         }
@@ -63,7 +60,7 @@ public class EvaluationVisitor extends BaseVisitor {
     @Override
     public void visitAssign(Assign node, Object... params) {
         super.visitAssign(node);
-        Tensor newTensor = valueMap.get(node.getNewValue());
+        Tensor newTensor = session.getValue(node.getNewValue());
 
         Expression target = node.getTarget();
         if (target instanceof Parameter) {
@@ -71,36 +68,49 @@ public class EvaluationVisitor extends BaseVisitor {
             targetParam.setValue(newTensor);
         }
 
-        valueMap.put(node, newTensor);
-        valueMap.put(target, newTensor);
+        session.setValue(node, newTensor);
+        session.setValue(target, newTensor);
     }
 
     @Override
     public void visitConstant(Constant node, Object... params) {
-        if (!valueMap.containsKey(node)) {
-            valueMap.put(node, node.getValue());
+        session.setValue(node, node.getValue());
+    }
+
+    @Override
+    public void visitDivide(Divide node, Object... params) {
+        super.visitDivide(node, params);
+        Tensor left = session.getValue(node.getLeft());
+        Tensor right = session.getValue(node.getRight());
+
+        Tensor divide = session.getValue(node);
+        if (divide == null) {
+            divide = TensorMath.divide(left, right);
+            session.setValue(node, divide);
+        } else {
+            divide = TensorMath.divide(left, right, divide);
         }
     }
 
     @Override
     public void visitFill(Fill node, Object... params) {
         super.visitFill(node, params);
-        if (valueMap.get(node) == null) {
+        if (session.getValue(node) == null) {
             Tensor value = Tensor.fill(node.getScalar(), node.getShape());
-            valueMap.put(node, value);
+            session.setValue(node, value);
         }
     }
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
         super.visitMatMul(node, params);
-        Tensor left = valueMap.get(node.getLeft());
-        Tensor right = valueMap.get(node.getRight());
+        Tensor left = session.getValue(node.getLeft());
+        Tensor right = session.getValue(node.getRight());
 
-        Tensor prod = valueMap.get(node);
+        Tensor prod = session.getValue(node);
         if (prod == null) {
             prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight());
-            valueMap.put(node, prod);
+            session.setValue(node, prod);
         } else {
             prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight(), prod);
         }
@@ -109,120 +119,97 @@ public class EvaluationVisitor extends BaseVisitor {
     @Override
     public void visitMultiply(Multiply node, Object... params) {
         super.visitMultiply(node, params);
-        Tensor left = valueMap.get(node.getLeft());
-        Tensor right = valueMap.get(node.getRight());
+        Tensor left = session.getValue(node.getLeft());
+        Tensor right = session.getValue(node.getRight());
 
-        Tensor prod = valueMap.get(node);
+        Tensor prod = session.getValue(node);
         if (prod == null) {
             prod = TensorMath.multiply(left, right);
-            valueMap.put(node, prod);
+            session.setValue(node, prod);
         } else {
             prod = TensorMath.multiply(left, right, prod);
         }
     }
 
     @Override
-    public void visitDivide(Divide node, Object... params) {
-        super.visitDivide(node, params);
-        Tensor left = valueMap.get(node.getLeft());
-        Tensor right = valueMap.get(node.getRight());
-
-        Tensor divide = valueMap.get(node);
-        if (divide == null) {
-            divide = TensorMath.divide(left, right);
-            valueMap.put(node, divide);
-        } else {
-            divide = TensorMath.divide(left, right, divide);
-        }
-    }
-
-    @Override
     public void visitNegate(Negate node, Object... params) {
         super.visitNegate(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor negValue = TensorMath.negate(base);
-        valueMap.put(node, negValue);
+        session.setValue(node, negValue);
     }
 
     @Override
     public void visitParameter(Parameter node, Object... params) {
-        valueMap.put(node, node.getValue());
+        session.setValue(node, node.getValue());
     }
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor reduced = TensorMath.reduceMean(base);
-        valueMap.put(node, reduced);
+        session.setValue(node, reduced);
     }
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
         super.visitReduceSum(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor reduced = TensorMath.reduceSum(base, node.getDimension());
-        valueMap.put(node, reduced);
+        session.setValue(node, reduced);
     }
 
     @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         super.visitSigmoid(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor sigmoid = TensorMath.sigmoid(base);
-        valueMap.put(node, sigmoid);
-    }
-
-    @Override
-    public void visitRelu(Relu node, Object... params) {
-        super.visitRelu(node, params);
-        Tensor base = valueMap.get(node.getBase());
-        Tensor relu = TensorMath.relu(base);
-        valueMap.put(node, relu);
-    }
-
-    @Override
-    public void visitStep(Step node, Object... params) {
-        super.visitStep(node, params);
-        Tensor base = valueMap.get(node.getBase());
-        Tensor step = TensorMath.step(base);
-        valueMap.put(node, step);
+        session.setValue(node, sigmoid);
     }
 
     @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
         super.visitSigmoidGrad(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor sigGrad = TensorMath.sigmoidGrad(base);
-        valueMap.put(node, sigGrad);
+        session.setValue(node, sigGrad);
+    }
+
+    @Override
+    public void visitSign(Sign node, Object... params) {
+        super.visitSign(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor relu = TensorMath.sign(base);
+        session.setValue(node, relu);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
         super.visitSquare(node, params);
-        Tensor base = valueMap.get(node.getBase());
+        Tensor base = session.getValue(node.getBase());
         Tensor squared = TensorMath.square(base);
-        valueMap.put(node, squared);
+        session.setValue(node, squared);
     }
 
     @Override
-    public void visitAbs(Abs node, Object... params) {
-        super.visitAbs(node, params);
-        Tensor base = valueMap.get(node.getBase());
-        Tensor abs = TensorMath.abs(base);
-        valueMap.put(node, abs);
+    public void visitStep(Step node, Object... params) {
+        super.visitStep(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor step = TensorMath.step(base);
+        session.setValue(node, step);
     }
 
     @Override
     public void visitSubtract(Subtract node, Object... params) {
         super.visitSubtract(node);
-        Tensor left = valueMap.get(node.getLeft());
-        Tensor right = valueMap.get(node.getRight());
+        Tensor left = session.getValue(node.getLeft());
+        Tensor right = session.getValue(node.getRight());
 
-        Tensor diff = valueMap.get(node);
+        Tensor diff = session.getValue(node);
         if (diff == null) {
             diff = TensorMath.subtract(left, right);
-            valueMap.put(node, diff);
+            session.setValue(node, diff);
         } else {
             diff = TensorMath.subtract(left, right, diff);
         }
@@ -230,10 +217,18 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitVariable(Variable node, Object... params) {
-        Tensor feedVal = feedMap.get(node);
+        Tensor feedVal = feed.get(node);
         if (feedVal != null) {
-            valueMap.put(node, feedVal);
+            session.setValue(node, feedVal);
         }
+    }
+
+    @Override
+    public void visitRelu(Relu node, Object... params) {
+        super.visitRelu(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor relu = TensorMath.relu(base);
+        session.setValue(node, relu);
     }
 
 }

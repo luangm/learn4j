@@ -8,7 +8,7 @@ public enum FlowMode {
 
     /**
      * In this mode, all the tensors are stored at each compute node.
-     * Advantage: Caching a subgraph allows some computations to run faster on later iterations
+     * Advantage: Caching a subgraph allows some computations to eval faster on later iterations
      * Disadvantage: Uses more memory
      */
     Store,

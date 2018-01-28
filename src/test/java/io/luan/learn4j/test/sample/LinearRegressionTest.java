@@ -42,24 +42,24 @@ public class LinearRegressionTest {
         feed.put(y, create(new double[]{3, 4, 2, 4, 4, 3}, new int[]{2, 3}));
 
         Session sess = session("My Session");
-        println("W1: " + sess.run(W1, feed));
-        println("x: " + sess.run(x, feed));
-        println("b1: " + sess.run(b1, feed));
-        println("mmul: " + sess.run(mmul, feed));
-        println("add: " + sess.run(add, feed));
-        println("sub: " + sess.run(sub, feed));
-        println("square: " + sess.run(square, feed));
-        println("loss: " + sess.run(loss, feed));
+        println("W1: " + sess.eval(W1, feed));
+        println("x: " + sess.eval(x, feed));
+        println("b1: " + sess.eval(b1, feed));
+        println("mmul: " + sess.eval(mmul, feed));
+        println("add: " + sess.eval(add, feed));
+        println("sub: " + sess.eval(sub, feed));
+        println("square: " + sess.eval(square, feed));
+        println("loss: " + sess.eval(loss, feed));
 
         long now = new Date().getTime();
 
         for (int i = 0; i < 100000; i++) {
-            sess.run(train, feed);
-//            sess.run(loss, feed);
-//            println("loss: " + sess.run(loss, feed));
+            sess.eval(train, feed);
+//            sess.eval(loss, feed);
+//            println("loss: " + sess.eval(loss, feed));
         }
-        println("W1: " + sess.run(W1, feed));
-        println("b1: " + sess.run(b1, feed));
+        println("W1: " + sess.eval(W1, feed));
+        println("b1: " + sess.eval(b1, feed));
 
         long now2 = new Date().getTime();
         System.out.println("Finished in: " + (now2 - now) + " ms");

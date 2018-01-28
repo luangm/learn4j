@@ -1,5 +1,6 @@
 package io.luan.learn4j.structure;
 
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.visitor.Visitor;
 
 /**
@@ -16,6 +17,11 @@ public interface Expression {
     void accept(Visitor visitor, Object... params);
 
     /**
+     * Evaluate the value of this expression using the graph's active Session.
+     */
+    Tensor eval();
+
+    /**
      * Returns the gradient wrt to the target.
      * <p>
      * Note, Since this is only for storing the compute graph structure, this interface does NOT enforce
@@ -26,7 +32,17 @@ public interface Expression {
     Expression getGradient();
 
     /**
-     * @return the unique ID of the Expression.
+     * Returns the containing graph
+     */
+    Graph getGraph();
+
+    /**
+     * Attach to a graph
+     */
+    void attach(Graph graph);
+
+    /**
+     * Returns the unique ID of the Expression.
      */
     int getId();
 
@@ -41,9 +57,30 @@ public interface Expression {
     int[] getShape();
 
     /**
+     * The current state of the expression
+     */
+    ExpressionState getState();
+
+    /**
+     * Modifies the state
+     */
+    void setState(ExpressionState state);
+
+    /**
      * Returns the type of the Expression
      */
     ExpressionType getType();
+
+    /**
+     * Returns the current value of the Expression at the active session only.
+     * Or Null if the current value is not yet evaluated.
+     */
+    Tensor getValue();
+
+    /**
+     * This forces setting the session's value for this expression.
+     */
+    void setValue(Tensor value);
 
     /**
      * Sets the gradient expression of the current Expresson wrt the target.

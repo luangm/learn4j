@@ -1,9 +1,11 @@
-package io.luan.learn4j.utils;
+package io.luan.learn4j.core.utils;
 
 import io.luan.learn4j.core.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
+
+import java.util.Arrays;
 
 /**
  * Utility class for encapsulate all Tensor operations
@@ -20,29 +22,28 @@ public class TensorMath {
     }
 
     public static Tensor add(Tensor left, Tensor right) {
-        INDArray leftArray = left.getArray();
-        INDArray rightArray = right.getArray();
-
-        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-        leftArray = leftArray.broadcast(resultShape);
-        rightArray = rightArray.broadcast(resultShape);
-
-        INDArray sum = leftArray.add(rightArray);
-        return Tensor.create(sum);
+        return add(left, right, null);
     }
 
     public static Tensor add(Tensor left, Tensor right, Tensor result) {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
-        INDArray resultArray = result.getArray();
 
         int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
+        if (result != null && !Arrays.equals(result.getShape(), resultShape)) {
+            throw new IllegalArgumentException("Result's shape is not compatible with inputs");
+        }
+
         leftArray = leftArray.broadcast(resultShape);
         rightArray = rightArray.broadcast(resultShape);
 
-        // INPLACE add
-        leftArray.add(rightArray, resultArray);
-        return result;
+        if (result != null) {
+            INDArray resultArray = result.getArray();
+            leftArray.addi(rightArray, resultArray);
+            return result;
+        }
+
+        return Tensor.create(leftArray.add(rightArray));
     }
 
     public static Tensor divide(Tensor left, Tensor right) {

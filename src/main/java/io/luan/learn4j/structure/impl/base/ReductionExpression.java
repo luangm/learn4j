@@ -1,7 +1,7 @@
 package io.luan.learn4j.structure.impl.base;
 
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.utils.ShapeUtils;
+import io.luan.learn4j.core.utils.ShapeUtils;
 import lombok.Getter;
 
 /**

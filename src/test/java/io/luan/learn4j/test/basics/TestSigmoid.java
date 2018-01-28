@@ -22,14 +22,14 @@ public class TestSigmoid {
 
         val sess = session("My Session");
 
-        println("a: " + sess.run(a));
-        println("sigmoid: " + sess.run(sigmoid));
+        println("a: " + sess.eval(a));
+        println("sigmoid: " + sess.eval(sigmoid));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
         sigmoid.accept(visitor);
 
         val gradA = a.getGradient(sigmoid);
-        println("gradA: " + sess.run(gradA));
+        println("gradA: " + sess.eval(gradA));
 
         println(sess.getGraph());
     }

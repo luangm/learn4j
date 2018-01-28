@@ -27,15 +27,15 @@ public class TestBroadcast {
         z.accept(visitor);
 
         Session sess = session("My Session");
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("z: " + sess.run(z));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("z: " + sess.eval(z));
 
         var da = a.getGradient();
-        println("da: " + sess.run(da));
+        println("da: " + sess.eval(da));
 
         var db = b.getGradient();
-        println("db: " + sess.run(db));
+        println("db: " + sess.eval(db));
     }
 
     @Test
@@ -49,15 +49,15 @@ public class TestBroadcast {
         z.accept(visitor);
 
         Session sess = session("My Session");
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("z: " + sess.run(z));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("z: " + sess.eval(z));
 
         var da = a.getGradient();
-        println("da: " + sess.run(da));
+        println("da: " + sess.eval(da));
 
         var db = b.getGradient();
-        println("db: " + sess.run(db));
+        println("db: " + sess.eval(db));
     }
 
     @Test
@@ -71,15 +71,15 @@ public class TestBroadcast {
         z.accept(visitor);
 
         Session sess = session("My Session");
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("z: " + sess.run(z));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("z: " + sess.eval(z));
 
         var da = a.getGradient();
-        println("da: " + sess.run(da));
+        println("da: " + sess.eval(da));
 
         var db = b.getGradient();
-        println("db: " + sess.run(db));
+        println("db: " + sess.eval(db));
     }
 
     @Test
@@ -96,15 +96,15 @@ public class TestBroadcast {
         z.accept(visitor);
 
         Session sess = session("My Session");
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("z: " + sess.run(z));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("z: " + sess.eval(z));
 
         var da = a.getGradient();
-        println("da: " + sess.run(da));
+        println("da: " + sess.eval(da));
 
         var db = b.getGradient();
-        println("db: " + sess.run(db));
+        println("db: " + sess.eval(db));
     }
 
 }

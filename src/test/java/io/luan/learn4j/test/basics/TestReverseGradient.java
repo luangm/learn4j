@@ -32,23 +32,23 @@ public class TestReverseGradient {
 
         val sess = session("My Session");
 
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("y: " + sess.run(y));
-        println("matmul: " + sess.run(matmul));
-//        println("sigmoid: " + sess.run(sigmoid));
-//        println("sub: " + sess.run(sub));
-//        println("square: " + sess.run(square));
-//        println("reduceSum: " + sess.run(reduceSum));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("y: " + sess.eval(y));
+        println("matmul: " + sess.eval(matmul));
+//        println("sigmoid: " + sess.eval(sigmoid));
+//        println("sub: " + sess.eval(sub));
+//        println("square: " + sess.eval(square));
+//        println("reduceSum: " + sess.eval(reduceSum));
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor();
         matmul.accept(visitor);
 
         val gradA = a.getGradient(loss);
-        println("gradA: " + sess.run(gradA));
+        println("gradA: " + sess.eval(gradA));
 
         val gradB = b.getGradient(matmul);
-        println("gradB: " + sess.run(gradB));
+        println("gradB: " + sess.eval(gradB));
 
 //        println(add.getGradients());
         println(sess.getGraph());
@@ -73,15 +73,15 @@ public class TestReverseGradient {
         loss.accept(visitor);
 
         Session sess = session("My Session");
-        println("loss: " + sess.run(loss));
+        println("loss: " + sess.eval(loss));
 
         var gradA = W1.getGradient();
 
-        println("gradA: " + sess.run(gradA));
+        println("gradA: " + sess.eval(gradA));
 
         var gradB = b1.getGradient();
 
-        println("gradB: " + sess.run(gradB));
+        println("gradB: " + sess.eval(gradB));
     }
 
 

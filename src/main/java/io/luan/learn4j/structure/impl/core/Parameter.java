@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Parameter is holder for parameters to be updated on each gradient descend run
+ * Parameter is holder for parameters to be updated on each gradient descend eval
  * <p>
  * This is equivalent to TensorFlow.Variable
  *

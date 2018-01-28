@@ -1,5 +1,7 @@
 package io.luan.learn4j.structure;
 
+import io.luan.learn4j.session.Session;
+
 import java.util.Map;
 
 /**
@@ -24,5 +26,15 @@ public interface Graph {
      * Value = Expression
      */
     Map<Integer, Expression> getNodes();
+
+    /**
+     * Returns the active session for this graph
+     */
+    Session getSession();
+
+    /**
+     * Modifies the current session
+     */
+    void setSession(Session sesion);
 
 }

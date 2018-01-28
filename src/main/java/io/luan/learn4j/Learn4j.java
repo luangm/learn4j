@@ -29,7 +29,7 @@ public class Learn4j {
      * All subsequent calls are based on this graph
      * This should be ThreadLocal
      */
-    private static Graph activeGraph = new GraphImpl();
+    private static Graph activeGraph = new GraphImpl("DEFAULT");
 
     public static Expression abs(Expression base) {
         return abs(base, null);
@@ -57,6 +57,10 @@ public class Learn4j {
 
     public static Expression constant(double[] data, int[] shape, String name) {
         return constant(Tensor.create(data, shape), name);
+    }
+
+    public static Expression constant(Tensor tensor) {
+        return constant(tensor, null);
     }
 
     public static Expression constant(Tensor tensor, String name) {
@@ -194,10 +198,7 @@ public class Learn4j {
     }
 
     private static Expression addToGraph(Expression exp) {
-        if (activeGraph != null) {
-            activeGraph.add(exp);
-        }
-        return exp;
+        return activeGraph != null ? activeGraph.add(exp) : exp;
     }
 
 }

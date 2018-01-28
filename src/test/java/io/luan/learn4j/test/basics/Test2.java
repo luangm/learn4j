@@ -40,27 +40,27 @@ public class Test2 {
         feed.put(x, create(new double[]{1, 1}, new int[]{2, 1}));
 
         Session sess = session("My Session");
-        println("W1: " + sess.run(W, feed));
-        println("x: " + sess.run(x, feed));
-        println("b1: " + sess.run(b, feed));
-        println("mmul: " + sess.run(mmul, feed));
-        println("add: " + sess.run(add, feed));
-        println("abs: " + sess.run(abs, feed));
+        println("W1: " + sess.eval(W, feed));
+        println("x: " + sess.eval(x, feed));
+        println("b1: " + sess.eval(b, feed));
+        println("mmul: " + sess.eval(mmul, feed));
+        println("add: " + sess.eval(add, feed));
+        println("abs: " + sess.eval(abs, feed));
 
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
 
         for (int i = 0; i < 10000; i++) {
-            sess.run(train, feed);
-            println(sess.run(abs, feed));
+            sess.eval(train, feed);
+            println(sess.eval(abs, feed));
 //            println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
 //            if (i % 5000 == 0) {
 //                runtime.gc();
 //            }
         }
 
-        println("W1: " + sess.run(W, feed));
-        println("b1: " + sess.run(b, feed));
+        println("W1: " + sess.eval(W, feed));
+        println("b1: " + sess.eval(b, feed));
 
         long now2 = new Date().getTime();
 

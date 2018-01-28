@@ -24,9 +24,9 @@ public class ForwardGradientTest {
 
         Session sess = session("My Session");
 
-        println("a: " + sess.run(a));
-        println("b: " + sess.run(b));
-        println("add: " + sess.run(add));
+        println("a: " + sess.eval(a));
+        println("b: " + sess.eval(b));
+        println("add: " + sess.eval(add));
 
         ForwardGradientVisitor visitor = new ForwardGradientVisitor(a);
         add.accept(visitor);

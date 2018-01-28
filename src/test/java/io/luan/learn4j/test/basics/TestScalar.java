@@ -41,10 +41,10 @@ public class TestScalar {
         Session sess = session("My Session");
 
         for (int i = 0; i < 1; i++) {
-            println("W1: " + sess.run(W1, feed));
-            println("b1: " + sess.run(b1, feed));
-            println("Loss: " + sess.run(loss2, feed));
-            println("W1_Train: " + sess.run(train, feed));
+            println("W1: " + sess.eval(W1, feed));
+            println("b1: " + sess.eval(b1, feed));
+            println("Loss: " + sess.eval(loss2, feed));
+            println("W1_Train: " + sess.eval(train, feed));
         }
     }
 }

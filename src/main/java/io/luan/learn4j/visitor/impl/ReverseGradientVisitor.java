@@ -8,7 +8,7 @@ import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
-import io.luan.learn4j.utils.ShapeUtils;
+import io.luan.learn4j.core.utils.ShapeUtils;
 import lombok.val;
 
 import static io.luan.learn4j.structure.factory.ExpressionFactory.*;

@@ -45,30 +45,30 @@ public class TestMatrix {
         feed.put(y, create(new double[]{0.3, 0.4, 0.4, 0.5}, new int[]{2, 2}));
 
         Session sess = session("My Session");
-        println("W1: " + sess.run(W1, feed));
-        println("x: " + sess.run(x, feed));
-        println("b1: " + sess.run(b1, feed));
-        println("mmul: " + sess.run(mmul, feed));
-        println("add: " + sess.run(add, feed));
-        println("sub: " + sess.run(sub, feed));
-        println("square: " + sess.run(square, feed));
-        println("loss: " + sess.run(loss, feed));
+        println("W1: " + sess.eval(W1, feed));
+        println("x: " + sess.eval(x, feed));
+        println("b1: " + sess.eval(b1, feed));
+        println("mmul: " + sess.eval(mmul, feed));
+        println("add: " + sess.eval(add, feed));
+        println("sub: " + sess.eval(sub, feed));
+        println("square: " + sess.eval(square, feed));
+        println("loss: " + sess.eval(loss, feed));
 
         long now = new Date().getTime();
         val runtime = Runtime.getRuntime();
 
         for (int i = 0; i < 100000; i++) {
-            sess.run(train, feed);
-//            println(sess.run(loss, feed));
+            sess.eval(train, feed);
+//            println(sess.eval(loss, feed));
 //            println((runtime.totalMemory() - runtime.freeMemory()) / 1000000);
 //            if (i % 5000 == 0) {
 //                runtime.gc();
 //            }
         }
 
-        println("W1: " + sess.run(W1, feed));
-        println("b1: " + sess.run(b1, feed));
-        println("loss: " + sess.run(loss, feed));
+        println("W1: " + sess.eval(W1, feed));
+        println("b1: " + sess.eval(b1, feed));
+        println("loss: " + sess.eval(loss, feed));
 
         long now2 = new Date().getTime();
 
