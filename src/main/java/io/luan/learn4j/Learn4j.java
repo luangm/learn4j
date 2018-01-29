@@ -13,7 +13,9 @@ import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
+import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
 
 /**
@@ -36,7 +38,7 @@ public class Learn4j {
     }
 
     public static Expression abs(Expression base, String name) {
-        return addToGraph(new Abs(base, name));
+        return addToGraph(new Absolute(base, name));
     }
 
     public static Expression add(Expression left, Expression right) {
@@ -67,6 +69,14 @@ public class Learn4j {
         return addToGraph(new Constant(tensor, name));
     }
 
+    public static Expression cos(Expression base) {
+        return cos(base, null);
+    }
+
+    public static Expression cos(Expression base, String name) {
+        return addToGraph(new Cosine(base, name));
+    }
+
     public static Expression divide(Expression left, Expression right) {
         return divide(left, right, null);
     }
@@ -75,9 +85,61 @@ public class Learn4j {
         return addToGraph(new Divide(left, right, name));
     }
 
+    public static Expression exp(Expression base) {
+        return exp(base, null);
+    }
+
+    public static Expression exp(Expression base, String name) {
+        return addToGraph(new Exponential(base, name));
+    }
+
+    public static Expression fill(Number scalar, int[] shape) {
+        return fill(scalar, shape, null);
+    }
+
+    public static Expression fill(Number scalar, int[] shape, String name) {
+        return addToGraph(new Fill(scalar, shape, name));
+    }
+
     public static GradientDescentOptimizer gradientDescentOptimizer(double learnRate) {
         val optimizer = new GradientDescentOptimizer(activeGraph, learnRate);
         return optimizer;
+    }
+
+    public static Expression gradients(Expression source, Expression node) {
+        return gradients(source, node, null);
+    }
+
+    public static Expression gradients(Expression source, Expression node, Expression grad) {
+        val visitor = new ReverseGradientVisitor(activeGraph);
+        visitor.visit(source, grad);
+        return source.getGradient(node);
+    }
+
+    public static Expression[] gradients(Expression source, Expression[] nodes) {
+        return gradients(source, nodes, null);
+    }
+
+    public static Expression[] gradients(Expression source, Expression[] nodes, Expression grad) {
+        val visitor = new ReverseGradientVisitor(activeGraph);
+        visitor.visit(source, grad);
+
+        Expression[] gradients = new Expression[nodes.length];
+        for (int i = 0; i < nodes.length; i++) {
+            gradients[i] = source.getGradient(nodes[i]);
+//            if (this.interactive) {
+//                grad.eval();
+//            }
+        }
+        return gradients;
+    }
+
+    public static Expression log(Expression base) {
+        return log(base, null);
+    }
+
+    public static Expression log(Expression base, String name) {
+        return addToGraph(new Logarithm(base, name));
     }
 
     public static Expression matmul(Expression left, Expression right) {
@@ -98,6 +160,14 @@ public class Learn4j {
 
     public static Expression multiply(Expression left, Expression right, String name) {
         return addToGraph(new Multiply(left, right, name));
+    }
+
+    public static Expression negate(Expression base) {
+        return negate(base, null);
+    }
+
+    public static Expression negate(Expression base, String name) {
+        return addToGraph(new Negate(base, name));
     }
 
     public static Expression parameter(Tensor tensor) {
@@ -165,6 +235,38 @@ public class Learn4j {
         return addToGraph(new Sigmoid(base, name));
     }
 
+    public static Expression sign(Expression base) {
+        return sign(base, null);
+    }
+
+    public static Expression sign(Expression base, String name) {
+        return addToGraph(new Sign(base, name));
+    }
+
+    public static Expression sin(Expression base) {
+        return sin(base, null);
+    }
+
+    public static Expression sin(Expression base, String name) {
+        return addToGraph(new Sine(base, name));
+    }
+
+    public static Expression softmax(Expression base) {
+        return softmax(base, null);
+    }
+
+    public static Expression softmax(Expression base, String name) {
+        return addToGraph(new Softmax(base, name));
+    }
+
+    public static Expression sqrt(Expression base) {
+        return sqrt(base, null);
+    }
+
+    public static Expression sqrt(Expression base, String name) {
+        return addToGraph(new SquareRoot(base, name));
+    }
+
     public static Expression square(Expression base) {
         return square(base, null);
     }
@@ -187,6 +289,22 @@ public class Learn4j {
 
     public static Expression subtract(Expression left, Expression right, String name) {
         return addToGraph(new Subtract(left, right, name));
+    }
+
+    public static Expression tan(Expression base) {
+        return tan(base, null);
+    }
+
+    public static Expression tan(Expression base, String name) {
+        return addToGraph(new Tangent(base, name));
+    }
+
+    public static Expression tanh(Expression base) {
+        return tanh(base, null);
+    }
+
+    public static Expression tanh(Expression base, String name) {
+        return addToGraph(new Tanh(base, name));
     }
 
     public static Expression variable(int[] shape) {

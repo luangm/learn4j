@@ -45,3 +45,40 @@ All the nodes (not the ones from gradient) are stored. If a node has a fixed ten
 The order of nodes are done by topological sort
 
 String json = Learn4j.saveGraph(Graph)
+
+
+# Implemented Expressions
+| Op            | Eval  | Grad  |
+| ---           | :---: | :---: |
+| Abs           | Y     | Y     |
+| Add           | Y     | Y     |
+| Assign        |       |       |
+| Cos           | Y     | Y     |
+| Divide        | Y     |       |
+| Exp           | Y     |       |
+| Fill          | Y     |       |
+| Group         |       |       |
+| Log           | Y     |       |
+| MatMul        | Y     |       |
+| Mult          | Y     | Y     |
+| Negate        | Y     |       |
+| ReduceSum     | Y     |       |
+| ReduceMean    | Y     |       |
+| Relu          | Y     |       |
+| Sigmoid       | Y     |       |
+| SigmoidGrad   |       |       |
+| Sign          | Y     |       |
+| Sine          | Y     | Y     |
+| Square        | Y     |       |
+| SquareRoot    | Y     |       |
+| Step          | Y     |       |
+| Subtract      | Y     | Y     |
+| Tangent       | Y     |       |
+| TangentGrad   |       |       |
+| Tanh          | Y     |       |
+| Conv2d        |       |       |
+| MaxPool       |       |       |
+| Reciprocal    |       |       |
+| Softmax       | Y     |       |
+| LogSumExp     |       |       |
+| AddN          |       |       |

@@ -20,125 +20,193 @@ import io.luan.learn4j.visitor.Visitor;
 abstract class BaseVisitor implements Visitor {
 
     @Override
-    public void visitAbs(Abs node, Object... params) {
+    public void visitAbsolute(Absolute node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
     }
 
     @Override
     public void visitAdd(Add node, Object... params) {
+        this.preVisit(node, params);
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
     }
 
     @Override
     public void visitAssign(Assign node, Object... params) {
+        this.preVisit(node, params);
         node.getNewValue().accept(this, params);
     }
 
     @Override
     public void visitConstant(Constant node, Object... params) {
-        // do nothing
+        this.preVisit(node, params);
+    }
+
+    @Override
+    public void visitCosine(Cosine node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
     }
 
     @Override
     public void visitDivide(Divide node, Object... params) {
+        this.preVisit(node, params);
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
     }
 
     @Override
+    public void visitExponential(Exponential node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitFill(Fill node, Object... params) {
-        // do nothing
+        this.preVisit(node, params);
     }
 
     @Override
     public void visitGroup(Group node, Object... params) {
+        this.preVisit(node, params);
         for (Expression exp : node.getList()) {
             exp.accept(this, params);
         }
     }
 
     @Override
+    public void visitLogarithm(Logarithm node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitMatMul(MatMul node, Object... params) {
+        this.preVisit(node, params);
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
     }
 
     @Override
     public void visitMultiply(Multiply node, Object... params) {
+        this.preVisit(node, params);
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
     }
 
     @Override
     public void visitNegate(Negate node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
     }
 
     @Override
     public void visitParameter(Parameter node, Object... params) {
-        // by default do nothing
+        this.preVisit(node, params);
     }
 
     @Override
     public void visitPower(Power node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
         node.getPower().accept(this, params);
     }
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
     }
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitSigmoid(Sigmoid node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitSign(Sign node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitSquare(Square node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitStep(Step node, Object... params) {
-        node.getBase().accept(this, params);
-    }
-
-    @Override
-    public void visitSubtract(Subtract node, Object... params) {
-        node.getLeft().accept(this, params);
-        node.getRight().accept(this, params);
-    }
-
-    @Override
-    public void visitVariable(Variable node, Object... params) {
-        // do nothing
-    }
-
-    @Override
-    public void visitSoftmax(Softmax node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
     }
 
     @Override
     public void visitRelu(Relu node, Object... params) {
+        this.preVisit(node, params);
         node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSigmoid(Sigmoid node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSign(Sign node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSine(Sine node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSoftmax(Softmax node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSquare(Square node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSquareRoot(SquareRoot node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitStep(Step node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSubtract(Subtract node, Object... params) {
+        this.preVisit(node, params);
+        node.getLeft().accept(this, params);
+        node.getRight().accept(this, params);
+    }
+
+    @Override
+    public void visitTangent(Tangent node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitTanh(Tanh node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitVariable(Variable node, Object... params) {
+        this.preVisit(node, params);
+    }
+
+    /**
+     * This is called before each visit.
+     */
+    protected Expression preVisit(Expression node, Object... params) {
+        return null;
     }
 }

@@ -2,13 +2,15 @@ package io.luan.learn4j.structure.factory;
 
 import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.Expression;
-import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.structure.impl.binary.Add;
+import io.luan.learn4j.structure.impl.binary.Multiply;
 import io.luan.learn4j.structure.impl.core.Constant;
-import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
-import io.luan.learn4j.structure.impl.special.Assign;
-import io.luan.learn4j.structure.impl.special.Group;
-import io.luan.learn4j.structure.impl.transform.*;
+import io.luan.learn4j.structure.impl.transform.Negate;
+import io.luan.learn4j.structure.impl.transform.Sign;
+import io.luan.learn4j.structure.impl.transform.Sine;
+import lombok.Getter;
 
 /**
  * The ExpressionFactory class implements the Factory pattern for object creation.
@@ -22,21 +24,11 @@ import io.luan.learn4j.structure.impl.transform.*;
  */
 public class ExpressionFactory {
 
-    public static Expression add(Expression left, Expression right, String name) {
-        if (left == Constant.ZERO) {
-            return right;
-        }
+    @Getter
+    private Graph graph;
 
-        if (right == Constant.ZERO) {
-            return left;
-        }
-
-        return new Add(left, right, name);
-    }
-
-    public static Expression createAssign(String name, Expression target, Expression newValue) {
-//        return new Assign(name, target, newValue);
-        return null;
+    public ExpressionFactory(Graph graph) {
+        this.graph = graph;
     }
 
     public static Expression createConstant(String name, Tensor value) {
@@ -48,7 +40,6 @@ public class ExpressionFactory {
 //        return new Divide(name, left, right);
         return null;
     }
-
 
     public static Expression createGroup(String name, Expression[] expList) {
 //        return new Group(name, expList);
@@ -85,11 +76,6 @@ public class ExpressionFactory {
         return null;
     }
 
-    public static Expression createNegate(String name, Expression base) {
-        return null;
-//        return new Negate(name, base);
-    }
-
     public static Expression createPower(String name, Expression base, Expression power) {
         //return new Power(name, base, power);
         return null;
@@ -98,14 +84,6 @@ public class ExpressionFactory {
     public static Expression createReduceMean(String name, Expression base, int dimension) {
 //        return new ReduceMean(name, base, dimension);
         return null;
-    }
-
-    public static Expression createReduceSum(String name, Expression base, int dimension) {
-        if (dimension >= 0) {
-//            return new ReduceSum(name, base, dimension);
-            return null;
-        }
-        return base;
     }
 
     public static Expression createSigmoid(String name, Expression base) {
@@ -135,5 +113,65 @@ public class ExpressionFactory {
 
 //        return new Subtract(name, left, right);
         return null;
+    }
+
+    public Expression add(Expression left, Expression right, String name) {
+        return graph.add(new Add(left, right, name));
+    }
+
+    public Expression createAssign(String name, Expression target, Expression newValue) {
+//        return new Assign(name, target, newValue);
+        return null;
+    }
+
+    public Expression multiply(Expression left, Expression right) {
+        return multiply(left, right, null);
+    }
+
+    public Expression multiply(Expression left, Expression right, String name) {
+        return graph.add(new Multiply(left, right, name));
+    }
+
+    public Expression neg(Expression base) {
+        return neg(base, null);
+    }
+
+    public Expression neg(Expression base, String name) {
+        return graph.add(new Negate(base, name));
+    }
+
+    public Expression negate(Expression base) {
+        return negate(base, null);
+    }
+
+    public Expression negate(Expression base, String name) {
+        return graph.add(new Negate(base, name));
+    }
+
+    public Expression reduceSum(Expression base, int dimension) {
+        return reduceSum(base, dimension, null);
+    }
+
+    public Expression reduceSum(Expression base, int dimension, String name) {
+        if (dimension >= 0) {
+            return graph.add(new ReduceSum(base, dimension, name));
+        }
+        return base;
+    }
+
+    public Expression sign(Expression base) {
+        return sign(base, null);
+    }
+
+    public Expression sign(Expression base, String name) {
+        return graph.add(new Sign(base, name));
+    }
+
+    public Expression sin(Expression base) {
+        return sin(base, null);
+    }
+
+    public Expression sin(Expression base, String name) {
+        return graph.add(new Sine(base, name));
     }
 }

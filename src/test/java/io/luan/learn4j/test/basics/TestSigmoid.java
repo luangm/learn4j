@@ -25,7 +25,7 @@ public class TestSigmoid {
         println("a: " + sess.eval(a));
         println("sigmoid: " + sess.eval(sigmoid));
 
-        ReverseGradientVisitor visitor = new ReverseGradientVisitor();
+        ReverseGradientVisitor visitor = new ReverseGradientVisitor(null);
         sigmoid.accept(visitor);
 
         val gradA = a.getGradient(sigmoid);

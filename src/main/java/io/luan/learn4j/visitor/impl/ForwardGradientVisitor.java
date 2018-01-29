@@ -26,22 +26,22 @@ public class ForwardGradientVisitor extends BaseVisitor {
     public void visitAdd(Add node, Object... params) {
         super.visitAdd(node);
         String gradName = createNameForGradient(node);
-        Expression leftGrad = node.getLeft().getGradient(target);
-        Expression rightGrad = node.getRight().getGradient(target);
-        Expression gradient = ExpressionFactory.add(leftGrad, rightGrad, gradName);
-        node.setGradient(target, gradient);
+//        Expression leftGrad = node.getLeft().getGradient(target);
+//        Expression rightGrad = node.getRight().getGradient(target);
+//        Expression gradient = ExpressionFactory.add(leftGrad, rightGrad, gradName);
+//        node.setGradient(target, gradient);
     }
 
     @Override
     public void visitConstant(Constant node, Object... params) {
         Expression gradient = Constant.ZERO;
-        node.setGradient(target, gradient);
+//        node.setGradient(target, gradient);
     }
 
     @Override
     public void visitParameter(Parameter node, Object... params) {
         Expression gradient = target == node ? Constant.ONE : Constant.ZERO;
-        node.setGradient(target, gradient);
+//        node.setGradient(target, gradient);
     }
 
     private String createNameForGradient(Expression node) {

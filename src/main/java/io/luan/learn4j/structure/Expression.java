@@ -87,5 +87,5 @@ public interface Expression {
      * <p>
      * Note, this is only storing the relation, it does NOT enforce the correctness.
      */
-    void setGradient(Expression target, Expression gradient);
+    void setGradient(Integer targetId, Expression gradient);
 }

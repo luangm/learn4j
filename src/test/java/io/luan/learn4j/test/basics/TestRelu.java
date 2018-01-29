@@ -22,7 +22,7 @@ public class TestRelu {
         println("a: " + sess.eval(a));
         println("relu: " + sess.eval(relu));
 
-        ReverseGradientVisitor visitor = new ReverseGradientVisitor();
+        ReverseGradientVisitor visitor = new ReverseGradientVisitor(null);
         relu.accept(visitor);
 
         val gradA = a.getGradient(relu);

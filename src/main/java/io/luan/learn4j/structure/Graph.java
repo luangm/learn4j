@@ -21,6 +21,11 @@ public interface Graph {
     Expression add(Expression exp);
 
     /**
+     * Use this to find an existing node that has the same params
+     */
+    Expression find(Expression exp);
+
+    /**
      * Map of all Expression Nodes within the Graph.
      * Key = Expression.ID
      * Value = Expression

@@ -1,5 +1,6 @@
 package io.luan.learn4j.visitor;
 
+import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
@@ -21,7 +22,7 @@ import io.luan.learn4j.structure.impl.transform.*;
  */
 public interface Visitor {
 
-    void visitAbs(Abs abs, Object... params);
+    void visitAbsolute(Absolute abs, Object... params);
 
     void visitAdd(Add node, Object... params);
 
@@ -29,11 +30,17 @@ public interface Visitor {
 
     void visitConstant(Constant node, Object... params);
 
+    void visitCosine(Cosine node, Object... params);
+
     void visitDivide(Divide node, Object... params);
+
+    void visitExponential(Exponential node, Object... params);
 
     void visitFill(Fill node, Object... params);
 
     void visitGroup(Group node, Object... params);
+
+    void visitLogarithm(Logarithm node, Object... params);
 
     void visitMatMul(MatMul node, Object... params);
 
@@ -49,22 +56,30 @@ public interface Visitor {
 
     void visitReduceSum(ReduceSum reduceSum, Object... params);
 
+    void visitRelu(Relu node, Object... params);
+
     void visitSigmoid(Sigmoid node, Object... params);
 
     void visitSigmoidGrad(SigmoidGrad node, Object... params);
 
     void visitSign(Sign sign, Object... params);
 
+    void visitSine(Sine node, Object... params);
+
     void visitSoftmax(Softmax node, Object... params);
 
     void visitSquare(Square node, Object... params);
+
+    void visitSquareRoot(SquareRoot node, Object... params);
 
     void visitStep(Step step, Object... params);
 
     void visitSubtract(Subtract node, Object... params);
 
-    void visitVariable(Variable node, Object... params);
+    void visitTangent(Tangent node, Object... params);
 
-    void visitRelu(Relu node, Object... params);
+    void visitTanh(Tanh node, Object... params);
+
+    void visitVariable(Variable node, Object... params);
 
 }

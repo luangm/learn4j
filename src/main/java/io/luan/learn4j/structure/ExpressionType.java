@@ -5,13 +5,15 @@ package io.luan.learn4j.structure;
  * @since 27/09/2017.
  */
 public enum ExpressionType {
-    Abs,
+    Unknown,
+    Absolute,
     Add,
     Assign,
     Constant,
     Divide,
     Fill,
     Group,
+    Logarithm,
     MatMul,
     Multiply,
     Negate,
@@ -22,9 +24,10 @@ public enum ExpressionType {
     Relu,
     Sigmoid,
     SigmoidGrad,
+    Sign,
     Softmax,
     Square,
     Step,
     Subtract,
-    Variable, Sign,
+    Variable, Sine, Cosine, SquareRoot, Exponenetial, Tangent, Tanh,
 }

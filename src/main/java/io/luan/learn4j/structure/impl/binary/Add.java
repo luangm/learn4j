@@ -5,6 +5,7 @@ import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.impl.base.BinaryExpression;
 import io.luan.learn4j.core.utils.ShapeUtils;
 import io.luan.learn4j.visitor.Visitor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 /**

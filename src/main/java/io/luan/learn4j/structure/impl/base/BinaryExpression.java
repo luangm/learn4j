@@ -21,4 +21,21 @@ public abstract class BinaryExpression extends BaseExpression {
         this.right = right;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = hash * 31 + left.getId();
+        hash = hash * 31 + right.getId();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        BinaryExpression other = (BinaryExpression) obj;
+        return this.getLeft().getId() == other.getLeft().getId()
+                && this.getRight().getId() == other.getRight().getId();
+    }
 }

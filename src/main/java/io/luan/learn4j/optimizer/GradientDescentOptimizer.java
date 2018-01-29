@@ -1,9 +1,9 @@
 package io.luan.learn4j.optimizer;
 
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.Graph;
-import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
@@ -36,7 +36,7 @@ public class GradientDescentOptimizer {
 
         List<Expression> assignList = new ArrayList<>();
 
-        ReverseGradientVisitor visitor = new ReverseGradientVisitor();
+        ReverseGradientVisitor visitor = new ReverseGradientVisitor(this.graph);
         loss.accept(visitor);
 
         for (Expression exp : depVisitor.getDependencies()) {
@@ -44,8 +44,8 @@ public class GradientDescentOptimizer {
                 Expression grad = exp.getGradient();
                 Expression newGrad = ExpressionFactory.createMultiply("", grad, this.learnRate);
                 Expression sub = ExpressionFactory.createSubtract("", exp, newGrad);
-                Expression assign = ExpressionFactory.createAssign("", exp, sub);
-                assignList.add(assign);
+//                Expression assign = ExpressionFactory.createAssign("", exp, sub);
+//                assignList.add(assign);
             }
         }
 

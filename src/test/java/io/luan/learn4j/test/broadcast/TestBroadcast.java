@@ -1,5 +1,6 @@
 package io.luan.learn4j.test.broadcast;
 
+import io.luan.learn4j.Learn4j;
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.experimental.var;
@@ -23,7 +24,7 @@ public class TestBroadcast {
         var b = constant(new double[]{3, 7}, new int[]{2, 1});
         var z = add(a, b);
 
-        var visitor = new ReverseGradientVisitor();
+        var visitor = new ReverseGradientVisitor(null);
         z.accept(visitor);
 
         Session sess = session("My Session");
@@ -45,7 +46,7 @@ public class TestBroadcast {
         var b = constant(new double[]{3, 7}, new int[]{2, 1});
         var z = subtract(a, b);
 
-        var visitor = new ReverseGradientVisitor();
+        var visitor = new ReverseGradientVisitor(null);
         z.accept(visitor);
 
         Session sess = session("My Session");
@@ -67,7 +68,7 @@ public class TestBroadcast {
         var b = constant(new double[]{3, 7}, new int[]{2, 1});
         var z = multiply(a, b);
 
-        var visitor = new ReverseGradientVisitor();
+        var visitor = new ReverseGradientVisitor(null);
         z.accept(visitor);
 
         Session sess = session("My Session");
@@ -92,7 +93,7 @@ public class TestBroadcast {
         var b = constant(new double[]{3, 7}, new int[]{2, 1});
         var z = divide(a, b);
 
-        var visitor = new ReverseGradientVisitor();
+        var visitor = new ReverseGradientVisitor(null);
         z.accept(visitor);
 
         Session sess = session("My Session");

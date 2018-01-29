@@ -1,11 +1,12 @@
 package io.luan.learn4j.test.graph;
 
 import io.luan.learn4j.Learn4j;
-import io.luan.learn4j.core.Tensor;
 import lombok.val;
 import org.junit.Test;
 
-import static io.luan.learn4j.Learn4j.println;
+import static io.luan.learn4j.Learn4j.*;
+import static io.luan.learn4j.core.Tensor.fill;
+import static io.luan.learn4j.core.Tensor.ones;
 
 /**
  * @author Guangmiao Luan
@@ -15,15 +16,25 @@ public class GraphTest {
 
     @Test
     public void testCreate() {
-        val x = Learn4j.constant(Tensor.ones(2, 3));
-        val y = Learn4j.constant(Tensor.fill(5, 1, 3));
-
-        val sum = Learn4j.add(x, y);
-        sum.eval();
-
+        val x = constant(ones(2, 3));
+        val y = constant(fill(5, 1, 3));
         println(x);
         println(y);
-        println(sum);
+
+        val neg = negate(x);
+        println(neg);
+
+        for (int i = 0; i < 2; i++) {
+            val neg2 = negate(x);
+            neg2.eval();
+            println(neg2);
+            val sum = add(x, y);
+            sum.eval();
+            println(sum);
+        }
+
+        val z = constant(ones(1, 1));
+        println(z);
 
     }
 

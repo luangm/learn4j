@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -21,7 +22,7 @@ public abstract class BaseExpression implements Expression {
 
     private static AtomicInteger ID_COUNTER = new AtomicInteger(1);
 
-    private Map<Expression, Expression> gradientMap = new HashMap<>();
+    private Map<Integer, Expression> gradientMap = new HashMap<>();
 
     @Getter
     private Graph graph;
@@ -53,7 +54,7 @@ public abstract class BaseExpression implements Expression {
 
     @Override
     public Expression getGradient(Expression target) {
-        return gradientMap.get(target);
+        return gradientMap.get(target.getId());
     }
 
     public Expression getGradient() {
@@ -89,13 +90,44 @@ public abstract class BaseExpression implements Expression {
     }
 
     @Override
-    public void setGradient(Expression target, Expression gradient) {
-        gradientMap.put(target, gradient);
+    public void setGradient(Integer targetId, Expression gradient) {
+        if (this.gradientMap == null) {
+            this.gradientMap = new HashMap<>();
+        }
+        gradientMap.put(targetId, gradient);
+    }
+
+    /**
+     * The hashCode is used to quickly differentiate two Expressions.
+     * The Base Expression uses type + name
+     * Higher classes should override with more
+     */
+    @Override
+    public int hashCode() {
+        int hash = 31 + this.getType().ordinal();
+        hash = hash * 31 + (this.getName() != null ? this.getName().hashCode() : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Expression other = (Expression) obj;
+        return (this.getType() == other.getType())
+                && Objects.equals(this.getName(), other.getName());
     }
 
     @Override
     public String toString() {
-        String result = this.getType() + "[" + this.getId() + "]: ";
+        int hash = this.hashCode();
+//        String hashHex = String.format("%X", hash);
+
+        String result = this.getType() + "[" + this.getId() + "][" + hash + "]: ";
         Tensor value = this.getValue();
         if (value != null) {
             result += "\n" + value.toString();

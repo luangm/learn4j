@@ -41,7 +41,7 @@ public class TestReverseGradient {
 //        println("square: " + sess.eval(square));
 //        println("reduceSum: " + sess.eval(reduceSum));
 
-        ReverseGradientVisitor visitor = new ReverseGradientVisitor();
+        ReverseGradientVisitor visitor = new ReverseGradientVisitor(null);
         matmul.accept(visitor);
 
         val gradA = a.getGradient(loss);
@@ -69,7 +69,7 @@ public class TestReverseGradient {
         var square = square(sub);
         var loss = reduceSum(square);
 
-        ReverseGradientVisitor visitor = new ReverseGradientVisitor();
+        ReverseGradientVisitor visitor = new ReverseGradientVisitor(null);
         loss.accept(visitor);
 
         Session sess = session("My Session");

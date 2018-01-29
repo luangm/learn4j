@@ -17,7 +17,6 @@ public class Constant extends BaseExpression {
     public static final Constant ZERO = new Constant(Tensor.scalar(0), "ZERO");
     public static final Constant ONE = new Constant(Tensor.scalar(1), "ONE");
     public static final Constant TWO = new Constant(Tensor.scalar(2), "TWO");
-
     @Getter
     private Tensor value;
 
@@ -44,5 +43,23 @@ public class Constant extends BaseExpression {
     @Override
     public void setValue(Tensor value) {
         throw new UnsupportedOperationException("Constant's value cannot be set after creation");
+    }
+
+    /**
+     * The hashcode behavior of constant node is different.
+     * It is very costly to compare the underlying Tensors,
+     * so the hashCode will use node's ID property IF no name is specified.
+     * Otherwise Name is used.
+     */
+    @Override
+    public int hashCode() {
+        int hash = 31 + this.getType().ordinal();
+        if (this.getName() != null) {
+            hash = hash * 31 + this.getName().hashCode();
+        } else {
+            hash = hash * 31 + this.getId();
+        }
+
+        return hash;
     }
 }

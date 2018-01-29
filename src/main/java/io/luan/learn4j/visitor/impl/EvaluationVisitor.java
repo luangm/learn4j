@@ -35,16 +35,16 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitAbs(Abs node, Object... params) {
-        super.visitAbs(node, params);
+    public void visitAbsolute(Absolute node, Object... params) {
+        super.visitAbsolute(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor abs = TensorMath.abs(base);
-        session.setValue(node, abs);
+        Tensor result = TensorMath.abs(base);
+        session.setValue(node, result);
     }
 
     @Override
     public void visitAdd(Add node, Object... params) {
-        super.visitAdd(node);
+        super.visitAdd(node, params);
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -78,6 +78,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitCosine(Cosine node, Object... params) {
+        super.visitCosine(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.cos(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitDivide(Divide node, Object... params) {
         super.visitDivide(node, params);
         Tensor left = session.getValue(node.getLeft());
@@ -93,12 +101,28 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitExponential(Exponential node, Object... params) {
+        super.visitExponential(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.exp(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitFill(Fill node, Object... params) {
         super.visitFill(node, params);
         if (session.getValue(node) == null) {
             Tensor value = Tensor.fill(node.getScalar(), node.getShape());
             session.setValue(node, value);
         }
+    }
+
+    @Override
+    public void visitLogarithm(Logarithm node, Object... params) {
+        super.visitLogarithm(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.log(base);
+        session.setValue(node, result);
     }
 
     @Override
@@ -148,7 +172,7 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor reduced = TensorMath.reduceMean(base);
+        Tensor reduced = TensorMath.reduceMean(base, node.getDimension());
         session.setValue(node, reduced);
     }
 
@@ -164,40 +188,64 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitSigmoid(Sigmoid node, Object... params) {
         super.visitSigmoid(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor sigmoid = TensorMath.sigmoid(base);
-        session.setValue(node, sigmoid);
+        Tensor result = TensorMath.sigmoid(base);
+        session.setValue(node, result);
     }
 
     @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
         super.visitSigmoidGrad(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor sigGrad = TensorMath.sigmoidGrad(base);
-        session.setValue(node, sigGrad);
+        Tensor result = TensorMath.sigmoidGrad(base);
+        session.setValue(node, result);
     }
 
     @Override
     public void visitSign(Sign node, Object... params) {
         super.visitSign(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor relu = TensorMath.sign(base);
-        session.setValue(node, relu);
+        Tensor result = TensorMath.sign(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitSine(Sine node, Object... params) {
+        super.visitSine(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.sin(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitSoftmax(Softmax node, Object... params) {
+        super.visitSoftmax(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.softmax(base);
+        session.setValue(node, result);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
         super.visitSquare(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor squared = TensorMath.square(base);
-        session.setValue(node, squared);
+        Tensor result = TensorMath.square(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitSquareRoot(SquareRoot node, Object... params) {
+        super.visitSquareRoot(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.sqrt(base);
+        session.setValue(node, result);
     }
 
     @Override
     public void visitStep(Step node, Object... params) {
         super.visitStep(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor step = TensorMath.step(base);
-        session.setValue(node, step);
+        Tensor result = TensorMath.step(base);
+        session.setValue(node, result);
     }
 
     @Override
@@ -216,6 +264,22 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitTangent(Tangent node, Object... params) {
+        super.visitTangent(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.tan(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitTanh(Tanh node, Object... params) {
+        super.visitTanh(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.tanh(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitVariable(Variable node, Object... params) {
         Tensor feedVal = feed.get(node);
         if (feedVal != null) {
@@ -227,8 +291,8 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitRelu(Relu node, Object... params) {
         super.visitRelu(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor relu = TensorMath.relu(base);
-        session.setValue(node, relu);
+        Tensor result = TensorMath.relu(base);
+        session.setValue(node, result);
     }
 
 }

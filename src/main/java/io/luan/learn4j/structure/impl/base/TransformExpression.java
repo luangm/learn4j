@@ -21,4 +21,20 @@ public abstract class TransformExpression extends BaseExpression {
     public int[] getShape() {
         return base.getShape();
     }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = hash * 31 + base.getId();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        TransformExpression other = (TransformExpression) obj;
+        return this.getBase().getId() == other.getBase().getId();
+    }
 }

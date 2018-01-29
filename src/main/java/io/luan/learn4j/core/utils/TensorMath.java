@@ -2,6 +2,7 @@ package io.luan.learn4j.core.utils;
 
 import io.luan.learn4j.core.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.impl.transforms.Tan;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
@@ -46,6 +47,12 @@ public class TensorMath {
         return Tensor.create(leftArray.add(rightArray));
     }
 
+    public static Tensor cos(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.cos(array, true);
+        return Tensor.create(result);
+    }
+
     public static Tensor divide(Tensor left, Tensor right) {
         INDArray leftArray = left.getArray();
         INDArray rightArray = right.getArray();
@@ -69,6 +76,18 @@ public class TensorMath {
 
         leftArray.div(rightArray, resultArray);
         return result;
+    }
+
+    public static Tensor exp(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.exp(array, true);
+        return Tensor.create(result);
+    }
+
+    public static Tensor log(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.log(array, true);
+        return Tensor.create(result);
     }
 
     public static Tensor matmul(Tensor left, Tensor right, boolean transposeLeft, boolean transposeRight) {
@@ -133,14 +152,18 @@ public class TensorMath {
 
     public static Tensor negate(Tensor base) {
         INDArray array = base.getArray();
-        INDArray neg = array.negi();
-        return base;
-//        return Tensor.create(neg);
+        INDArray neg = array.neg();
+        return Tensor.create(neg);
     }
 
-    public static Tensor reduceMean(Tensor base) {
+    public static Tensor reduceMean(Tensor base, int dimension) {
         INDArray array = base.getArray();
-        INDArray mean = Nd4j.mean(array);
+        INDArray mean;
+        if (dimension != -1) {
+            mean = array.mean(dimension);
+        } else {
+            mean = array.mean();
+        }
         return Tensor.create(mean);
     }
 
@@ -179,6 +202,24 @@ public class TensorMath {
         return Tensor.create(result);
     }
 
+    public static Tensor sin(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.sin(array, true);
+        return Tensor.create(result);
+    }
+
+    public static Tensor softmax(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.softmax(array, true);
+        return Tensor.create(result);
+    }
+
+    public static Tensor sqrt(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.sqrt(array, true);
+        return Tensor.create(result);
+    }
+
     public static Tensor square(Tensor base) {
         INDArray array = base.getArray();
         INDArray squared = array.mul(array);
@@ -214,5 +255,17 @@ public class TensorMath {
 
         leftArray.sub(rightArray, resultArray);
         return result;
+    }
+
+    public static Tensor tan(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Nd4j.getExecutioner().execAndReturn(new Tan(array, array.dup()));
+        return Tensor.create(result);
+    }
+
+    public static Tensor tanh(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Transforms.tanh(array, true);
+        return Tensor.create(result);
     }
 }

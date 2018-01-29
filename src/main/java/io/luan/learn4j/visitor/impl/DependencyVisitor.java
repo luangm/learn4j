@@ -22,9 +22,9 @@ public class DependencyVisitor extends BaseVisitor {
     private Set<Expression> dependencies = new HashSet<Expression>();
 
     @Override
-    public void visitAbs(Abs node, Object... params) {
+    public void visitAbsolute(Absolute node, Object... params) {
         dependencies.add(node.getBase());
-        super.visitAbs(node, params);
+        super.visitAbsolute(node, params);
     }
 
     @Override
