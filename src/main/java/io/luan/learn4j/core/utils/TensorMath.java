@@ -3,6 +3,8 @@ package io.luan.learn4j.core.utils;
 import io.luan.learn4j.core.Tensor;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.transforms.Tan;
+import org.nd4j.linalg.api.ops.impl.transforms.TanDerivative;
+import org.nd4j.linalg.convolution.Convolution;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.linalg.ops.transforms.Transforms;
 
@@ -47,6 +49,39 @@ public class TensorMath {
         return Tensor.create(leftArray.add(rightArray));
     }
 
+    public static Tensor conv2d(Tensor image, Tensor kernel, int[] stride, int[] padding) {
+        INDArray imageArray = image.getArray();
+        if (imageArray.rank() != 4) {
+            throw new IllegalArgumentException("Image Rank must be 4");
+        }
+
+        INDArray kernelArray = kernel.getArray();
+        if (kernelArray.rank() != 4) {
+            throw new IllegalArgumentException("Kernel Rank must be 4");
+        }
+
+        int numImages = imageArray.shape()[0];
+        int channels = imageArray.shape()[1];
+        int height = imageArray.shape()[2];
+        int width = imageArray.shape()[3];
+
+        int numKernels = kernelArray.shape()[0];
+        int kernelChannels = kernelArray.shape()[1];
+        int kernelHeight = kernelArray.shape()[2];
+        int kernelWidth = kernelArray.shape()[3];
+
+        int outHeight = ConvUtils.outSize(height, kernelHeight, stride[0], padding[0]);
+        int outWidth = ConvUtils.outSize(width, kernelWidth, stride[1], padding[1]);
+
+        INDArray xCol = im2col(image, new int[]{kernelHeight, kernelWidth}, stride, padding).getArray();
+        INDArray kCol = kernelArray.reshape(numKernels, kernelChannels * kernelWidth * kernelHeight);
+        INDArray result = kCol.mmul(xCol);
+        INDArray reshaped = result.reshape(numKernels, numImages, outHeight, outWidth);
+        INDArray transposed = reshaped.permute(1, 0, 2, 3);
+
+        return Tensor.create(transposed);
+    }
+
     public static Tensor cos(Tensor base) {
         INDArray array = base.getArray();
         INDArray result = Transforms.cos(array, true);
@@ -82,6 +117,29 @@ public class TensorMath {
         INDArray array = base.getArray();
         INDArray result = Transforms.exp(array, true);
         return Tensor.create(result);
+    }
+
+    public static Tensor im2col(Tensor image, int[] kernel, int[] stride, int[] padding) {
+        INDArray imageArray = image.getArray();
+        if (imageArray.rank() != 4) {
+            throw new IllegalArgumentException("Image Rank must be 4");
+        }
+        int numImages = imageArray.shape()[0];
+        int channels = imageArray.shape()[1];
+        int height = imageArray.shape()[2];
+        int width = imageArray.shape()[3];
+
+        int outHeight = ConvUtils.outSize(height, kernel[0], stride[0], padding[0]);
+        int outWidth = ConvUtils.outSize(width, kernel[1], stride[1], padding[1]);
+
+        int resultHeight = channels * kernel[0] * kernel[1];
+        int resultWidth = numImages * outWidth * outHeight;
+
+        // N, C, KH, KW, OH, OW
+        INDArray im2colArray = Convolution.im2col(imageArray, kernel, stride, padding);
+        im2colArray = im2colArray.permute(1, 2, 3, 0, 4, 5);
+        im2colArray = im2colArray.reshape(resultHeight, resultWidth);
+        return Tensor.create(im2colArray);
     }
 
     public static Tensor log(Tensor base) {
@@ -152,8 +210,14 @@ public class TensorMath {
 
     public static Tensor negate(Tensor base) {
         INDArray array = base.getArray();
-        INDArray neg = array.neg();
-        return Tensor.create(neg);
+        INDArray result = array.neg();
+        return Tensor.create(result);
+    }
+
+    public static Tensor reciprocal(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = array.rdiv(1);
+        return Tensor.create(result);
     }
 
     public static Tensor reduceMean(Tensor base, int dimension) {
@@ -214,6 +278,17 @@ public class TensorMath {
         return Tensor.create(result);
     }
 
+    public static Tensor softmaxGrad(Tensor base, Tensor grad) {
+        INDArray array = base.getArray();
+        INDArray gradArray = grad.getArray();
+        INDArray softmax = Transforms.softmax(array, true);
+        INDArray mul = softmax.muli(gradArray);
+        INDArray sum = mul.sum(1);
+        INDArray subtract = subtract(gradArray, sum);
+        INDArray result = subtract.mul(softmax);
+        return Tensor.create(result);
+    }
+
     public static Tensor sqrt(Tensor base) {
         INDArray array = base.getArray();
         INDArray result = Transforms.sqrt(array, true);
@@ -222,8 +297,8 @@ public class TensorMath {
 
     public static Tensor square(Tensor base) {
         INDArray array = base.getArray();
-        INDArray squared = array.mul(array);
-        return Tensor.create(squared);
+        INDArray result = array.mul(array);
+        return Tensor.create(result);
     }
 
     public static Tensor step(Tensor base) {
@@ -233,27 +308,12 @@ public class TensorMath {
     }
 
     public static Tensor subtract(Tensor left, Tensor right) {
-        INDArray leftArray = left.getArray();
-        INDArray rightArray = right.getArray();
-
-        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-        leftArray = leftArray.broadcast(resultShape);
-        rightArray = rightArray.broadcast(resultShape);
-
-        INDArray diff = leftArray.sub(rightArray);
-        return Tensor.create(diff);
+        INDArray result = subtract(left.getArray(), right.getArray());
+        return Tensor.create(result);
     }
 
     public static Tensor subtract(Tensor left, Tensor right, Tensor result) {
-        INDArray leftArray = left.getArray();
-        INDArray rightArray = right.getArray();
-        INDArray resultArray = result.getArray();
-
-        int[] resultShape = ShapeUtils.broadcastShapes(leftArray.shape(), rightArray.shape());
-        leftArray = leftArray.broadcast(resultShape);
-        rightArray = rightArray.broadcast(resultShape);
-
-        leftArray.sub(rightArray, resultArray);
+        subtract(left.getArray(), right.getArray(), result.getArray());
         return result;
     }
 
@@ -263,9 +323,29 @@ public class TensorMath {
         return Tensor.create(result);
     }
 
+    public static Tensor tanGrad(Tensor base) {
+        INDArray array = base.getArray();
+        INDArray result = Nd4j.getExecutioner().execAndReturn(new TanDerivative(array, array.dup()));
+        return Tensor.create(result);
+    }
+
     public static Tensor tanh(Tensor base) {
         INDArray array = base.getArray();
         INDArray result = Transforms.tanh(array, true);
         return Tensor.create(result);
+    }
+
+    private static INDArray subtract(INDArray left, INDArray right) {
+        int[] resultShape = ShapeUtils.broadcastShapes(left.shape(), right.shape());
+        left = left.broadcast(resultShape);
+        right = right.broadcast(resultShape);
+        return left.sub(right);
+    }
+
+    private static void subtract(INDArray left, INDArray right, INDArray result) {
+        int[] resultShape = ShapeUtils.broadcastShapes(left.shape(), right.shape());
+        left = left.broadcast(resultShape);
+        right = right.broadcast(resultShape);
+        left.sub(right, result);
     }
 }

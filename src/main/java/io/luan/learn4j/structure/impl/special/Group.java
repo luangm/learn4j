@@ -1,5 +1,6 @@
 package io.luan.learn4j.structure.impl.special;
 
+import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.impl.base.BaseExpression;
@@ -37,4 +38,40 @@ public class Group extends BaseExpression {
         return ExpressionType.Group;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        for (Expression exp : this.list) {
+            hash = hash * 31 + exp.getId();
+        }
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Group other = (Group) obj;
+        if (this.list.length != other.list.length) {
+            return false;
+        }
+        for (int i = 0; i < this.list.length; i++) {
+            if (this.list[i].getId() != other.list[i].getId()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        int hash = this.hashCode();
+        String result = this.getType() + "[" + this.getId() + "][" + hash + "]: \n";
+
+        for (Expression item : this.list) {
+            result += item.toString() + "\n";
+        }
+        return result;
+    }
 }

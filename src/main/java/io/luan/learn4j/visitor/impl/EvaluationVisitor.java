@@ -96,7 +96,7 @@ public class EvaluationVisitor extends BaseVisitor {
             divide = TensorMath.divide(left, right);
             session.setValue(node, divide);
         } else {
-            divide = TensorMath.divide(left, right, divide);
+            TensorMath.divide(left, right, divide);
         }
     }
 
@@ -169,6 +169,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitReciprocal(Reciprocal node, Object... params) {
+        super.visitReciprocal(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.reciprocal(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node, params);
         Tensor base = session.getValue(node.getBase());
@@ -185,6 +193,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitRelu(Relu node, Object... params) {
+        super.visitRelu(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.relu(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         super.visitSigmoid(node, params);
         Tensor base = session.getValue(node.getBase());
@@ -193,7 +209,7 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitSigmoidGrad(SigmoidGrad node, Object[] params) {
+    public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
         super.visitSigmoidGrad(node, params);
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sigmoidGrad(base);
@@ -221,6 +237,15 @@ public class EvaluationVisitor extends BaseVisitor {
         super.visitSoftmax(node, params);
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.softmax(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitSoftmaxGrad(SoftmaxGrad node, Object... params) {
+        super.visitSoftmaxGrad(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor grad = session.getValue(node.getGrad());
+        Tensor result = TensorMath.softmaxGrad(base, grad);
         session.setValue(node, result);
     }
 
@@ -272,6 +297,14 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitTangentGrad(TangentGrad node, Object... params) {
+        super.visitTangentGrad(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.tanGrad(base);
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitTanh(Tanh node, Object... params) {
         super.visitTanh(node, params);
         Tensor base = session.getValue(node.getBase());
@@ -285,14 +318,6 @@ public class EvaluationVisitor extends BaseVisitor {
         if (feedVal != null) {
             session.setValue(node, feedVal);
         }
-    }
-
-    @Override
-    public void visitRelu(Relu node, Object... params) {
-        super.visitRelu(node, params);
-        Tensor base = session.getValue(node.getBase());
-        Tensor result = TensorMath.relu(base);
-        session.setValue(node, result);
     }
 
 }

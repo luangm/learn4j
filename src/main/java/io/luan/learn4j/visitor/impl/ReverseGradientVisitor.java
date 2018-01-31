@@ -6,7 +6,6 @@ import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
-import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
@@ -17,8 +16,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static io.luan.learn4j.structure.factory.ExpressionFactory.createMultiply;
 
 /**
  * @author Guangmiao Luan
@@ -76,34 +73,42 @@ public class ReverseGradientVisitor extends BaseVisitor {
 
     @Override
     public void visitDivide(Divide node, Object... params) {
-//        Expression grad = getGradientOrDefault(node, params);
-//
-//        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
-//        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
-//
-//        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
-//
-//        Expression leftGrad = createDivide(leftGradName, grad, node.getRight());
-//        Expression rightGrad = createDivide(rightGradName, createNegate("", node.getLeft()), node.getRight());
-//        rightGrad = createDivide("", rightGrad, node.getRight());
-//        rightGrad = createMultiply("", grad, rightGrad);
-//
-//        leftGrad = createReduceSum(leftGradName, leftGrad, pair.getLeft());
-//        rightGrad = createReduceSum(rightGradName, rightGrad, pair.getRight());
-//
-//        node.getLeft().accept(this, leftGrad);
-//        node.getRight().accept(this, rightGrad);
+        val grad = this.preVisit(node, params);
+        val pair = ShapeUtils.getReductionIndices(node.getLeft().getShape(), node.getRight().getShape());
+
+        // left = grad / right
+        // right = -grad * left / right^2
+        val leftDiv = factory.divide(grad, node.getRight());
+        val rightDiv = factory.divide(leftDiv, node.getRight());
+        val leftNeg = factory.neg(node.getLeft());
+        val rightMul = factory.multiply(leftNeg, rightDiv);
+
+        val leftGrad = factory.reduceSum(leftDiv, pair.getLeft());
+        val rightGrad = factory.reduceSum(rightMul, pair.getRight());
+
+        node.getLeft().accept(this, leftGrad);
+        node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitExponential(Exponential node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val result = factory.multiply(grad, node);
+        node.getBase().accept(this, result);
+    }
+
+    @Override
+    public void visitLogarithm(Logarithm node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val result = factory.divide(grad, node.getBase());
+        node.getBase().accept(this, result);
     }
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-        String leftGradName = node.getName() + "/grad_" + node.getLeft().getName();
-        String rightGradName = node.getName() + "/grad_" + node.getRight().getName();
-
-        Expression leftGrad = ExpressionFactory.createMatMul(leftGradName, grad, node.getRight(), false, true);
-        Expression rightGrad = ExpressionFactory.createMatMul(rightGradName, node.getLeft(), grad, true, false);
-
+        val grad = this.preVisit(node, params);
+        val leftGrad = factory.matmul(grad, node.getRight(), false, true);
+        val rightGrad = factory.matmul(node.getLeft(), grad, true, false);
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
     }
@@ -119,71 +124,62 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
     }
+//    @Override
+//    public void visitReduceMean(ReduceMean node, Object... params) {
+//        Expression grad = getGradientOrDefault(node, params);
+//        node.getBase().accept(this, grad);
+//    }
+//
 
     @Override
-    public void visitReduceMean(ReduceMean node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-        node.getBase().accept(this, grad);
+    public void visitNegate(Negate node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val result = factory.neg(grad);
+        node.getBase().accept(this, result);
     }
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
+        val grad = this.preVisit(node, params);
         node.getBase().accept(this, grad);
     }
 
     @Override
     public void visitRelu(Relu node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String gradName = node.getName() + "/grad_" + node.getBase().getName();
-        String stepName = gradName + "/step";
-
-        Expression step = ExpressionFactory.createStep(stepName, node.getBase());
-        Expression result = createMultiply(gradName, grad, step);
-
+        val grad = this.preVisit(node, params);
+        val step = factory.step(node.getBase());
+        val result = factory.multiply(grad, step);
         node.getBase().accept(this, result);
     }
 
     @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String gradName = node.getName() + "/grad_" + node.getBase().getName();
-        String sigGradName = gradName + "/sigGrad";
-
-        Expression sigGrad = ExpressionFactory.createSigmoidGrad(sigGradName, node.getBase());
-        Expression result = createMultiply(gradName, grad, sigGrad);
-
+        val grad = this.preVisit(node, params);
+        val sigGrad = factory.sigmoidGrad(node.getBase());
+        val result = factory.multiply(grad, sigGrad);
         node.getBase().accept(this, result);
     }
 
     @Override
     public void visitSine(Sine node, Object... params) {
-        Expression grad = this.preVisit(node, params);
-
-        Expression cos = graph.add(new Cosine(node.getBase(), null));
-        Expression result = graph.add(new Multiply(grad, cos, null));
-
+        val grad = this.preVisit(node, params);
+        val cos = factory.cos(node.getBase());
+        val result = factory.multiply(grad, cos);
         node.getBase().accept(this, result);
     }
 
     @Override
-    public void visitSoftmax(Softmax softmax, Object... params) {
-
+    public void visitSoftmax(Softmax node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val result = factory.softmaxGrad(node.getBase(), grad);
+        node.getBase().accept(this, result);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
-        Expression grad = getGradientOrDefault(node, params);
-
-        String gradName = node.getName() + "/grad_" + node.getBase().getName();
-
-        String mulName = gradName + "/mul";
-        Expression mul = createMultiply(mulName, node.getBase(), Constant.TWO);
-
-        Expression result = createMultiply(gradName, grad, mul);
-
+        val grad = this.preVisit(node, params);
+        val mul = factory.multiply(Constant.TWO, node.getBase());
+        val result = factory.multiply(grad, mul);
         node.getBase().accept(this, result);
     }
 
@@ -196,6 +192,14 @@ public class ReverseGradientVisitor extends BaseVisitor {
         val rightGradNeg = factory.neg(rightGrad);
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGradNeg);
+    }
+
+    @Override
+    public void visitTangent(Tangent node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val tanGrad = factory.tanGrad(node.getBase());
+        val result = factory.multiply(grad, tanGrad);
+        node.getBase().accept(this, result);
     }
 
     @Override

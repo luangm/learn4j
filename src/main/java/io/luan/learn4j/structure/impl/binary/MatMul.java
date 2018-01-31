@@ -15,13 +15,13 @@ import lombok.Getter;
 public class MatMul extends BinaryExpression {
 
     @Getter
+    private int[] shape;
+
+    @Getter
     private boolean transposeLeft;
 
     @Getter
     private boolean transposeRight;
-
-    @Getter
-    private int[] shape;
 
     public MatMul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight, String name) {
         super(left, right, name);
@@ -43,4 +43,21 @@ public class MatMul extends BinaryExpression {
         return ExpressionType.MatMul;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = hash * 31 + (transposeLeft ? 1 : 0);
+        hash = hash * 31 + (transposeRight ? 1 : 0);
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        MatMul other = (MatMul) obj;
+        return this.isTransposeLeft() == other.isTransposeLeft()
+                && this.isTransposeRight() == other.isTransposeRight();
+    }
 }

@@ -4,12 +4,12 @@ import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.impl.binary.Add;
+import io.luan.learn4j.structure.impl.binary.Divide;
+import io.luan.learn4j.structure.impl.binary.MatMul;
 import io.luan.learn4j.structure.impl.binary.Multiply;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
-import io.luan.learn4j.structure.impl.transform.Negate;
-import io.luan.learn4j.structure.impl.transform.Sign;
-import io.luan.learn4j.structure.impl.transform.Sine;
+import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 
 /**
@@ -33,11 +33,6 @@ public class ExpressionFactory {
 
     public static Expression createConstant(String name, Tensor value) {
 //        return new Constant(name, value);
-        return null;
-    }
-
-    public static Expression createDivide(String name, Expression left, Expression right) {
-//        return new Divide(name, left, right);
         return null;
     }
 
@@ -86,23 +81,8 @@ public class ExpressionFactory {
         return null;
     }
 
-    public static Expression createSigmoid(String name, Expression base) {
-//        return new Sigmoid(name, base);
-        return null;
-    }
-
-    public static Expression createSigmoidGrad(String name, Expression base) {
-//        return new SigmoidGrad(name, base);
-        return null;
-    }
-
     public static Expression createSign(String name, Expression base) {
 //        return new Sign(name, base);
-        return null;
-    }
-
-    public static Expression createStep(String name, Expression base) {
-//        return new Step(name, base);
         return null;
     }
 
@@ -119,9 +99,37 @@ public class ExpressionFactory {
         return graph.add(new Add(left, right, name));
     }
 
+    public Expression cos(Expression base) {
+        return cos(base, null);
+    }
+
+    public Expression cos(Expression base, String name) {
+        return graph.add(new Cosine(base, name));
+    }
+
     public Expression createAssign(String name, Expression target, Expression newValue) {
 //        return new Assign(name, target, newValue);
         return null;
+    }
+
+    public Expression divide(Expression left, Expression right) {
+        return divide(left, right, null);
+    }
+
+    public Expression divide(Expression left, Expression right, String name) {
+        return graph.add(new Divide(left, right, name));
+    }
+
+    public Expression matmul(Expression left, Expression right) {
+        return matmul(left, right, false, false, null);
+    }
+
+    public Expression matmul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight) {
+        return matmul(left, right, transposeLeft, transposeRight, null);
+    }
+
+    public Expression matmul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight, String name) {
+        return graph.add(new MatMul(left, right, transposeLeft, transposeRight, name));
     }
 
     public Expression multiply(Expression left, Expression right) {
@@ -140,14 +148,6 @@ public class ExpressionFactory {
         return graph.add(new Negate(base, name));
     }
 
-    public Expression negate(Expression base) {
-        return negate(base, null);
-    }
-
-    public Expression negate(Expression base, String name) {
-        return graph.add(new Negate(base, name));
-    }
-
     public Expression reduceSum(Expression base, int dimension) {
         return reduceSum(base, dimension, null);
     }
@@ -157,6 +157,22 @@ public class ExpressionFactory {
             return graph.add(new ReduceSum(base, dimension, name));
         }
         return base;
+    }
+
+    public Expression sigmoid(Expression base) {
+        return sigmoid(base, null);
+    }
+
+    public Expression sigmoid(Expression base, String name) {
+        return graph.add(new Sigmoid(base, name));
+    }
+
+    public Expression sigmoidGrad(Expression base) {
+        return sigmoidGrad(base, null);
+    }
+
+    public Expression sigmoidGrad(Expression base, String name) {
+        return graph.add(new SigmoidGrad(base, name));
     }
 
     public Expression sign(Expression base) {
@@ -173,5 +189,29 @@ public class ExpressionFactory {
 
     public Expression sin(Expression base, String name) {
         return graph.add(new Sine(base, name));
+    }
+
+    public Expression softmaxGrad(Expression base, Expression grad) {
+        return softmaxGrad(base, grad, null);
+    }
+
+    public Expression softmaxGrad(Expression base, Expression grad, String name) {
+        return graph.add(new SoftmaxGrad(base, grad, name));
+    }
+
+    public Expression step(Expression base) {
+        return step(base, null);
+    }
+
+    public Expression step(Expression base, String name) {
+        return graph.add(new Step(base, name));
+    }
+
+    public Expression tanGrad(Expression base) {
+        return tanGrad(base, null);
+    }
+
+    public Expression tanGrad(Expression base, String name) {
+        return graph.add(new TangentGrad(base, name));
     }
 }

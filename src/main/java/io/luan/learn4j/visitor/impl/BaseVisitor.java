@@ -114,6 +114,12 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
+    public void visitReciprocal(Reciprocal node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
@@ -162,6 +168,13 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
+    public void visitSoftmaxGrad(SoftmaxGrad node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+        node.getGrad().accept(this, params);
+    }
+
+    @Override
     public void visitSquare(Square node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
@@ -188,6 +201,12 @@ abstract class BaseVisitor implements Visitor {
 
     @Override
     public void visitTangent(Tangent node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitTangentGrad(TangentGrad node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
     }

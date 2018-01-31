@@ -1,6 +1,5 @@
 package io.luan.learn4j.visitor;
 
-import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
@@ -52,6 +51,8 @@ public interface Visitor {
 
     void visitPower(Power node, Object... params);
 
+    void visitReciprocal(Reciprocal node, Object... params);
+
     void visitReduceMean(ReduceMean node, Object... params);
 
     void visitReduceSum(ReduceSum reduceSum, Object... params);
@@ -68,6 +69,8 @@ public interface Visitor {
 
     void visitSoftmax(Softmax node, Object... params);
 
+    void visitSoftmaxGrad(SoftmaxGrad node, Object... params);
+
     void visitSquare(Square node, Object... params);
 
     void visitSquareRoot(SquareRoot node, Object... params);
@@ -77,6 +80,8 @@ public interface Visitor {
     void visitSubtract(Subtract node, Object... params);
 
     void visitTangent(Tangent node, Object... params);
+
+    void visitTangentGrad(TangentGrad node, Object... params);
 
     void visitTanh(Tanh node, Object... params);
 

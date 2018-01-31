@@ -54,31 +54,29 @@ String json = Learn4j.saveGraph(Graph)
 | Add           | Y     | Y     |
 | Assign        |       |       |
 | Cos           | Y     | Y     |
-| Divide        | Y     |       |
-| Exp           | Y     |       |
+| Divide        | Y     | Y     |
+| Exp           | Y     | Y     |
 | Fill          | Y     |       |
-| Group         |       |       |
-| Log           | Y     |       |
-| MatMul        | Y     |       |
+| Group         | Y     |       |
+| Log           | Y     | Y     |
+| MatMul        | Y     | Y     |
 | Mult          | Y     | Y     |
-| Negate        | Y     |       |
-| ReduceSum     | Y     |       |
+| Negate        | Y     | Y     |
+| ReduceSum     | Y     | Y     |
 | ReduceMean    | Y     |       |
-| Relu          | Y     |       |
-| Sigmoid       | Y     |       |
-| SigmoidGrad   |       |       |
+| Relu          | Y     | Y     |
+| Sigmoid       | Y     | Y     |
 | Sign          | Y     |       |
 | Sine          | Y     | Y     |
-| Square        | Y     |       |
+| Square        | Y     | Y     |
 | SquareRoot    | Y     |       |
 | Step          | Y     |       |
 | Subtract      | Y     | Y     |
-| Tangent       | Y     |       |
-| TangentGrad   |       |       |
+| Tangent       | Y     | Y     |
 | Tanh          | Y     |       |
-| Conv2d        |       |       |
+| Conv2d        | Y     |       |
 | MaxPool       |       |       |
-| Reciprocal    |       |       |
-| Softmax       | Y     |       |
+| Reciprocal    | Y     |       |
+| Softmax       | Y     | Y     |
 | LogSumExp     |       |       |
 | AddN          |       |       |

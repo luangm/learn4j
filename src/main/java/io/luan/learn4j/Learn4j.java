@@ -14,6 +14,7 @@ import io.luan.learn4j.structure.impl.core.Variable;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Fill;
+import io.luan.learn4j.structure.impl.special.Group;
 import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
@@ -134,6 +135,14 @@ public class Learn4j {
         return gradients;
     }
 
+    public static Expression group(Expression... expressions) {
+        return group(expressions, null);
+    }
+
+    public static Expression group(Expression[] expressions, String name) {
+        return addToGraph(new Group(expressions, name));
+    }
+
     public static Expression log(Expression base) {
         return log(base, null);
     }
@@ -180,6 +189,14 @@ public class Learn4j {
 
     public static void println(Object obj) {
         System.out.println(obj);
+    }
+
+    public static Expression reciprocal(Expression base) {
+        return reciprocal(base, null);
+    }
+
+    public static Expression reciprocal(Expression base, String name) {
+        return addToGraph(new Reciprocal(base, name));
     }
 
     public static Expression reduceMean(Expression base) {
