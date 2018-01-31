@@ -1,7 +1,6 @@
 package io.luan.learn4j.test.opTest;
 
 import io.luan.learn4j.Learn4j;
-import lombok.experimental.var;
 import lombok.val;
 import org.junit.Test;
 
@@ -23,11 +22,10 @@ public class SumTest {
         println(result);
     }
 
-
     @Test
     public void testGrad() {
-        val x = constant(new double[]{1,2,3,4,5,6}, new int[]{2, 3});
-        val abs = reduceSum(x);
+        val x = constant(new double[]{1, 2, 3, 4, 5, 6}, new int[]{2, 3});
+        val abs = reduceSum(x, 1);
         abs.eval();
         println(abs);
 

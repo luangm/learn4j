@@ -6,6 +6,7 @@ import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
@@ -124,12 +125,6 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
     }
-//    @Override
-//    public void visitReduceMean(ReduceMean node, Object... params) {
-//        Expression grad = getGradientOrDefault(node, params);
-//        node.getBase().accept(this, grad);
-//    }
-//
 
     @Override
     public void visitNegate(Negate node, Object... params) {
@@ -139,9 +134,29 @@ public class ReverseGradientVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitReduceMean(ReduceMean node, Object... params) {
+        val grad = this.preVisit(node, params);
+
+        int[] inputShape = node.getBase().getShape();
+        int[] outputShape = node.getShape();
+        int[] scale = ShapeUtils.safeDivide(inputShape, outputShape);
+        val tile = factory.tile(grad, scale);
+
+        int factor = ShapeUtils.prod(scale);
+        val factorExp = factory.constant(factor);
+        val result = factory.divide(tile, factorExp);
+
+        node.getBase().accept(this, result);
+    }
+
+    @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
         val grad = this.preVisit(node, params);
-        node.getBase().accept(this, grad);
+        int[] inputShape = node.getBase().getShape();
+        int[] outputShape = node.getShape();
+        int[] scale = ShapeUtils.safeDivide(inputShape, outputShape);
+        val result = factory.tile(grad, scale);
+        node.getBase().accept(this, result);
     }
 
     @Override

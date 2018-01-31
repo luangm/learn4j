@@ -224,9 +224,9 @@ public class TensorMath {
         INDArray array = base.getArray();
         INDArray mean;
         if (dimension != -1) {
-            mean = array.mean(dimension);
+            mean = Nd4j.mean(array, dimension);
         } else {
-            mean = array.mean();
+            mean = Nd4j.mean(array);
         }
         return Tensor.create(mean);
     }
@@ -332,6 +332,12 @@ public class TensorMath {
     public static Tensor tanh(Tensor base) {
         INDArray array = base.getArray();
         INDArray result = Transforms.tanh(array, true);
+        return Tensor.create(result);
+    }
+
+    public static Tensor tile(Tensor base, int[] repeats) {
+        INDArray array = base.getArray();
+        INDArray result = Nd4j.tile(array, repeats);
         return Tensor.create(result);
     }
 

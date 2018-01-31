@@ -19,6 +19,9 @@ import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
 
+import java.lang.reflect.Array;
+import java.util.Arrays;
+
 /**
  * This is a main factory class for creating nodes
  *

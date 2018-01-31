@@ -63,7 +63,7 @@ String json = Learn4j.saveGraph(Graph)
 | Mult          | Y     | Y     |
 | Negate        | Y     | Y     |
 | ReduceSum     | Y     | Y     |
-| ReduceMean    | Y     |       |
+| ReduceMean    | Y     | Y     |
 | Relu          | Y     | Y     |
 | Sigmoid       | Y     | Y     |
 | Sign          | Y     |       |

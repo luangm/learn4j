@@ -29,5 +29,5 @@ public enum ExpressionType {
     Square,
     Step,
     Subtract,
-    Variable, Sine, Cosine, SquareRoot, Exponenetial, Tangent, Tanh, Conv2d, Reciprocal, SoftmaxGrad, TangentGrad,
+    Variable, Sine, Cosine, SquareRoot, Exponenetial, Tangent, Tanh, Conv2d, Reciprocal, SoftmaxGrad, TangentGrad, Tile,
 }

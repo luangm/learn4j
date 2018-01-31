@@ -10,6 +10,7 @@ import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Assign;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Group;
+import io.luan.learn4j.structure.impl.special.Tile;
 import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.Visitor;
 
@@ -201,6 +202,12 @@ abstract class BaseVisitor implements Visitor {
 
     @Override
     public void visitTangent(Tangent node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitTile(Tile node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
     }

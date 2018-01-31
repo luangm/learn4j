@@ -12,6 +12,7 @@ import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Assign;
 import io.luan.learn4j.structure.impl.special.Fill;
+import io.luan.learn4j.structure.impl.special.Tile;
 import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 
@@ -180,16 +181,16 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor reduced = TensorMath.reduceMean(base, node.getDimension());
-        session.setValue(node, reduced);
+        Tensor result = TensorMath.reduceMean(base, node.getDimension());
+        session.setValue(node, result);
     }
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
         super.visitReduceSum(node, params);
         Tensor base = session.getValue(node.getBase());
-        Tensor reduced = TensorMath.reduceSum(base, node.getDimension());
-        session.setValue(node, reduced);
+        Tensor result = TensorMath.reduceSum(base, node.getDimension());
+        session.setValue(node, result);
     }
 
     @Override
@@ -293,6 +294,14 @@ public class EvaluationVisitor extends BaseVisitor {
         super.visitTangent(node, params);
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tan(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitTile(Tile node, Object... params) {
+        super.visitTile(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.tile(base, node.getRepeats());
         session.setValue(node, result);
     }
 

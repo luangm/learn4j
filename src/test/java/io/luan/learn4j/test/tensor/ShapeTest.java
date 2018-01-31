@@ -44,4 +44,6 @@ public class ShapeTest {
         int[] result = ShapeUtils.broadcastShapes(left, right);
         println(Arrays.toString(result));
     }
+
+
 }

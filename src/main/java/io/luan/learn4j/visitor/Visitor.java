@@ -9,6 +9,7 @@ import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.Assign;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Group;
+import io.luan.learn4j.structure.impl.special.Tile;
 import io.luan.learn4j.structure.impl.transform.*;
 
 /**
@@ -84,6 +85,8 @@ public interface Visitor {
     void visitTangentGrad(TangentGrad node, Object... params);
 
     void visitTanh(Tanh node, Object... params);
+
+    void visitTile(Tile node, Object... params);
 
     void visitVariable(Variable node, Object... params);
 

@@ -40,6 +40,27 @@ public class ShapeUtils {
         return result;
     }
 
+    public static int prod(int[] shape) {
+        int result = 1;
+        for (int dim : shape) {
+            result *= dim;
+        }
+        return result;
+    }
+
+    /**
+     * By calling this method the caller ensures the two shapes have the same rank
+     * and can be cleanly divided.
+     * Normally used on reduction.
+     */
+    public static int[] safeDivide(int[] shape1, int[] shape2) {
+        int[] result = new int[shape1.length];
+        for (int i = 0; i < result.length; i++) {
+            result[i] = shape1[i] / shape2[i];
+        }
+        return result;
+    }
+
     public static Pair<Integer, Integer> getReductionIndices(int[] shape1, int[] shape2) {
 
         int[] resultShape = broadcastShapes(shape1, shape2);

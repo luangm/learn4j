@@ -9,6 +9,7 @@ import io.luan.learn4j.structure.impl.binary.MatMul;
 import io.luan.learn4j.structure.impl.binary.Multiply;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.Tile;
 import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 
@@ -97,6 +98,14 @@ public class ExpressionFactory {
 
     public Expression add(Expression left, Expression right, String name) {
         return graph.add(new Add(left, right, name));
+    }
+
+    public Expression constant(Number number) {
+        return constant(number, null);
+    }
+
+    public Expression constant(Number number, String name) {
+        return graph.add(new Constant(Tensor.scalar(number), name));
     }
 
     public Expression cos(Expression base) {
@@ -213,5 +222,13 @@ public class ExpressionFactory {
 
     public Expression tanGrad(Expression base, String name) {
         return graph.add(new TangentGrad(base, name));
+    }
+
+    public Expression tile(Expression base, int[] scale) {
+        return tile(base, scale, null);
+    }
+
+    public Expression tile(Expression base, int[] scale, String name) {
+        return graph.add(new Tile(base, scale, name));
     }
 }
