@@ -1,11 +1,10 @@
 package io.luan.learn4j.structure.impl.core;
 
-import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.core.Tensor;
+import io.luan.learn4j.structure.ExpressionType;
 import io.luan.learn4j.structure.impl.base.BaseExpression;
 import io.luan.learn4j.visitor.Visitor;
 import lombok.Getter;
-import lombok.Setter;
 
 /**
  * Parameter is holder for parameters to be updated on each gradient descend eval
@@ -18,7 +17,6 @@ import lombok.Setter;
 public class Parameter extends BaseExpression {
 
     @Getter
-    @Setter
     private Tensor value;
 
     public Parameter(Tensor value, String name) {
@@ -39,6 +37,11 @@ public class Parameter extends BaseExpression {
     @Override
     public ExpressionType getType() {
         return ExpressionType.Parameter;
+    }
+
+    @Override
+    public void setValue(Tensor value) {
+        super.setValue(value);
     }
 
 }

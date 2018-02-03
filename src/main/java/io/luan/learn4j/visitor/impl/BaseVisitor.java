@@ -5,12 +5,11 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
-import io.luan.learn4j.structure.impl.special.Assign;
-import io.luan.learn4j.structure.impl.special.Fill;
-import io.luan.learn4j.structure.impl.special.Group;
-import io.luan.learn4j.structure.impl.special.Tile;
+import io.luan.learn4j.structure.impl.special.*;
 import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.Visitor;
 
@@ -31,6 +30,14 @@ abstract class BaseVisitor implements Visitor {
         this.preVisit(node, params);
         node.getLeft().accept(this, params);
         node.getRight().accept(this, params);
+    }
+
+    @Override
+    public void visitAddN(AddN node, Object... params) {
+        this.preVisit(node, params);
+        for (Expression exp : node.getList()) {
+            exp.accept(this, params);
+        }
     }
 
     @Override
@@ -121,7 +128,19 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
+    public void visitReduceMax(ReduceMax node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitReduceMin(ReduceMin node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
     }
@@ -207,12 +226,6 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
-    public void visitTile(Tile node, Object... params) {
-        this.preVisit(node, params);
-        node.getBase().accept(this, params);
-    }
-
-    @Override
     public void visitTangentGrad(TangentGrad node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
@@ -220,6 +233,12 @@ abstract class BaseVisitor implements Visitor {
 
     @Override
     public void visitTanh(Tanh node, Object... params) {
+        this.preVisit(node, params);
+        node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitTile(Tile node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
     }

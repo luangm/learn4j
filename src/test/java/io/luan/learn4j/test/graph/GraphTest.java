@@ -1,11 +1,10 @@
 package io.luan.learn4j.test.graph;
 
-import io.luan.learn4j.Learn4j;
-import lombok.val;
+import io.luan.learn4j.core.Tensor;
+import lombok.experimental.var;
 import org.junit.Test;
 
 import static io.luan.learn4j.Learn4j.*;
-import static io.luan.learn4j.core.Tensor.fill;
 import static io.luan.learn4j.core.Tensor.ones;
 
 /**
@@ -16,25 +15,34 @@ public class GraphTest {
 
     @Test
     public void testCreate() {
-        val x = constant(ones(2, 3));
-        val y = constant(fill(5, 1, 3));
+
+        var W = parameter(ones(2, 3), "W");
+        var x = variable(new int[]{3, 2});
+        var b = parameter(ones(2, 1), "b");
+        println(W);
         println(x);
-        println(y);
 
-        val neg = negate(x);
-        println(neg);
+        var lr = constant(new double[]{0.05}, new int[]{1, 1});
 
-        for (int i = 0; i < 2; i++) {
-            val neg2 = negate(x);
-            neg2.eval();
-            println(neg2);
-            val sum = add(x, y);
-            sum.eval();
-            println(sum);
+        for (int i = 0; i < 4; i++) {
+            x.setValue(Tensor.fill(3, 3, 2));
+//            println(x);
+
+            var mm = matmul(W, x);
+            var yHat = add(mm, b);
+
+//            yHat.eval();
+//            println(yHat);
+
+            var W_grad = gradients(yHat, W);
+            var diff = multiply(lr, W_grad);
+            var newVal = subtract(W_grad, diff);
+            newVal.eval();
+            println(newVal);
+
+            W.setValue(newVal.getValue());
+            println(W);
         }
-
-        val z = constant(ones(1, 1));
-        println(z);
 
     }
 

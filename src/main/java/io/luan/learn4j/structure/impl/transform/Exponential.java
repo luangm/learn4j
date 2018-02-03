@@ -22,7 +22,7 @@ public class Exponential extends TransformExpression {
 
     @Override
     public ExpressionType getType() {
-        return ExpressionType.Exponenetial;
+        return ExpressionType.Exponential;
     }
 
 }

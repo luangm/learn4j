@@ -220,25 +220,27 @@ public class TensorMath {
         return Tensor.create(result);
     }
 
+    public static Tensor reduceMax(Tensor base, int dimension) {
+        INDArray array = base.getArray();
+        INDArray max = dimension != -1 ? Nd4j.max(array, dimension) : Nd4j.max(array);
+        return Tensor.create(max);
+    }
+
     public static Tensor reduceMean(Tensor base, int dimension) {
         INDArray array = base.getArray();
-        INDArray mean;
-        if (dimension != -1) {
-            mean = Nd4j.mean(array, dimension);
-        } else {
-            mean = Nd4j.mean(array);
-        }
+        INDArray mean = dimension != -1 ? Nd4j.mean(array, dimension) : Nd4j.mean(array);
         return Tensor.create(mean);
+    }
+
+    public static Tensor reduceMin(Tensor base, int dimension) {
+        INDArray array = base.getArray();
+        INDArray min = dimension != -1 ? Nd4j.min(array, dimension) : Nd4j.min(array);
+        return Tensor.create(min);
     }
 
     public static Tensor reduceSum(Tensor base, int dimension) {
         INDArray array = base.getArray();
-        INDArray sum;
-        if (dimension != -1) {
-            sum = Nd4j.sum(array, dimension);
-        } else {
-            sum = Nd4j.sum(array);
-        }
+        INDArray sum = dimension != -1 ? Nd4j.sum(array, dimension) : Nd4j.sum(array);
         return Tensor.create(sum);
     }
 

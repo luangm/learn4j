@@ -8,8 +8,11 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.AddN;
 import io.luan.learn4j.structure.impl.special.Assign;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Tile;
@@ -56,6 +59,18 @@ public class EvaluationVisitor extends BaseVisitor {
         } else {
             TensorMath.add(left, right, sum);
         }
+    }
+
+    @Override
+    public void visitAddN(AddN node, Object... params) {
+        super.visitAddN(node, params);
+
+        Tensor result = Tensor.zeros(node.getShape());
+        for (int i = 0; i < node.getList().length; i++) {
+            Tensor value = session.getValue(node.getList()[i]);
+            TensorMath.add(result, value, result);
+        }
+        session.setValue(node, result);
     }
 
     @Override
@@ -178,10 +193,26 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
+    public void visitReduceMax(ReduceMax node, Object... params) {
+        super.visitReduceMax(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.reduceMax(base, node.getDimension());
+        session.setValue(node, result);
+    }
+
+    @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
         super.visitReduceMean(node, params);
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reduceMean(base, node.getDimension());
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitReduceMin(ReduceMin node, Object... params) {
+        super.visitReduceMin(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.reduceMin(base, node.getDimension());
         session.setValue(node, result);
     }
 
@@ -298,14 +329,6 @@ public class EvaluationVisitor extends BaseVisitor {
     }
 
     @Override
-    public void visitTile(Tile node, Object... params) {
-        super.visitTile(node, params);
-        Tensor base = session.getValue(node.getBase());
-        Tensor result = TensorMath.tile(base, node.getRepeats());
-        session.setValue(node, result);
-    }
-
-    @Override
     public void visitTangentGrad(TangentGrad node, Object... params) {
         super.visitTangentGrad(node, params);
         Tensor base = session.getValue(node.getBase());
@@ -318,6 +341,14 @@ public class EvaluationVisitor extends BaseVisitor {
         super.visitTanh(node, params);
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tanh(base);
+        session.setValue(node, result);
+    }
+
+    @Override
+    public void visitTile(Tile node, Object... params) {
+        super.visitTile(node, params);
+        Tensor base = session.getValue(node.getBase());
+        Tensor result = TensorMath.tile(base, node.getRepeats());
         session.setValue(node, result);
     }
 

@@ -64,6 +64,8 @@ String json = Learn4j.saveGraph(Graph)
 | Negate        | Y     | Y     |
 | ReduceSum     | Y     | Y     |
 | ReduceMean    | Y     | Y     |
+| ReduceMin     | Y     |       |
+| ReduceMax     | Y     |       |
 | Relu          | Y     | Y     |
 | Sigmoid       | Y     | Y     |
 | Sign          | Y     |       |

@@ -11,16 +11,16 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.AddN;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Group;
 import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
-
-import java.lang.reflect.Array;
-import java.util.Arrays;
 
 /**
  * This is a main factory class for creating nodes
@@ -51,6 +51,14 @@ public class Learn4j {
 
     public static Expression add(Expression left, Expression right, String name) {
         return addToGraph(new Add(left, right, name));
+    }
+
+    public static Expression addN(Expression... nodes) {
+        return addN(nodes, null);
+    }
+
+    public static Expression addN(Expression[] nodes, String name) {
+        return addToGraph(new AddN(nodes, name));
     }
 
     public static Expression assign(Expression target, Expression newValue) {
@@ -202,6 +210,22 @@ public class Learn4j {
         return addToGraph(new Reciprocal(base, name));
     }
 
+    public static Expression reduceMax(Expression base) {
+        return reduceMax(base, null);
+    }
+
+    public static Expression reduceMax(Expression base, String name) {
+        return reduceMax(base, -1, name);
+    }
+
+    public static Expression reduceMax(Expression base, int dimension) {
+        return reduceMax(base, dimension, null);
+    }
+
+    public static Expression reduceMax(Expression base, int dimension, String name) {
+        return addToGraph(new ReduceMax(base, dimension, name));
+    }
+
     public static Expression reduceMean(Expression base) {
         return reduceMean(base, null);
     }
@@ -216,6 +240,22 @@ public class Learn4j {
 
     public static Expression reduceMean(Expression base, int dimension, String name) {
         return addToGraph(new ReduceMean(base, dimension, name));
+    }
+
+    public static Expression reduceMin(Expression base) {
+        return reduceMin(base, null);
+    }
+
+    public static Expression reduceMin(Expression base, String name) {
+        return reduceMin(base, -1, name);
+    }
+
+    public static Expression reduceMin(Expression base, int dimension) {
+        return reduceMin(base, dimension, null);
+    }
+
+    public static Expression reduceMin(Expression base, int dimension, String name) {
+        return addToGraph(new ReduceMin(base, dimension, name));
     }
 
     public static Expression reduceSum(Expression base) {

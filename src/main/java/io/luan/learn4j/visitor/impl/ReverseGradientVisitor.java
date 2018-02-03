@@ -4,14 +4,18 @@ import io.luan.learn4j.core.utils.ShapeUtils;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
+import io.luan.learn4j.structure.impl.base.ReductionExpression;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
+import io.luan.learn4j.structure.impl.special.AddN;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 import lombok.val;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -61,6 +65,14 @@ public class ReverseGradientVisitor extends BaseVisitor {
         val rightGrad = factory.reduceSum(grad, pair.getRight());
         node.getLeft().accept(this, leftGrad);
         node.getRight().accept(this, rightGrad);
+    }
+
+    @Override
+    public void visitAddN(AddN node, Object... params) {
+        val grad = this.preVisit(node, params);
+        for (val item: node.getList()) {
+            item.accept(this, grad);
+        }
     }
 
     @Override
@@ -149,13 +161,19 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getBase().accept(this, result);
     }
 
+    // TODO: Not finished
+    @Override
+    public void visitReduceMin(ReduceMin node, Object... params) {
+        val grad = this.preVisit(node, params);
+        val reductionGrad = this.getReductionGrad(node, grad);
+        node.getBase().accept(this, reductionGrad);
+        throw new NotImplementedException();
+    }
+
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
         val grad = this.preVisit(node, params);
-        int[] inputShape = node.getBase().getShape();
-        int[] outputShape = node.getShape();
-        int[] scale = ShapeUtils.safeDivide(inputShape, outputShape);
-        val result = factory.tile(grad, scale);
+        val result = this.getReductionGrad(node, grad);
         node.getBase().accept(this, result);
     }
 
@@ -259,6 +277,13 @@ public class ReverseGradientVisitor extends BaseVisitor {
         }
 
         return this.graph.add(grad);
+    }
+
+    private Expression getReductionGrad(ReductionExpression node, Expression grad) {
+        int[] inputShape = node.getBase().getShape();
+        int[] outputShape = node.getShape();
+        int[] scale = ShapeUtils.safeDivide(inputShape, outputShape);
+        return factory.tile(grad, scale);
     }
 
     private static Expression getGradientOrDefault(Expression node, Object... params) {

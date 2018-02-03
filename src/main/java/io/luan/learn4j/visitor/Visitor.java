@@ -4,12 +4,11 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
+import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
-import io.luan.learn4j.structure.impl.special.Assign;
-import io.luan.learn4j.structure.impl.special.Fill;
-import io.luan.learn4j.structure.impl.special.Group;
-import io.luan.learn4j.structure.impl.special.Tile;
+import io.luan.learn4j.structure.impl.special.*;
 import io.luan.learn4j.structure.impl.transform.*;
 
 /**
@@ -25,6 +24,8 @@ public interface Visitor {
     void visitAbsolute(Absolute abs, Object... params);
 
     void visitAdd(Add node, Object... params);
+
+    void visitAddN(AddN node, Object... params);
 
     void visitAssign(Assign node, Object... params);
 
@@ -54,7 +55,11 @@ public interface Visitor {
 
     void visitReciprocal(Reciprocal node, Object... params);
 
+    void visitReduceMax(ReduceMax node, Object... params);
+
     void visitReduceMean(ReduceMean node, Object... params);
+
+    void visitReduceMin(ReduceMin node, Object... params);
 
     void visitReduceSum(ReduceSum reduceSum, Object... params);
 
