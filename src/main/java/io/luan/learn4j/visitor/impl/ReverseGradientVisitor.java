@@ -208,6 +208,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getBase().accept(this, result);
     }
 
+    // TODO: Fix Constant 2
     @Override
     public void visitSquare(Square node, Object... params) {
         val grad = this.preVisit(node, params);

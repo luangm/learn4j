@@ -81,4 +81,4 @@ String json = Learn4j.saveGraph(Graph)
 | Reciprocal    | Y     |       |
 | Softmax       | Y     | Y     |
 | LogSumExp     |       |       |
-| AddN          |       |       |
+| AddN          | Y     | Y     |

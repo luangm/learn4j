@@ -65,6 +65,10 @@ public class Learn4j {
         return null;
     }
 
+    public static Expression constant(Number scalar) {
+        return constant(Tensor.scalar(scalar));
+    }
+
     public static Expression constant(double[] data, int[] shape) {
         return constant(data, shape, null);
     }

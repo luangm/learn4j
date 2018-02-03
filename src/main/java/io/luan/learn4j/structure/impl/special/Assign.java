@@ -15,10 +15,9 @@ import lombok.Getter;
 public class Assign extends BaseExpression {
 
     @Getter
-    private Expression target;
-
-    @Getter
     private Expression newValue;
+    @Getter
+    private Expression target;
 
     public Assign(Expression target, Expression newValue, String name) {
         super(name);
@@ -41,4 +40,21 @@ public class Assign extends BaseExpression {
         return ExpressionType.Assign;
     }
 
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode();
+        hash = hash * 31 + target.getId();
+        hash = hash * 31 + newValue.getId();
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (!super.equals(obj)) {
+            return false;
+        }
+        Assign other = (Assign) obj;
+        return this.getTarget().getId() == other.getTarget().getId()
+                && this.getNewValue().getId() == other.getNewValue().getId();
+    }
 }

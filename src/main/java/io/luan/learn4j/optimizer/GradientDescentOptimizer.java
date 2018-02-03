@@ -8,6 +8,7 @@ import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.Getter;
+import lombok.val;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,32 +25,33 @@ public class GradientDescentOptimizer {
     @Getter
     private Expression learnRate;
 
+    private ExpressionFactory factory;
+
     public GradientDescentOptimizer(Graph graph, double learnRate) {
         this.graph = graph;
-        this.learnRate = ExpressionFactory.createConstant("learn_rate", Tensor.scalar(learnRate));
+        this.factory = new ExpressionFactory(graph);
+        this.learnRate = factory.parameter(Tensor.scalar(learnRate));
     }
 
     public Expression minimize(Expression loss) {
-
         DependencyVisitor depVisitor = new DependencyVisitor();
         loss.accept(depVisitor);
 
-        List<Expression> assignList = new ArrayList<>();
-
         ReverseGradientVisitor visitor = new ReverseGradientVisitor(this.graph);
-        loss.accept(visitor);
+        visitor.visit(loss, null);
 
+        List<Expression> assignList = new ArrayList<>();
         for (Expression exp : depVisitor.getDependencies()) {
             if (exp.getType() == ExpressionType.Parameter) {
-                Expression grad = exp.getGradient();
-                Expression newGrad = ExpressionFactory.createMultiply("", grad, this.learnRate);
-                Expression sub = ExpressionFactory.createSubtract("", exp, newGrad);
-//                Expression assign = ExpressionFactory.createAssign("", exp, sub);
-//                assignList.add(assign);
+                val grad = loss.getGradient(exp);
+                val mul = factory.multiply(this.learnRate, grad);
+                val sub = factory.subtract(exp, mul);
+                val assign = factory.assign(exp, sub);
+                assignList.add(assign);
             }
         }
 
-        return ExpressionFactory.createGroup("TrainStep", assignList.toArray(new Expression[assignList.size()]));
+        return factory.group(assignList.toArray(new Expression[assignList.size()]));
 
     }
 }

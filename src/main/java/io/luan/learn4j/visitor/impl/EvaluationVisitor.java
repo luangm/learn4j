@@ -18,6 +18,8 @@ import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Tile;
 import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -26,6 +28,8 @@ import java.util.Map;
  * @since 31/08/2017.
  */
 public class EvaluationVisitor extends BaseVisitor {
+
+    private static Logger logger = LoggerFactory.getLogger(EvaluationVisitor.class);
 
     @Getter
     private Map<Expression, Tensor> feed;
@@ -75,6 +79,8 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitAssign(Assign node, Object... params) {
+        logger.info("visitAssign", node.getId());
+
         super.visitAssign(node);
         Tensor newTensor = session.getValue(node.getNewValue());
 
@@ -84,7 +90,6 @@ public class EvaluationVisitor extends BaseVisitor {
             targetParam.setValue(newTensor);
         }
 
-        session.setValue(node, newTensor);
         session.setValue(target, newTensor);
     }
 

@@ -42,6 +42,7 @@ public class Parameter extends BaseExpression {
     @Override
     public void setValue(Tensor value) {
         super.setValue(value);
+        this.value = value;
     }
 
 }
