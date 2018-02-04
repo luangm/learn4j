@@ -4,6 +4,7 @@ import io.luan.learn4j.core.Tensor;
 import io.luan.learn4j.core.utils.TensorMath;
 import io.luan.learn4j.session.Session;
 import io.luan.learn4j.structure.Expression;
+import io.luan.learn4j.structure.ExpressionState;
 import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
@@ -12,10 +13,7 @@ import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
-import io.luan.learn4j.structure.impl.special.AddN;
-import io.luan.learn4j.structure.impl.special.Assign;
-import io.luan.learn4j.structure.impl.special.Fill;
-import io.luan.learn4j.structure.impl.special.Tile;
+import io.luan.learn4j.structure.impl.special.*;
 import io.luan.learn4j.structure.impl.transform.*;
 import lombok.Getter;
 import org.slf4j.Logger;
@@ -52,7 +50,22 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitAdd(Add node, Object... params) {
-        super.visitAdd(node, params);
+        logger.info("visitAdd: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitAdd Skipped");
+//            return;
+//        }
+
+        if (node.getLeft().isInvalid()) {
+            node.getLeft().accept(this, params);
+        }
+
+        if (node.getRight().isInvalid()) {
+            node.getRight().accept(this, params);
+        }
+
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -63,6 +76,8 @@ public class EvaluationVisitor extends BaseVisitor {
         } else {
             TensorMath.add(left, right, sum);
         }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -79,9 +94,18 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitAssign(Assign node, Object... params) {
-        logger.info("visitAssign", node.getId());
+        logger.info("visitAssign: " + node.getId());
 
-        super.visitAssign(node);
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitReduceSum Skipped");
+//            return;
+//        }
+
+        if (node.getNewValue().isInvalid()) {
+            node.getNewValue().accept(this, params);
+        }
+
         Tensor newTensor = session.getValue(node.getNewValue());
 
         Expression target = node.getTarget();
@@ -95,7 +119,9 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitConstant(Constant node, Object... params) {
+        logger.info("visitConstant: " + node.getId());
         session.setValue(node, node.getValue());
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -131,11 +157,20 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitFill(Fill node, Object... params) {
-        super.visitFill(node, params);
+        logger.info("visitFill: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitFill Skipped");
+//            return;
+//        }
+
         if (session.getValue(node) == null) {
             Tensor value = Tensor.fill(node.getScalar(), node.getShape());
             session.setValue(node, value);
         }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -148,7 +183,22 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
-        super.visitMatMul(node, params);
+        logger.info("visitMatMul: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitMatMul Skipped");
+//            return;
+//        }
+
+        if (node.getLeft().isInvalid()) {
+            node.getLeft().accept(this, params);
+        }
+
+        if (node.getRight().isInvalid()) {
+            node.getRight().accept(this, params);
+        }
+
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -157,13 +207,50 @@ public class EvaluationVisitor extends BaseVisitor {
             prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight());
             session.setValue(node, prod);
         } else {
-            prod = TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight(), prod);
+            TensorMath.matmul(left, right, node.isTransposeLeft(), node.isTransposeRight(), prod);
         }
+
+        node.setState(ExpressionState.Evaluated);
+    }
+
+    @Override
+    public void visitMultiAssign(MultiAssign node, Object... params) {
+        logger.info("visitMultiAssign: " + node.getId());
+
+        for (Expression newVal : node.getNewValues()) {
+            if (newVal.isInvalid()) {
+                newVal.accept(this, params);
+            }
+        }
+
+        for (int i = 0; i < node.getTargets().length; i++) {
+            Tensor newVal = session.getValue(node.getNewValues()[i]);
+
+            Expression target = node.getTargets()[i];
+            target.setValue(newVal);
+        }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitMultiply(Multiply node, Object... params) {
-        super.visitMultiply(node, params);
+        logger.info("visitMultiply" + node.getId());
+
+//         Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitMultiply Skipped");
+//            return;
+//        }
+
+        if (node.getLeft().isInvalid()) {
+            node.getLeft().accept(this, params);
+        }
+
+        if (node.getRight().isInvalid()) {
+            node.getRight().accept(this, params);
+        }
+
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -172,21 +259,38 @@ public class EvaluationVisitor extends BaseVisitor {
             prod = TensorMath.multiply(left, right);
             session.setValue(node, prod);
         } else {
-            prod = TensorMath.multiply(left, right, prod);
+            TensorMath.multiply(left, right, prod);
         }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitNegate(Negate node, Object... params) {
-        super.visitNegate(node, params);
+        logger.info("visitNegate: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitNegate Skipped");
+//            return;
+//        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor negValue = TensorMath.negate(base);
         session.setValue(node, negValue);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitParameter(Parameter node, Object... params) {
+        logger.info("visitParameter: " + node.getId());
         session.setValue(node, node.getValue());
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -223,10 +327,23 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
-        super.visitReduceSum(node, params);
+        logger.info("visitReduceSum" + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitReduceSum Skipped");
+//            return;
+//        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reduceSum(base, node.getDimension());
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -239,18 +356,44 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
-        super.visitSigmoid(node, params);
+        logger.info("visitSigmoid: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitSigmoid Skipped");
+//            return;
+//        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sigmoid(base);
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
-        super.visitSigmoidGrad(node, params);
+        logger.info("visitSigmoidGrad: " + node.getId());
+
+        // Shortcut
+        if (!node.isInvalid()) {
+            logger.info("visitSigmoidGrad Skipped");
+            return;
+        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sigmoidGrad(base);
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -288,10 +431,23 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitSquare(Square node, Object... params) {
-        super.visitSquare(node, params);
+        logger.info("visitSquare" + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitSquare Skipped");
+//            return;
+//        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.square(base);
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -312,7 +468,22 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitSubtract(Subtract node, Object... params) {
-        super.visitSubtract(node);
+        logger.info("visitSubtract: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitSubtract Skipped");
+//            return;
+//        }
+
+        if (node.getLeft().isInvalid()) {
+            node.getLeft().accept(this, params);
+        }
+
+        if (node.getRight().isInvalid()) {
+            node.getRight().accept(this, params);
+        }
+
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -321,8 +492,10 @@ public class EvaluationVisitor extends BaseVisitor {
             diff = TensorMath.subtract(left, right);
             session.setValue(node, diff);
         } else {
-            diff = TensorMath.subtract(left, right, diff);
+            TensorMath.subtract(left, right, diff);
         }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -351,18 +524,33 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitTile(Tile node, Object... params) {
-        super.visitTile(node, params);
+        logger.info("visitTile: " + node.getId());
+
+        // Shortcut
+//        if (!node.isInvalid()) {
+//            logger.info("visitTile Skipped");
+//            return;
+//        }
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tile(base, node.getRepeats());
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitVariable(Variable node, Object... params) {
-        Tensor feedVal = feed.get(node);
-        if (feedVal != null) {
-            session.setValue(node, feedVal);
-        }
+        logger.info("visitVariable: " + node.getId());
+//        Tensor feedVal = feed.get(node);
+//        if (feedVal != null) {
+//            session.setValue(node, feedVal);
+//        }
+        node.setState(ExpressionState.Evaluated);
     }
 
 }

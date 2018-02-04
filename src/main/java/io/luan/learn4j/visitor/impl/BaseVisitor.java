@@ -97,6 +97,15 @@ abstract class BaseVisitor implements Visitor {
     }
 
     @Override
+    public void visitMultiAssign(MultiAssign node, Object... params) {
+        this.preVisit(node, params);
+
+        for (Expression newVal : node.getNewValues()) {
+            newVal.accept(this, params);
+        }
+    }
+
+    @Override
     public void visitMultiply(Multiply node, Object... params) {
         this.preVisit(node, params);
         node.getLeft().accept(this, params);

@@ -45,6 +45,8 @@ public interface Visitor {
 
     void visitMatMul(MatMul node, Object... params);
 
+    void visitMultiAssign(MultiAssign node, Object... params);
+
     void visitMultiply(Multiply node, Object... params);
 
     void visitNegate(Negate node, Object... params);

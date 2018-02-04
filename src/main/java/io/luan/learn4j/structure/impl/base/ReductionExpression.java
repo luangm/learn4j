@@ -19,6 +19,11 @@ public abstract class ReductionExpression extends BaseExpression {
     @Getter
     private int dimension;
 
+    @Override
+    public boolean isInvalid() {
+        return super.isInvalid() || base.isInvalid();
+    }
+
     @Getter
     private int[] shape;
 

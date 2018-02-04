@@ -41,6 +41,11 @@ public class Assign extends BaseExpression {
     }
 
     @Override
+    public boolean isInvalid() {
+        return super.isInvalid() || newValue.isInvalid();
+    }
+
+    @Override
     public int hashCode() {
         int hash = super.hashCode();
         hash = hash * 31 + target.getId();

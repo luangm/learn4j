@@ -78,6 +78,20 @@ public interface Expression {
     Tensor getValue();
 
     /**
+     * Adds an observer that listens to the value change event.
+     */
+    void addObserver(Expression observer);
+
+    /**
+     * Called when an event is observed
+     */
+    void onEvent();
+    /**
+     * Calls all observers to tell them value changed
+     */
+    void notifyValueChanged();
+
+    /**
      * This forces setting the session's value for this expression.
      */
     void setValue(Tensor value);
@@ -88,4 +102,9 @@ public interface Expression {
      * Note, this is only storing the relation, it does NOT enforce the correctness.
      */
     void setGradient(Integer targetId, Expression gradient);
+
+    /**
+     * Return if the current value of this node is invalid
+     */
+    boolean isInvalid();
 }

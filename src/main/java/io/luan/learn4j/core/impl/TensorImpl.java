@@ -3,6 +3,7 @@ package io.luan.learn4j.core.impl;
 import io.luan.learn4j.core.Tensor;
 import lombok.Getter;
 import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.string.NDArrayStrings;
 
 import java.util.Arrays;
 
@@ -15,6 +16,8 @@ import java.util.Arrays;
  * @since 24/09/2017.
  */
 public class TensorImpl implements Tensor {
+
+    private static final NDArrayStrings format = new NDArrayStrings(",", 8);
 
     /**
      * The underlying value of the tensor.
@@ -40,6 +43,7 @@ public class TensorImpl implements Tensor {
 //        if (this.array.isScalar()) {
 //            return "" + this.array.getDouble(0);
 //        }
-        return this.array.toString() + " @ " + Arrays.toString(this.array.shape());
+
+        return format.format(this.array) + " @ " + Arrays.toString(this.array.shape());
     }
 }

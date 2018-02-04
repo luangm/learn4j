@@ -6,6 +6,7 @@ import io.luan.learn4j.structure.ExpressionState;
 import io.luan.learn4j.structure.Graph;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,21 +19,19 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Guangmiao Luan
  * @since 31/08/2017.
  */
+@Slf4j
 public abstract class BaseExpression implements Expression {
 
     private static AtomicInteger ID_COUNTER = new AtomicInteger(1);
 
     private Map<Integer, Expression> gradientMap = new HashMap<>();
-
     @Getter
     private Graph graph;
-
     @Getter
     private int id;
-
     @Getter
     private String name;
-
+    private Map<Integer, Expression> observerMap = new HashMap<>();
     @Getter
     @Setter
     private ExpressionState state;
@@ -80,13 +79,33 @@ public abstract class BaseExpression implements Expression {
     }
 
     @Override
+    public void addObserver(Expression observer) {
+        observerMap.put(observer.getId(), observer);
+    }
+
+    @Override
+    public void onEvent() {
+        if (this.state == ExpressionState.Evaluated) {
+            this.setState(ExpressionState.Invalidated);
+            notifyValueChanged();
+        }
+    }
+
+    @Override
+    public void notifyValueChanged() {
+        observerMap.values().forEach(Expression::onEvent);
+    }
+
+    @Override
     public void setValue(Tensor value) {
+//        log.error("SetValue: " +  this.getId());
         if (this.graph == null || this.graph.getSession() == null) {
             throw new IllegalStateException("Cannot Set Value if not attached to a graph");
         }
 
         this.graph.getSession().setValue(this, value);
         this.state = ExpressionState.Modified;
+        notifyValueChanged();
     }
 
     @Override
@@ -95,6 +114,11 @@ public abstract class BaseExpression implements Expression {
             this.gradientMap = new HashMap<>();
         }
         gradientMap.put(targetId, gradient);
+    }
+
+    @Override
+    public boolean isInvalid() {
+        return this.state != ExpressionState.Evaluated;
     }
 
     /**

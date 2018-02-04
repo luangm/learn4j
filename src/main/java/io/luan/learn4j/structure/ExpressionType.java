@@ -32,5 +32,5 @@ public enum ExpressionType {
     Variable, Sine, Cosine, SquareRoot,
     Exponential, Tangent, Tanh, Conv2d,
     Reciprocal, SoftmaxGrad, TangentGrad,
-    Tile, ReduceMin, ReduceMax, AddN,
+    Tile, ReduceMin, ReduceMax, AddN, MultiAssign,
 }

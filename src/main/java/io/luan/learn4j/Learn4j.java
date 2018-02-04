@@ -6,15 +6,15 @@ import io.luan.learn4j.session.Session;
 import io.luan.learn4j.session.impl.SessionImpl;
 import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
+import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.GraphImpl;
-import io.luan.learn4j.structure.impl.binary.*;
+import io.luan.learn4j.structure.impl.binary.Divide;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
 import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
-import io.luan.learn4j.structure.impl.reduction.ReduceSum;
 import io.luan.learn4j.structure.impl.special.AddN;
 import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Group;
@@ -35,14 +35,20 @@ public class Learn4j {
      * All subsequent calls are based on this graph
      * This should be ThreadLocal
      */
-    private static Graph activeGraph = new GraphImpl("DEFAULT");
+    private static Graph activeGraph;
+    private static ExpressionFactory factory;
+
+    static {
+        activeGraph = new GraphImpl("DEFAULT");
+        factory = new ExpressionFactory(activeGraph);
+    }
 
     public static Expression abs(Expression base) {
         return abs(base, null);
     }
 
     public static Expression abs(Expression base, String name) {
-        return addToGraph(new Absolute(base, name));
+        return factory.abs(base, name);
     }
 
     public static Expression add(Expression left, Expression right) {
@@ -50,7 +56,7 @@ public class Learn4j {
     }
 
     public static Expression add(Expression left, Expression right, String name) {
-        return addToGraph(new Add(left, right, name));
+        return factory.add(left, right, name);
     }
 
     public static Expression addN(Expression... nodes) {
@@ -175,7 +181,7 @@ public class Learn4j {
     }
 
     public static Expression matmul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight, String name) {
-        return addToGraph(new MatMul(left, right, transposeLeft, transposeRight, name));
+        return factory.matmul(left, right, transposeLeft, transposeRight, name);
     }
 
     public static Expression multiply(Expression left, Expression right) {
@@ -183,7 +189,7 @@ public class Learn4j {
     }
 
     public static Expression multiply(Expression left, Expression right, String name) {
-        return addToGraph(new Multiply(left, right, name));
+        return factory.multiply(left, right, name);
     }
 
     public static Expression negate(Expression base) {
@@ -191,7 +197,7 @@ public class Learn4j {
     }
 
     public static Expression negate(Expression base, String name) {
-        return addToGraph(new Negate(base, name));
+        return factory.neg(base, name);
     }
 
     public static Expression parameter(Tensor tensor) {
@@ -275,7 +281,7 @@ public class Learn4j {
     }
 
     public static Expression reduceSum(Expression base, int dimension, String name) {
-        return addToGraph(new ReduceSum(base, dimension, name));
+        return factory.reduceSum(base, dimension, name);
     }
 
     public static Expression relu(Expression base) {
@@ -296,7 +302,7 @@ public class Learn4j {
     }
 
     public static Expression sigmoid(Expression base, String name) {
-        return addToGraph(new Sigmoid(base, name));
+        return factory.sigmoid(base, name);
     }
 
     public static Expression sign(Expression base) {
@@ -336,7 +342,7 @@ public class Learn4j {
     }
 
     public static Expression square(Expression base, String name) {
-        return addToGraph(new Square(base, name));
+        return factory.square(base, name);
     }
 
     public static Expression step(Expression base) {
@@ -352,7 +358,7 @@ public class Learn4j {
     }
 
     public static Expression subtract(Expression left, Expression right, String name) {
-        return addToGraph(new Subtract(left, right, name));
+        return factory.subtract(left, right, name);
     }
 
     public static Expression tan(Expression base) {

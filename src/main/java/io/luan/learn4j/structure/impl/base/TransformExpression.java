@@ -23,6 +23,11 @@ public abstract class TransformExpression extends BaseExpression {
     }
 
     @Override
+    public boolean isInvalid() {
+        return super.isInvalid() || base.isInvalid();
+    }
+
+    @Override
     public int hashCode() {
         int hash = super.hashCode();
         hash = hash * 31 + base.getId();

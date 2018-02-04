@@ -19,13 +19,11 @@ import java.util.List;
  */
 public class GradientDescentOptimizer {
 
+    private ExpressionFactory factory;
     @Getter
     private Graph graph;
-
     @Getter
     private Expression learnRate;
-
-    private ExpressionFactory factory;
 
     public GradientDescentOptimizer(Graph graph, double learnRate) {
         this.graph = graph;
@@ -36,22 +34,30 @@ public class GradientDescentOptimizer {
     public Expression minimize(Expression loss) {
         DependencyVisitor depVisitor = new DependencyVisitor();
         loss.accept(depVisitor);
+        List<Expression> params = new ArrayList<>();
+        for (Expression exp : depVisitor.getDependencies()) {
+            if (exp.getType() == ExpressionType.Parameter) {
+                params.add(exp);
+            }
+        }
 
         ReverseGradientVisitor visitor = new ReverseGradientVisitor(this.graph);
         visitor.visit(loss, null);
 
-        List<Expression> assignList = new ArrayList<>();
-        for (Expression exp : depVisitor.getDependencies()) {
-            if (exp.getType() == ExpressionType.Parameter) {
-                val grad = loss.getGradient(exp);
-                val mul = factory.multiply(this.learnRate, grad);
-                val sub = factory.subtract(exp, mul);
-                val assign = factory.assign(exp, sub);
-                assignList.add(assign);
-            }
+        Expression[] paramList = params.toArray(new Expression[params.size()]);
+        Expression[] valueList = new Expression[params.size()];
+        Expression[] groupList = new Expression[paramList.length + 1];
+
+        for (int i = 0; i < paramList.length; i++) {
+            val exp = params.get(i);
+            val grad = loss.getGradient(exp);
+            val mul = factory.multiply(this.learnRate, grad);
+            val sub = factory.subtract(exp, mul);
+            valueList[i] = sub;
+            groupList[i] = sub;
         }
 
-        return factory.group(assignList.toArray(new Expression[assignList.size()]));
-
+        groupList[paramList.length] = factory.multiAssign(paramList, valueList);
+        return factory.group(groupList);
     }
 }

@@ -22,6 +22,11 @@ public abstract class BinaryExpression extends BaseExpression {
     }
 
     @Override
+    public boolean isInvalid() {
+        return super.isInvalid() || left.isInvalid() || right.isInvalid();
+    }
+
+    @Override
     public int hashCode() {
         int hash = super.hashCode();
         hash = hash * 31 + left.getId();

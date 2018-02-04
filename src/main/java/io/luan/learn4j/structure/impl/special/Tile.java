@@ -36,4 +36,8 @@ public class Tile extends BaseExpression {
         return ExpressionType.Tile;
     }
 
+    @Override
+    public boolean isInvalid() {
+        return super.isInvalid() || base.isInvalid();
+    }
 }
