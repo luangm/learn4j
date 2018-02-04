@@ -6,7 +6,7 @@ import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.base.ReductionExpression;
 import io.luan.learn4j.structure.impl.binary.*;
-import io.luan.learn4j.structure.impl.core.Constant;
+import io.luan.learn4j.structure.impl.loss.SoftmaxCrossEntropy;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.reduction.ReduceSum;
@@ -70,7 +70,7 @@ public class ReverseGradientVisitor extends BaseVisitor {
     @Override
     public void visitAddN(AddN node, Object... params) {
         val grad = this.preVisit(node, params);
-        for (val item: node.getList()) {
+        for (val item : node.getList()) {
             item.accept(this, grad);
         }
     }
@@ -208,11 +208,22 @@ public class ReverseGradientVisitor extends BaseVisitor {
         node.getBase().accept(this, result);
     }
 
-    // TODO: Fix Constant 2
+    @Override
+    public void visitSoftmaxCrossEntropy(SoftmaxCrossEntropy node, Object... params) {
+        val grad = this.preVisit(node, params);
+
+        val softmax = factory.softmax(node.getLogits());
+        val sub = factory.subtract(softmax, node.getLabels());
+        val result = factory.multiply(grad, sub);
+
+        node.getLogits().accept(this, result);
+    }
+
     @Override
     public void visitSquare(Square node, Object... params) {
         val grad = this.preVisit(node, params);
-        val mul = factory.multiply(Constant.TWO, node.getBase());
+        val two = factory.constant(2, "TWO");
+        val mul = factory.multiply(two, node.getBase());
         val result = factory.multiply(grad, mul);
         node.getBase().accept(this, result);
     }

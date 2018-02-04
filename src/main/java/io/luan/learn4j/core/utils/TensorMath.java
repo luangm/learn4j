@@ -1,6 +1,7 @@
 package io.luan.learn4j.core.utils;
 
 import io.luan.learn4j.core.Tensor;
+import lombok.val;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.api.ops.impl.transforms.Tan;
 import org.nd4j.linalg.api.ops.impl.transforms.TanDerivative;
@@ -119,6 +120,33 @@ public class TensorMath {
         return Tensor.create(result);
     }
 
+    public static Tensor conv2dImageGrad(Tensor image, Tensor kernel, Tensor grad) {
+        int numKernels = kernel.getShape()[0];
+        INDArray gradArray = grad.getArray();
+        INDArray gradReshape = gradArray.reshape(numKernels, gradArray.length() / numKernels);
+
+        INDArray kernelArray = kernel.getArray();
+        INDArray kReshape = kernelArray.reshape(numKernels, kernelArray.length() / numKernels);
+
+        INDArray col = matmul(kReshape, gradReshape, true, false);
+
+        return null;
+//        return col2im(col, );
+//        return TensorUtils.col2im(col, image, kernel).reshape(image.shape);
+    }
+
+    // TODO: Finish
+    public static Tensor col2im(Tensor col, int[] kernel, int[] stride, int[] padding) {
+        INDArray colArray = col.getArray();
+
+        // The original col
+        // Nd4j expects col2im's col be rank 6: N, C, KH, KW, OH, OW
+
+
+        // output of col2im is N, C, H, W
+        return null;
+    }
+
     public static Tensor im2col(Tensor image, int[] kernel, int[] stride, int[] padding) {
         INDArray imageArray = image.getArray();
         if (imageArray.rank() != 4) {
@@ -146,6 +174,18 @@ public class TensorMath {
         INDArray array = base.getArray();
         INDArray result = Transforms.log(array, true);
         return Tensor.create(result);
+    }
+
+    private static INDArray matmul(INDArray left, INDArray right, boolean transposeLeft, boolean transposeRight) {
+        if (transposeLeft) {
+            left = left.transpose();
+        }
+
+        if (transposeRight) {
+            right = right.transpose();
+        }
+
+        return left.mmul(right);
     }
 
     public static Tensor matmul(Tensor left, Tensor right, boolean transposeLeft, boolean transposeRight) {
@@ -342,6 +382,30 @@ public class TensorMath {
         INDArray result = Nd4j.tile(array, repeats);
         return Tensor.create(result);
     }
+
+    public static Tensor softmaxCrossEntropyWithLogits(Tensor labels, Tensor logits, int dim) {
+        if (dim < 0) {
+            dim += logits.getRank();
+        }
+        val logSumExp = TensorMath.logSumExp(logits, -1);
+        val sub = TensorMath.subtract(logits, logSumExp);
+        val mul = TensorMath.multiply(labels, sub);
+        val sum = TensorMath.reduceSum(mul, dim);
+        return TensorMath.negate(sum);
+    }
+
+    public static Tensor logSumExp(Tensor base, int dim) {
+        if (dim < 0) {
+            dim += base.getRank();
+        }
+        val max = TensorMath.reduceMax(base, dim);
+        val subtract = TensorMath.subtract(base, max);
+        val exp = TensorMath.exp(subtract);
+        val sum = TensorMath.reduceSum(exp, dim);
+        val log = TensorMath.log(sum);
+        return TensorMath.add(log, max);
+    }
+
 
     private static INDArray subtract(INDArray left, INDArray right) {
         int[] resultShape = ShapeUtils.broadcastShapes(left.shape(), right.shape());

@@ -5,6 +5,7 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.loss.SoftmaxCrossEntropy;
 import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
@@ -194,6 +195,13 @@ abstract class BaseVisitor implements Visitor {
     public void visitSoftmax(Softmax node, Object... params) {
         this.preVisit(node, params);
         node.getBase().accept(this, params);
+    }
+
+    @Override
+    public void visitSoftmaxCrossEntropy(SoftmaxCrossEntropy node, Object... params) {
+        this.preVisit(node, params);
+        node.getLogits().accept(this, params);
+        node.getLabels().accept(this, params);
     }
 
     @Override

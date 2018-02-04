@@ -52,7 +52,8 @@ String json = Learn4j.saveGraph(Graph)
 | ---           | :---: | :---: |
 | Abs           | Y     | Y     |
 | Add           | Y     | Y     |
-| Assign        |       |       |
+| Assign        | Y     |       |
+| MultiAssign   | Y     |       |
 | Cos           | Y     | Y     |
 | Divide        | Y     | Y     |
 | Exp           | Y     | Y     |
@@ -80,5 +81,6 @@ String json = Learn4j.saveGraph(Graph)
 | MaxPool       |       |       |
 | Reciprocal    | Y     |       |
 | Softmax       | Y     | Y     |
+| SoftmaxXE     | Y     |       |
 | LogSumExp     |       |       |
 | AddN          | Y     | Y     |

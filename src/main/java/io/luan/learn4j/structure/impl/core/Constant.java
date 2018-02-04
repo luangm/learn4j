@@ -14,9 +14,6 @@ import lombok.Getter;
  */
 public class Constant extends BaseExpression {
 
-    public static final Constant ZERO = new Constant(Tensor.scalar(0), "ZERO");
-    public static final Constant ONE = new Constant(Tensor.scalar(1), "ONE");
-    public static final Constant TWO = new Constant(Tensor.scalar(2), "TWO");
     @Getter
     private Tensor value;
 

@@ -9,6 +9,7 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.loss.SoftmaxCrossEntropy;
 import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
@@ -418,6 +419,25 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.softmax(base);
         session.setValue(node, result);
+    }
+
+    @Override
+    public void visitSoftmaxCrossEntropy(SoftmaxCrossEntropy node, Object... params) {
+        logger.info("visitSoftmaxCrossEntropy: " + node.getId());
+
+        if (node.getLabels().isInvalid()) {
+            node.getLabels().accept(this, params);
+        }
+
+        if (node.getLogits().isInvalid()) {
+            node.getLogits().accept(this, params);
+        }
+
+        Tensor labels = session.getValue(node.getLabels());
+        Tensor logits = session.getValue(node.getLogits());
+        Tensor result = TensorMath.softmaxCrossEntropyWithLogits(labels, logits, -1);
+        session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override

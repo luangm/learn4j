@@ -8,17 +8,11 @@ import io.luan.learn4j.structure.Expression;
 import io.luan.learn4j.structure.Graph;
 import io.luan.learn4j.structure.factory.ExpressionFactory;
 import io.luan.learn4j.structure.impl.GraphImpl;
-import io.luan.learn4j.structure.impl.binary.Divide;
-import io.luan.learn4j.structure.impl.core.Constant;
-import io.luan.learn4j.structure.impl.core.Parameter;
-import io.luan.learn4j.structure.impl.core.Variable;
 import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
 import io.luan.learn4j.structure.impl.special.AddN;
-import io.luan.learn4j.structure.impl.special.Fill;
 import io.luan.learn4j.structure.impl.special.Group;
-import io.luan.learn4j.structure.impl.transform.*;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
 
@@ -44,7 +38,7 @@ public class Learn4j {
     }
 
     public static Expression abs(Expression base) {
-        return abs(base, null);
+        return factory.abs(base);
     }
 
     public static Expression abs(Expression base, String name) {
@@ -52,7 +46,7 @@ public class Learn4j {
     }
 
     public static Expression add(Expression left, Expression right) {
-        return add(left, right, null);
+        return factory.add(left, right);
     }
 
     public static Expression add(Expression left, Expression right, String name) {
@@ -67,12 +61,16 @@ public class Learn4j {
         return addToGraph(new AddN(nodes, name));
     }
 
-    public static Expression assign(Expression target, Expression newValue) {
-        return null;
+    public static Expression assign(Expression target, Expression value) {
+        return factory.assign(target, value);
+    }
+
+    public static Expression assign(Expression target, Expression value, String name) {
+        return factory.assign(target, value, name);
     }
 
     public static Expression constant(Number scalar) {
-        return constant(Tensor.scalar(scalar));
+        return factory.constant(scalar);
     }
 
     public static Expression constant(double[] data, int[] shape) {
@@ -80,47 +78,47 @@ public class Learn4j {
     }
 
     public static Expression constant(double[] data, int[] shape, String name) {
-        return constant(Tensor.create(data, shape), name);
+        return factory.constant(Tensor.create(data, shape), name);
     }
 
     public static Expression constant(Tensor tensor) {
-        return constant(tensor, null);
+        return factory.constant(tensor);
     }
 
     public static Expression constant(Tensor tensor, String name) {
-        return addToGraph(new Constant(tensor, name));
+        return factory.constant(tensor, name);
     }
 
     public static Expression cos(Expression base) {
-        return cos(base, null);
+        return factory.cos(base);
     }
 
     public static Expression cos(Expression base, String name) {
-        return addToGraph(new Cosine(base, name));
+        return factory.cos(base, name);
     }
 
     public static Expression divide(Expression left, Expression right) {
-        return divide(left, right, null);
+        return factory.divide(left, right);
     }
 
     public static Expression divide(Expression left, Expression right, String name) {
-        return addToGraph(new Divide(left, right, name));
+        return factory.divide(left, right, name);
     }
 
     public static Expression exp(Expression base) {
-        return exp(base, null);
+        return factory.exp(base);
     }
 
     public static Expression exp(Expression base, String name) {
-        return addToGraph(new Exponential(base, name));
+        return factory.exp(base, name);
     }
 
     public static Expression fill(Number scalar, int[] shape) {
-        return fill(scalar, shape, null);
+        return factory.fill(scalar, shape);
     }
 
     public static Expression fill(Number scalar, int[] shape, String name) {
-        return addToGraph(new Fill(scalar, shape, name));
+        return factory.fill(scalar, shape, name);
     }
 
     public static GradientDescentOptimizer gradientDescentOptimizer(double learnRate) {
@@ -165,19 +163,19 @@ public class Learn4j {
     }
 
     public static Expression log(Expression base) {
-        return log(base, null);
+        return factory.log(base);
     }
 
     public static Expression log(Expression base, String name) {
-        return addToGraph(new Logarithm(base, name));
+        return factory.log(base, name);
     }
 
     public static Expression matmul(Expression left, Expression right) {
-        return matmul(left, right, null);
+        return factory.matmul(left, right);
     }
 
     public static Expression matmul(Expression left, Expression right, String name) {
-        return matmul(left, right, false, false, name);
+        return factory.matmul(left, right, false, false, name);
     }
 
     public static Expression matmul(Expression left, Expression right, boolean transposeLeft, boolean transposeRight, String name) {
@@ -185,7 +183,7 @@ public class Learn4j {
     }
 
     public static Expression multiply(Expression left, Expression right) {
-        return multiply(left, right, null);
+        return factory.multiply(left, right);
     }
 
     public static Expression multiply(Expression left, Expression right, String name) {
@@ -193,7 +191,7 @@ public class Learn4j {
     }
 
     public static Expression negate(Expression base) {
-        return negate(base, null);
+        return factory.neg(base);
     }
 
     public static Expression negate(Expression base, String name) {
@@ -201,11 +199,11 @@ public class Learn4j {
     }
 
     public static Expression parameter(Tensor tensor) {
-        return parameter(tensor, null);
+        return factory.parameter(tensor);
     }
 
     public static Expression parameter(Tensor tensor, String name) {
-        return addToGraph(new Parameter(tensor, name));
+        return factory.parameter(tensor, name);
     }
 
     public static void println(Object obj) {
@@ -213,11 +211,11 @@ public class Learn4j {
     }
 
     public static Expression reciprocal(Expression base) {
-        return reciprocal(base, null);
+        return factory.reciprocal(base);
     }
 
     public static Expression reciprocal(Expression base, String name) {
-        return addToGraph(new Reciprocal(base, name));
+        return factory.reciprocal(base, name);
     }
 
     public static Expression reduceMax(Expression base) {
@@ -285,11 +283,11 @@ public class Learn4j {
     }
 
     public static Expression relu(Expression base) {
-        return relu(base, null);
+        return factory.relu(base);
     }
 
     public static Expression relu(Expression base, String name) {
-        return addToGraph(new Relu(base, name));
+        return factory.relu(base, name);
     }
 
     public static Session session(String s) {
@@ -298,7 +296,7 @@ public class Learn4j {
     }
 
     public static Expression sigmoid(Expression base) {
-        return sigmoid(base, null);
+        return factory.sigmoid(base);
     }
 
     public static Expression sigmoid(Expression base, String name) {
@@ -306,39 +304,47 @@ public class Learn4j {
     }
 
     public static Expression sign(Expression base) {
-        return sign(base, null);
+        return factory.sign(base);
     }
 
     public static Expression sign(Expression base, String name) {
-        return addToGraph(new Sign(base, name));
+        return factory.sign(base, name);
     }
 
     public static Expression sin(Expression base) {
-        return sin(base, null);
+        return factory.sin(base);
     }
 
     public static Expression sin(Expression base, String name) {
-        return addToGraph(new Sine(base, name));
+        return factory.sin(base, name);
     }
 
     public static Expression softmax(Expression base) {
-        return softmax(base, null);
+        return factory.softmax(base);
     }
 
     public static Expression softmax(Expression base, String name) {
-        return addToGraph(new Softmax(base, name));
+        return factory.softmax(base, name);
+    }
+
+    public static Expression softmaxCrossEntropy(Expression logits, Expression labels) {
+        return factory.softmaxCrossEntropy(logits, labels);
+    }
+
+    public static Expression softmaxCrossEntropy(Expression logits, Expression labels, String name) {
+        return factory.softmaxCrossEntropy(logits, labels, name);
     }
 
     public static Expression sqrt(Expression base) {
-        return sqrt(base, null);
+        return factory.sqrt(base);
     }
 
     public static Expression sqrt(Expression base, String name) {
-        return addToGraph(new SquareRoot(base, name));
+        return factory.sqrt(base, name);
     }
 
     public static Expression square(Expression base) {
-        return square(base, null);
+        return factory.square(base);
     }
 
     public static Expression square(Expression base, String name) {
@@ -346,15 +352,15 @@ public class Learn4j {
     }
 
     public static Expression step(Expression base) {
-        return step(base, null);
+        return factory.step(base);
     }
 
     public static Expression step(Expression base, String name) {
-        return addToGraph(new Step(base, name));
+        return factory.step(base, name);
     }
 
     public static Expression subtract(Expression left, Expression right) {
-        return subtract(left, right, null);
+        return factory.subtract(left, right);
     }
 
     public static Expression subtract(Expression left, Expression right, String name) {
@@ -362,27 +368,27 @@ public class Learn4j {
     }
 
     public static Expression tan(Expression base) {
-        return tan(base, null);
+        return factory.tan(base);
     }
 
     public static Expression tan(Expression base, String name) {
-        return addToGraph(new Tangent(base, name));
+        return factory.tan(base, name);
     }
 
     public static Expression tanh(Expression base) {
-        return tanh(base, null);
+        return factory.tanh(base);
     }
 
     public static Expression tanh(Expression base, String name) {
-        return addToGraph(new Tanh(base, name));
+        return factory.tanh(base, name);
     }
 
     public static Expression variable(int[] shape) {
-        return variable(shape, null);
+        return factory.variable(shape);
     }
 
     public static Expression variable(int[] shape, String name) {
-        return addToGraph(new Variable(shape, name));
+        return factory.variable(shape, name);
     }
 
     private static Expression addToGraph(Expression exp) {

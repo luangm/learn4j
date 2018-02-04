@@ -44,6 +44,21 @@ public class ConvTest {
     }
 
     @Test
+    public void testIm2Col_nd4j() {
+        val array = Tensor.create(Nd4j.linspace(1, 16, 16).reshape(1, 1, 4, 4));
+        println(array);
+        int[] kernel = {2, 2};
+        int[] stride = {1, 1};
+        int[] padding = {0, 0};
+        val col = Convolution.im2col(array.getArray(), kernel, stride, padding);
+        println(col);
+
+        val im = Convolution.col2im(col, stride, padding, 4, 4);
+        println(im);
+        println(im.shapeInfoToString());
+    }
+
+    @Test
     public void testConv2d() {
         val array = Tensor.create(Nd4j.linspace(1, 9, 9).reshape(1, 1, 3, 3));
         val kernel = Tensor.create(Nd4j.linspace(1, 4, 4).reshape(1, 1, 2, 2));

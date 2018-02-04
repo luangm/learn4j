@@ -4,6 +4,7 @@ import io.luan.learn4j.structure.impl.binary.*;
 import io.luan.learn4j.structure.impl.core.Constant;
 import io.luan.learn4j.structure.impl.core.Parameter;
 import io.luan.learn4j.structure.impl.core.Variable;
+import io.luan.learn4j.structure.impl.loss.SoftmaxCrossEntropy;
 import io.luan.learn4j.structure.impl.reduction.ReduceMax;
 import io.luan.learn4j.structure.impl.reduction.ReduceMean;
 import io.luan.learn4j.structure.impl.reduction.ReduceMin;
@@ -76,6 +77,8 @@ public interface Visitor {
     void visitSine(Sine node, Object... params);
 
     void visitSoftmax(Softmax node, Object... params);
+
+    void visitSoftmaxCrossEntropy(SoftmaxCrossEntropy node, Object... params);
 
     void visitSoftmaxGrad(SoftmaxGrad node, Object... params);
 
