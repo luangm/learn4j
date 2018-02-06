@@ -23,7 +23,10 @@ public class Tile extends BaseExpression {
         super(name);
         this.base = base;
         this.repeats = repeats;
-        this.shape = new int[0];
+        this.shape = base.getShape().clone();
+        for (int i = 0; i < repeats.length; i++) {
+            this.shape[i] *= repeats[i];
+        }
     }
 
     @Override

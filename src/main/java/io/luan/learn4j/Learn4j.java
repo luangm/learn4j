@@ -15,6 +15,8 @@ import io.luan.learn4j.structure.impl.special.AddN;
 import io.luan.learn4j.structure.impl.special.Group;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.val;
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.string.NDArrayStrings;
 
 /**
  * This is a main factory class for creating nodes
@@ -23,6 +25,8 @@ import lombok.val;
  * @since 28/08/2017.
  */
 public class Learn4j {
+
+    private static final NDArrayStrings format = new NDArrayStrings(",", 8);
 
     /**
      * Stores the current active graph.
@@ -207,7 +211,13 @@ public class Learn4j {
     }
 
     public static void println(Object obj) {
-        System.out.println(obj);
+
+        if (obj instanceof INDArray) {
+            INDArray array = (INDArray)obj;
+            System.out.println(format.format(array));
+        } else {
+            System.out.println(obj);
+        }
     }
 
     public static Expression reciprocal(Expression base) {
@@ -271,7 +281,7 @@ public class Learn4j {
     }
 
     public static Expression reduceSum(Expression base, String name) {
-        return reduceSum(base, -1, name);
+        return reduceSum(base, Integer.MAX_VALUE, name);
     }
 
     public static Expression reduceSum(Expression base, int dimension) {

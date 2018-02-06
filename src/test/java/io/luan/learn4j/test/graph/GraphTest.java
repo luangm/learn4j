@@ -39,30 +39,8 @@ public class GraphTest {
         x.setValue(x_data);
         y.setValue(y_data);
 
-//        Expression[] gradients = gradients(loss, new Expression[]{W, b});
-//        var w_grad = gradients[0];
-//        var b_grad = gradients[1];
-//
-//        var lr = parameter(Tensor.scalar(0.1), "lr");
-//        var w_mul = multiply(lr, w_grad);
-//        var w_sub = subtract(W, w_mul);
-//
-//        var b_mul = multiply(lr, b_grad);
-//        var b_sub = subtract(b, b_mul);
-//
-        for (int i = 0; i < 100000; i++) {
-//            w_sub.eval();
-//            b_sub.eval();
-//
-//            W.setValue(w_sub.getValue());
-//            b.setValue(b_sub.getValue());
-//            loss.eval();
-//            println(loss);
+        for (int i = 0; i < 10000; i++) {
             train.eval();
-//            println(W);
-//            println(b);
-//            println("------------------");
-
         }
 
         Date after = new Date();

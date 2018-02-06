@@ -24,7 +24,7 @@ public class ShapeUtils {
             int right = rightShape[rightIndex];
 
             if (left != 1 && right != 1 && left != right) {
-                throw new IllegalArgumentException("Incompatible shapes, cannot broadcast");
+                throw new IllegalArgumentException("Incompatible shapes, cannot broadcast: " + left + "," + right);
             }
 
             if (rightIndex > leftIndex) {
@@ -82,7 +82,7 @@ public class ShapeUtils {
     public static int[] reduce(int[] shape, int dimension) {
         int[] result = new int[shape.length];
         for (int i = 0; i < shape.length; i++) {
-            result[i] = (dimension == -1 || dimension == i) ? 1 : shape[i];
+            result[i] = (dimension == Integer.MAX_VALUE || dimension == i) ? 1 : shape[i];
         }
         return result;
     }

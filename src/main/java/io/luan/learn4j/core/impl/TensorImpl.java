@@ -39,6 +39,11 @@ public class TensorImpl implements Tensor {
     }
 
     @Override
+    public Tensor reshape(int... newShape) {
+        return Tensor.create(this.array.reshape(newShape));
+    }
+
+    @Override
     public String toString() {
 //        if (this.array.isScalar()) {
 //            return "" + this.array.getDouble(0);

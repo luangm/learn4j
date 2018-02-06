@@ -70,4 +70,6 @@ public interface Tensor {
     int getRank();
 
     int[] getShape();
+
+    Tensor reshape(int... newShape);
 }

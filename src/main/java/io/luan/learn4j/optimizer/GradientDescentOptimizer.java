@@ -9,6 +9,7 @@ import io.luan.learn4j.visitor.impl.DependencyVisitor;
 import io.luan.learn4j.visitor.impl.ReverseGradientVisitor;
 import lombok.Getter;
 import lombok.val;
+import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.ArrayList;
 import java.util.List;

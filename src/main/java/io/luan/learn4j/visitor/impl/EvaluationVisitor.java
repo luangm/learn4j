@@ -43,21 +43,21 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitAbsolute(Absolute node, Object... params) {
-        super.visitAbsolute(node, params);
+        logger.info("visitCosine: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.abs(base);
         session.setValue(node, result);
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitAdd(Add node, Object... params) {
         logger.info("visitAdd: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitAdd Skipped");
-//            return;
-//        }
 
         if (node.getLeft().isInvalid()) {
             node.getLeft().accept(this, params);
@@ -97,12 +97,6 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitAssign(Assign node, Object... params) {
         logger.info("visitAssign: " + node.getId());
 
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitReduceSum Skipped");
-//            return;
-//        }
-
         if (node.getNewValue().isInvalid()) {
             node.getNewValue().accept(this, params);
         }
@@ -127,15 +121,29 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitCosine(Cosine node, Object... params) {
-        super.visitCosine(node, params);
+        logger.info("visitCosine: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.cos(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitDivide(Divide node, Object... params) {
-        super.visitDivide(node, params);
+        logger.info("visitDivide: " + node.getId());
+
+        if (node.getLeft().isInvalid()) {
+            node.getLeft().accept(this, params);
+        }
+
+        if (node.getRight().isInvalid()) {
+            node.getRight().accept(this, params);
+        }
+
         Tensor left = session.getValue(node.getLeft());
         Tensor right = session.getValue(node.getRight());
 
@@ -146,25 +154,26 @@ public class EvaluationVisitor extends BaseVisitor {
         } else {
             TensorMath.divide(left, right, divide);
         }
+
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitExponential(Exponential node, Object... params) {
-        super.visitExponential(node, params);
+        logger.info("visitExponential: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.exp(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitFill(Fill node, Object... params) {
         logger.info("visitFill: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitFill Skipped");
-//            return;
-//        }
 
         if (session.getValue(node) == null) {
             Tensor value = Tensor.fill(node.getScalar(), node.getShape());
@@ -176,21 +185,20 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitLogarithm(Logarithm node, Object... params) {
-        super.visitLogarithm(node, params);
+        logger.info("visitLogarithm: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.log(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitMatMul(MatMul node, Object... params) {
         logger.info("visitMatMul: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitMatMul Skipped");
-//            return;
-//        }
 
         if (node.getLeft().isInvalid()) {
             node.getLeft().accept(this, params);
@@ -238,12 +246,6 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitMultiply(Multiply node, Object... params) {
         logger.info("visitMultiply" + node.getId());
 
-//         Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitMultiply Skipped");
-//            return;
-//        }
-
         if (node.getLeft().isInvalid()) {
             node.getLeft().accept(this, params);
         }
@@ -270,12 +272,6 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitNegate(Negate node, Object... params) {
         logger.info("visitNegate: " + node.getId());
 
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitNegate Skipped");
-//            return;
-//        }
-
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);
         }
@@ -296,45 +292,59 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitReciprocal(Reciprocal node, Object... params) {
-        super.visitReciprocal(node, params);
+        logger.info("visitReciprocal" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reciprocal(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitReduceMax(ReduceMax node, Object... params) {
-        super.visitReduceMax(node, params);
+        logger.info("visitReduceMax" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reduceMax(base, node.getDimension());
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitReduceMean(ReduceMean node, Object... params) {
-        super.visitReduceMean(node, params);
+        logger.info("visitReduceMean" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reduceMean(base, node.getDimension());
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitReduceMin(ReduceMin node, Object... params) {
-        super.visitReduceMin(node, params);
+        logger.info("visitReduceMin" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.reduceMin(base, node.getDimension());
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitReduceSum(ReduceSum node, Object... params) {
         logger.info("visitReduceSum" + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitReduceSum Skipped");
-//            return;
-//        }
 
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);
@@ -349,21 +359,20 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitRelu(Relu node, Object... params) {
-        super.visitRelu(node, params);
+        logger.info("visitRelu: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.relu(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSigmoid(Sigmoid node, Object... params) {
         logger.info("visitSigmoid: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitSigmoid Skipped");
-//            return;
-//        }
 
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);
@@ -380,12 +389,6 @@ public class EvaluationVisitor extends BaseVisitor {
     public void visitSigmoidGrad(SigmoidGrad node, Object... params) {
         logger.info("visitSigmoidGrad: " + node.getId());
 
-        // Shortcut
-        if (!node.isInvalid()) {
-            logger.info("visitSigmoidGrad Skipped");
-            return;
-        }
-
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);
         }
@@ -399,26 +402,43 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitSign(Sign node, Object... params) {
-        super.visitSign(node, params);
+        logger.info("visitSign: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sign(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSine(Sine node, Object... params) {
-        super.visitSine(node, params);
+        logger.info("visitSine: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sin(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSoftmax(Softmax node, Object... params) {
-        super.visitSoftmax(node, params);
+        logger.info("visitSoftmax: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.softmax(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
@@ -442,22 +462,22 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitSoftmaxGrad(SoftmaxGrad node, Object... params) {
-        super.visitSoftmaxGrad(node, params);
+        logger.info("visitSoftmaxGrad: " + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor grad = session.getValue(node.getGrad());
         Tensor result = TensorMath.softmaxGrad(base, grad);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSquare(Square node, Object... params) {
         logger.info("visitSquare" + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitSquare Skipped");
-//            return;
-//        }
 
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);
@@ -466,35 +486,40 @@ public class EvaluationVisitor extends BaseVisitor {
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.square(base);
         session.setValue(node, result);
-
         node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSquareRoot(SquareRoot node, Object... params) {
-        super.visitSquareRoot(node, params);
+        logger.info("visitSquareRoot" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.sqrt(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitStep(Step node, Object... params) {
-        super.visitStep(node, params);
+        logger.info("visitStep" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
+
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.step(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitSubtract(Subtract node, Object... params) {
         logger.info("visitSubtract: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitSubtract Skipped");
-//            return;
-//        }
 
         if (node.getLeft().isInvalid()) {
             node.getLeft().accept(this, params);
@@ -520,37 +545,46 @@ public class EvaluationVisitor extends BaseVisitor {
 
     @Override
     public void visitTangent(Tangent node, Object... params) {
-        super.visitTangent(node, params);
+        logger.info("visitTangent" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tan(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitTangentGrad(TangentGrad node, Object... params) {
-        super.visitTangentGrad(node, params);
+        logger.info("visitTangentGrad" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tanGrad(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitTanh(Tanh node, Object... params) {
-        super.visitTanh(node, params);
+        logger.info("visitTanh" + node.getId());
+
+        if (node.getBase().isInvalid()) {
+            node.getBase().accept(this, params);
+        }
         Tensor base = session.getValue(node.getBase());
         Tensor result = TensorMath.tanh(base);
         session.setValue(node, result);
+        node.setState(ExpressionState.Evaluated);
     }
 
     @Override
     public void visitTile(Tile node, Object... params) {
         logger.info("visitTile: " + node.getId());
-
-        // Shortcut
-//        if (!node.isInvalid()) {
-//            logger.info("visitTile Skipped");
-//            return;
-//        }
 
         if (node.getBase().isInvalid()) {
             node.getBase().accept(this, params);

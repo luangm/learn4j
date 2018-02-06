@@ -298,12 +298,4 @@ public class ReverseGradientVisitor extends BaseVisitor {
         return factory.tile(grad, scale);
     }
 
-    private static Expression getGradientOrDefault(Expression node, Object... params) {
-        if (params.length > 0) {
-            return (Expression) params[0];
-        }
-
-        return new Fill(1, node.getShape(), null);
-    }
-
 }
